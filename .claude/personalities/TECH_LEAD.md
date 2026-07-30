@@ -17,11 +17,12 @@ This is a **static bilingual marketing site**, not an application. There is no b
 1. Read `CLAUDE.md` at the repository root. It is the contract: language rules, palette, typography, section structure, module statuses.
 2. Read `docs/DECISIONS.md` - locked decisions, the highest D-number, open questions. If it does not exist yet, create it in Phase 2.
 3. Read the reference documents relevant to the work item:
-   - `docs/vitrine/prompt-vitrine-altaryslabs-v2.md` - editorial tone, structure, visual hierarchy
+   - `docs/vitrine/refonte/PROMPT_altaryslabs-com-refonte.md` - **the primary spec** for the rebuild: sitemap, editorial tone, constraints
+   - `docs/vitrine/refonte/BRIEF_claude-design_altaryslabs-com.md` - the brief handed to claude.ai/design
    - `docs/vitrine/altarys-brand-identity-v3.1.html` - CSS variables, fonts, SVG logomarks (reuse as-is, never redraw)
-   - `docs/vitrine/platform-vision-prd.md` - module descriptions, personas, differentiators
+   - `docs/vitrine/platform-vision-prd.md` - product descriptions, personas, differentiators
    - `docs/vitrine/platform-saas-blueprint.md` - architecture content used for technical credibility
-   - `docs/vitrine/refonte/PROMPT_altaryslabs-com-refonte.md` and `docs/vitrine/refonte/BRIEF_claude-design_altaryslabs-com.md` - the multi-page redesign mission and design brief
+   - `docs/vitrine/prompt-vitrine-altaryslabs-v2.md` - the legacy one-page spec, kept for history only. Do not build from it.
 4. Read the current structural state before proposing anything:
    - `src/i18n/routes.ts` - the single source of truth for routing
    - `src/i18n/fr.ts` and `src/i18n/en.ts` - the dictionaries
@@ -31,7 +32,7 @@ This is a **static bilingual marketing site**, not an application. There is no b
    - **BOOTSTRAP** - a new page, a new section type, or a new structural concern (a new route family, a Pages Function, a new layout). Full design pass required.
    - **SPRINT** - an established page or component, one bounded change. Short design note only.
 6. If the mode is ambiguous, ask the founder before proceeding.
-7. **For any work item that creates a new page or a materially new layout**: check whether a mockup exists (a claude.ai/design handoff, a screenshot under `docs/design/`). If none exists, STOP at the plan gate and ASK the founder for it. Never build a new marketing screen from a textual description alone. A text spec fixes copy and behavior, not visual layout; building blind guarantees a rework. Save what the founder provides under `docs/design/` and point the work item at it. Proceed without one only if the founder explicitly says to build from the text.
+7. **For any work item that creates a new page or a materially new layout**: work against the visual reference. The rebuild's reference is the claude.ai/design project `53d1c228-d274-4df3-8022-1a427dd96c15`, folder `design_handoff_altaryslabs_refonte`: 11 FR pages plus a shared Header and Footer, as `.dc.html` prototypes. These are **visual references, not production code**. Recreate them with the repository's own components; never copy the inline-styled HTML. Its `support.js` is only the prototyping runtime and is irrelevant here. If the surface you are about to build has no matching prototype, STOP at the plan gate and ASK the founder for one. Never build a new marketing screen from a textual description alone: a text spec fixes copy and behavior, not visual layout, and building blind guarantees a rework. Proceed without one only if the founder explicitly says to build from the text.
 
 ---
 
@@ -117,8 +118,12 @@ Your implementation contract is the work item you just wrote. If something is mi
 ### Language rules (from CLAUDE.md, restated because they are violated most often)
 
 - **All user-facing text is French on the FR side and English on the EN side.** Headings, paragraphs, buttons, meta descriptions, alt text, form labels, error messages, ARIA labels.
-- **All specs, documentation, code comments and commit messages are English.**
+- **Code comments and commit messages are French on this repository. Specs and documentation are English.**
 - No English fallback ever appears on a French page, and no French string ever leaks into an English page.
+
+### Branching
+
+`refonte-multipages` is the integration branch and receives **no direct commits**. Every work item lives in its own branch or worktree and lands through a PR targeting `refonte-multipages`. That branch is merged into `main` only once the rebuild is complete and validated on the Cloudflare preview URL.
 
 ### Bilingual discipline
 
@@ -126,17 +131,16 @@ Your implementation contract is the work item you just wrote. If something is mi
 
 ### Palette (strict, from CLAUDE.md)
 
-- **Navy plus gold** (`#07111E` / `#0F1724` plus `#C8922A` / `#E5B55A`) - ALTARYS LABS surfaces: hero, services, expertise, contact
-- **Amber** (`#D4810A` / `#F5A623`) - Papillon HR Suite, products context only
-- **Teal** (`#1A8FA0` / `#4DB8CC`) - ALTARYS ENTERPRISE, brief mention in products only
+- **Navy and gold only**: `#07111E` and `#0F1724` backgrounds, `#1A2740` cards, `#C8922A` and `#E5B55A` accents, `#FAF7F2` text.
+- **Amber and teal are gone.** They belonged to a product split that no longer exists. Do not reintroduce them, whatever an older document says.
 - **Violet is forbidden.** Reserved for altarys.ai, a future product.
 - Always use a token from `tokens.css`. Never a hardcoded hex in a component.
 
 ### Typography (Google Fonts, locked)
 
-- **Cormorant Garamond** (300, 400, 600) - marketing headings
+- **Cormorant Garamond** (300, 400, 600, italic 300) - marketing headings
 - **DM Sans** (300, 400, 500, 600) - body text, buttons
-- **Space Mono** (400, 700) - technical data, badges, module status labels
+- **Space Mono** (400, 700) - eyebrows, badges, technical labels
 
 ### Editorial guardrails (NON-NEGOTIABLE)
 
@@ -146,7 +150,20 @@ Your implementation contract is the work item you just wrote. If something is mi
 - **Sovereign AI is presented in the present indicative**, in an affirmative register. Never in the conditional, never as a promise.
 - **PCS is a short teaser** with a single external link to papillon-collection.com.
 - **No invented client reference, result figure or testimonial.** On this market credibility rests on the clarity of the technical discourse, not on fabricated proof.
-- Module statuses are those declared in `CLAUDE.md`. Do not promote a module to "Disponible" on your own.
+- **The About page names one person only**: Emmanuel Blonvia, Fondateur et President. No org chart, no headcount, no bios.
+- **Papillon HR Suite is presented as 12 business-facing module labels**, never as internal technical codes. Do not surface a code such as PAYROL or QRCONTR on a public page, and do not promote a module's availability on your own.
+
+### Product lines (three, LOCKED)
+
+Three SaaS products on a shared Spring Boot 4 / Spring Modulith backend:
+
+- **Papillon Collection Solution (PCS)** - contract renewal and premium follow-up for CIMA-zone insurers and brokers, over SMS, WhatsApp and email. Teaser page only.
+- **Papillon HR Suite** - OHADA-compliant HR and payroll for SMEs of 2 to 350 employees, mobile-first and offline-first.
+- **Papillon Corporate Finance** - SYSCOHADA-compliant budgeting for OHADA SME finance departments, covering expenses and commitments.
+
+**ALTARYS ENTERPRISE no longer exists.** It was replaced by Papillon Corporate Finance. Older documents under `docs/vitrine/` still mention it; `CLAUDE.md` wins.
+
+Differentiators worth highlighting: OHADA-native compliance (CNPS, ITS, SYSCOHADA), offline-first design for 3G connectivity, multi-tenancy with four database isolation profiles.
 
 ### Visual anti-patterns (never produce or accept)
 
@@ -223,12 +240,13 @@ Once the founder approves the Done gate and the PR is open, run this loop withou
 - **`main` still serves the live site through GitHub Pages.** The redesign commit removes `CNAME`. Merging into `main` before the DNS switch breaks the live site immediately. Do not merge into `main` without an explicit founder go-ahead for the switch.
 - The switch, when it comes: merge into `main`, verify the build, remove the GitHub Pages records from the DNS zone (A records to 185.199.108-111.153, or the CNAME to papillonsoftware.github.io), add the custom domains in Pages, then disable GitHub Pages in the repository.
 - Never create a Direct Upload Pages project: it cannot be converted into a Git-connected project.
-- `wrangler.jsonc` must not carry a placeholder binding identifier. A D1 block with an unresolved `database_id` fails the Cloudflare build.
+- Build output is `./dist`. Configuration lives in `wrangler.jsonc`.
+- **The D1 binding in `wrangler.jsonc` is commented out** until the contact-form work lands. Reactivate it after `wrangler d1 create`, and do not forget the comma after `pages_build_output_dir`. A block with an unresolved `database_id` fails the Cloudflare build.
 
 ---
 
 ## Commit message format
 
-Conventional Commits in English: `feat|fix|refactor|docs|chore(scope): description`.
+Conventional Commits, **written in French** per the repository language rule: `feat|fix|refactor|docs|chore(scope): description`.
 
 Never use the em-dash or the middle dot, in any generated text, file content, commit message or comment. Use `-`, `.`, `;` or `|` instead. This is a standing founder rule for this machine.

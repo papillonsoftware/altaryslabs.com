@@ -50,14 +50,17 @@ Before walking the checklist below, run the official `code-review` skill on the 
 - [ ] PCS remains a short teaser with a single external link to papillon-collection.com
 - [ ] Sovereign AI is written in the present indicative and in an affirmative register, never in the conditional
 - [ ] No invented client reference, result figure, testimonial, headcount or award. Every factual claim traces to a document under `docs/vitrine/` or to a founder decision recorded in `docs/DECISIONS.md`.
-- [ ] Module statuses match the table in `CLAUDE.md`. No module silently promoted.
+- [ ] The About page names one person only: Emmanuel Blonvia, Fondateur et President. No org chart, no headcount, no bios.
+- [ ] Papillon HR Suite is presented as 12 business-facing module labels. No internal technical code (PAYROL, QRCONTR and the like) appears on a public page, and no module availability is silently promoted.
+- [ ] Only the three current products appear: Papillon Collection Solution, Papillon HR Suite, Papillon Corporate Finance. **Any mention of ALTARYS ENTERPRISE is a blocker**: that product line no longer exists, it was replaced by Papillon Corporate Finance. Older documents under `docs/vitrine/` still name it; `CLAUDE.md` wins.
 
 ### Brand compliance
 
-- [ ] Palette respected: navy and gold on ALTARYS LABS surfaces, amber for Papillon HR Suite in the products context, teal for ALTARYS ENTERPRISE as a brief products mention only
+- [ ] Palette respected: **navy and gold only**. `#07111E` and `#0F1724` backgrounds, `#1A2740` cards, `#C8922A` and `#E5B55A` accents, `#FAF7F2` text.
+- [ ] **No amber and no teal.** They belonged to a product split that no longer exists. Their reappearance is a blocker, whatever an older document says.
 - [ ] **No violet anywhere.** It is reserved for altarys.ai.
 - [ ] Colors come from `tokens.css`. No hardcoded hex in a component or a page.
-- [ ] Typography respected: Cormorant Garamond for marketing headings, DM Sans for body and buttons, Space Mono for technical data, badges and module status labels
+- [ ] Typography respected: Cormorant Garamond for marketing headings, DM Sans for body and buttons, Space Mono for eyebrows, badges and technical labels
 - [ ] Logomarks reused from `docs/vitrine/altarys-brand-identity-v3.1.html` as-is, never redrawn
 - [ ] Visual hierarchy holds: Services first, Products second. The page speaks to an executive evaluating a contractor, not to a SaaS early adopter.
 - [ ] No stock photography. Visuals are typographic and geometric compositions derived from the diamond.
@@ -66,7 +69,10 @@ Before walking the checklist below, run the official `code-review` skill on the 
 
 For any item that delivers or touches a rendered surface which has a mockup, verify the delivered page against it in-session. Do not defer this to an owed founder eyeball by default. This applies to a newly built page and equally to a copy-only or wiring-only change on an existing page, where it becomes a visual non-regression check.
 
-- [ ] Identify the page and the matching mockup referenced by the work item
+The visual reference for the rebuild is the claude.ai/design project `53d1c228-d274-4df3-8022-1a427dd96c15`, folder `design_handoff_altaryslabs_refonte`: 11 FR pages plus a shared Header and Footer, as `.dc.html` prototypes. They are visual references, not production code.
+
+- [ ] Identify the page and the matching prototype referenced by the work item
+- [ ] Verify the implementation **recreates** the prototype with the repository's own components. Inline-styled HTML copied from a `.dc.html` file is a blocker, and so is anything pulled from its `support.js` prototyping runtime.
 - [ ] Serve the site (`npm run preview`) and drive a browser through the `chrome-devtools-mcp` plugin or the Claude in Chrome extension
 - [ ] Screenshot at 360px, 768px and 1440px and compare with the mockup
 - [ ] Report concrete deltas (spacing, type scale, color token, alignment) as findings, citing the token to use, never a hardcoded value
@@ -75,7 +81,8 @@ For any item that delivers or touches a rendered surface which has a mockup, ver
 ### SEO and metadata
 
 - [ ] Unique, meaningful `<title>` and meta description on every page touched, in the page's language
-- [ ] Open Graph and Twitter Card tags present. OG locale `fr_CI` on the French side, the English equivalent on the English side.
+- [ ] Open Graph and Twitter Card tags present. OG locales: `fr_CI` on the French side, `en` on the English side.
+- [ ] Canonical, hreflang, Open Graph, Twitter Card, JSON-LD Organization and sitemap remain handled centrally in `BaseLayout.astro`. A page that hand-rolls its own is a finding.
 - [ ] The referenced OG image actually exists in `public/`. A referenced-but-missing OG image is a blocker: it silently kills every social and WhatsApp preview.
 - [ ] Canonical URL correct
 - [ ] JSON-LD valid and consistent with the page
@@ -85,7 +92,7 @@ For any item that delivers or touches a rendered surface which has a mockup, ver
 
 ### Accessibility
 
-- [ ] Contrast meets WCAG AA. Gold on navy and amber on white are the two combinations most likely to fail; measure rather than assume.
+- [ ] Contrast meets WCAG AA. Gold `#C8922A` on navy and gold on the `#1A2740` card background are the two pairs most likely to fail; measure rather than assume.
 - [ ] Heading hierarchy is coherent, one `h1` per page, no level skipped
 - [ ] Every image and inline SVG carries meaningful alt text or is correctly marked decorative
 - [ ] Keyboard navigation works, focus is visible, focus order is sensible
@@ -107,7 +114,7 @@ For any item that delivers or touches a rendered surface which has a mockup, ver
 - [ ] Existing components reused rather than duplicated. `PageScaffold`, `BaseLayout`, `Header`, `Footer`, `LangSwitcher` and `Logo` already exist.
 - [ ] No copy duplicated across FR pages that should live in a dictionary
 - [ ] No new dependency without justification recorded in the work item
-- [ ] Code comments are in English; user-facing strings are in the page's language
+- [ ] Code comments and commit messages are in French per the repository language rule; specs and documentation are in English; user-facing strings are in the page's language
 - [ ] Naming and file layout consistent with the existing tree
 - [ ] No dead code, no commented-out block left behind
 
@@ -115,9 +122,10 @@ For any item that delivers or touches a rendered surface which has a mockup, ver
 
 - [ ] Static output preserved. No adapter added without an explicit decision.
 - [ ] Any Pages Function lives under `/functions` and is not bundled by the Astro build
-- [ ] `wrangler.jsonc` carries no placeholder binding identifier. An unresolved `database_id` fails the Cloudflare build and is a blocker.
+- [ ] Build output is still `./dist`
+- [ ] The D1 binding in `wrangler.jsonc` stays commented out until the contact-form work lands. If the PR reactivates it, the `database_id` must be real and the comma after `pages_build_output_dir` must be present: an unresolved identifier or a missing comma fails the Cloudflare build and is a blocker.
 - [ ] No secret, API key or token committed
-- [ ] The PR does not target `main` while `main` still serves the live site through GitHub Pages. The redesign removes `CNAME`; merging early breaks the live site immediately.
+- [ ] The PR targets `refonte-multipages`, the integration branch, and not `main`. `main` still serves the legacy site through GitHub Pages and the rebuild deletes `CNAME`; merging early breaks the live site immediately.
 
 ---
 
@@ -160,7 +168,7 @@ Write to `docs/reviews/<ID>-review.md` on the **feature branch**. If the file al
 ### Committing the review
 
 1. Stage only the review file: `git add docs/reviews/<ID>-review.md`
-2. Commit: `docs(review): add <ID> review round <N>`
+2. Commit, message in French per the repository language rule: `docs(review): ajouter la revue <ID> round <N>`
 3. Push so the author can see it
 4. Post a summary as a PR comment via `gh pr comment`
 

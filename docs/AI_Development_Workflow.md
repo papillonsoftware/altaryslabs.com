@@ -160,10 +160,10 @@ A superseded clause in an existing D-row is **not** a defect. A D-row is a dated
 
 ## Branch and worktree discipline
 
-- **Never work in the main checkout.** Every work item gets its own worktree: `git worktree add -b <type>/<slug> .claude/worktrees/<slug> <base>`
-- **Never commit on `main`.**
-- The current working branch is `refonte-multipages`. Redesign work branches from it and targets it, not `main`.
-- **`main` still serves the live site through GitHub Pages**, and the redesign commit removes `CNAME`. Merging into `main` before the DNS switch breaks the live site immediately. That merge is a founder decision, made once, deliberately.
+- **`refonte-multipages` is the integration branch and receives no direct commits.** Every work item lives in its own branch or worktree and lands through a PR targeting `refonte-multipages`.
+- **Never work in the main checkout.** Every work item gets its own worktree: `git worktree add -b <type>/<slug> .claude/worktrees/<slug> refonte-multipages`
+- **Never commit on `main`, and never target `main` in a PR.**
+- **`main` still serves the legacy one-page site through GitHub Pages**, and the rebuild deletes `CNAME`. `refonte-multipages` is merged into `main` only once the rebuild is complete and validated on the Cloudflare preview URL. That merge is a founder decision, made once, deliberately.
 
 ---
 
@@ -174,11 +174,13 @@ A superseded clause in an existing D-row is **not** a defect. A D-row is a dated
 3. **FR and EN parity is complete.** All 11 pages exist in both languages. `Dictionary` is derived from `fr.ts` so a missing English key fails the build; never weaken that derivation to unblock yourself.
 4. **English is a readaptation, not a translation.** Audiences: anglophone Africa, international investors, donors and NGOs. OHADA and CIMA spelled out, emphasis on offline-first and multi-country rather than on CNPS and ITS.
 5. **`routes.ts` is the single source of truth for routing.** Slugs are translated, so no URL can be derived from the other language. Never hardcode a cross-language URL.
-6. **Palette is strict and violet is forbidden.** Navy and gold for ALTARYS LABS, amber for Papillon HR Suite, teal for ALTARYS ENTERPRISE. Violet belongs to altarys.ai, which is not launched.
+6. **Palette is strict: navy and gold only.** Amber and teal are gone; they belonged to a product split that no longer exists. Violet belongs to altarys.ai, which is not launched. Do not reintroduce any of them, whatever an older document under `docs/vitrine/` says: `CLAUDE.md` wins.
 7. **Never invent.** No client name without approval, no figure, no testimonial, no exact date, no price. Every factual claim traces to a document under `docs/vitrine/` or to a recorded founder decision.
-8. **Services first, Products second.** The visitor is evaluating a contractor, not shopping for SaaS.
-9. **Never merge into `main` before the DNS switch.**
-10. **One work item at a time.** No umbrella branches.
+8. **Products before Services in the navigation**, a deliberate positioning choice. The visitor is an executive evaluating a supplier, not a SaaS early adopter.
+9. **Three products only**: Papillon Collection Solution, Papillon HR Suite, Papillon Corporate Finance. ALTARYS ENTERPRISE no longer exists.
+10. **Never merge into `main` before the DNS cutover.**
+11. **One work item at a time.** No umbrella branches.
+12. **Code comments and commit messages in French**, specs and documentation in English.
 
 ---
 

@@ -1,0 +1,145 @@
+---
+/**
+ * Hero de la page d'accueil.
+ *
+ * Le fond quadrille est purement decoratif : il evoque la trame technique sans
+ * recourir a une photo de banque d'images, conformement au parti pris visuel.
+ * Il est en aria-hidden et disparait quand l'utilisateur reduit les contrastes.
+ */
+interface Cta {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  /** Bandeau d'annonce cliquable au-dessus du titre. */
+  badge?: { label: string; href: string };
+  title: string;
+  /** Seconde ligne du titre, en italique doree. */
+  emphasis?: string;
+  subtitle: string;
+  primary: Cta;
+  secondary?: Cta;
+}
+
+const { badge, title, emphasis, subtitle, primary, secondary } = Astro.props;
+---
+
+<section class="section section--hero hero">
+  <div class="hero-grid" aria-hidden="true"></div>
+
+  <div class="container hero-inner">
+    {
+      badge && (
+        <a class="hero-badge" href={badge.href}>
+          <span class="hero-badge-dot" aria-hidden="true" />
+          <span class="hero-badge-text">{badge.label}</span>
+        </a>
+      )
+    }
+
+    <h1 class="page-title hero-title">
+      {title}
+      {emphasis && <><br /><em>{emphasis}</em></>}
+    </h1>
+
+    <p class="hero-subtitle">{subtitle}</p>
+
+    <div class="hero-actions">
+      <a class="btn-primary" href={primary.href}>{primary.label}</a>
+      {secondary && <a class="btn-secondary" href={secondary.href}>{secondary.label}</a>}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  /* Trame de 80px, a peine visible : elle structure le vide sans le remplir. */
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 79px,
+        var(--gold-03) 79px,
+        var(--gold-03) 80px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 79px,
+        var(--gold-03) 79px,
+        var(--gold-03) 80px
+      );
+  }
+
+  @media (prefers-contrast: more) {
+    .hero-grid {
+      display: none;
+    }
+  }
+
+  .hero-inner {
+    position: relative;
+    max-width: 920px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--gold-10);
+    border: 1px solid var(--gold-25);
+    padding: 8px 18px;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    margin-bottom: 36px;
+    transition: background var(--ease), border-color var(--ease);
+  }
+
+  .hero-badge:hover {
+    background: var(--gold-15);
+    border-color: var(--gold-40);
+  }
+
+  .hero-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .hero-badge-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--gold-light);
+  }
+
+  .hero-title {
+    margin-bottom: 28px;
+  }
+
+  .hero-subtitle {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 660px;
+    margin: 0 auto 44px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>

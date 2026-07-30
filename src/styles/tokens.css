@@ -1,31 +1,35 @@
 /* ==========================================================================
    ALTARYS LABS - Design tokens
-   Source de verite : docs/vitrine/altarys-brand-identity-v3.1.html
+   Sources de verite : docs/vitrine/altarys-brand-identity-v3.1.html pour la
+   charte, et le handoff claude.ai/design pour les valeurs de mise en page.
    Ne pas redefinir ces valeurs ailleurs dans le projet.
    ========================================================================== */
 
 :root {
-  /* --- Palette ALTARYS LABS (navy + gold) ------------------------------- */
-  --navy: #0f1724;
-  --navy-deep: #07111e;
-  --navy-mid: #1a2740;
+  /* --- Fonds ------------------------------------------------------------ */
+  --navy-deep: #07111e; /* fond principal du site */
+  --navy: #0f1724; /* fond de section secondaire */
+  --navy-alt: #0b1626; /* fond des sections alternees */
+  --navy-mid: #1a2740; /* cartes produits */
+  --navy-card: #101d30; /* cartes services, plus discretes */
   --navy-soft: #253550;
+  --navy-footer: #040c16; /* pied de page, un cran sous le fond principal */
+
+  /* --- Accent ----------------------------------------------------------- */
   --gold: #c8922a;
   --gold-light: #e5b55a;
   --gold-pale: #f5e6c8;
+
+  /* --- Textes ----------------------------------------------------------- */
   --ivory: #faf7f2;
-  --slate: #6b7a96;
+  --muted: #9aa7be; /* corps de texte sur fond sombre */
+  --muted-soft: #8b98af; /* texte secondaire dans les cartes */
+  --slate: #6b7a96; /* mentions les plus discretes */
 
-  /* --- Palette Papillon (produits) ------------------------------------- */
-  --pap-amber: #d4810a;
-  --pap-warm: #f5a623;
-
-  /* --- Palette ALTARYS ENTERPRISE -------------------------------------- */
-  --ent-teal: #1a8fa0;
-  --ent-teal-l: #4db8cc;
-
-  /* Le violet de la charte (--ai-violet #7C5CBF) est volontairement absent :
-     il est reserve a altarys.ai et interdit sur ce site. */
+  /* Le site est integralement navy et or. Les anciennes teintes ambre
+     (Papillon) et teal (ALTARYS ENTERPRISE) ont ete retirees : la gamme qui
+     les justifiait n'existe plus. Le violet de la charte (--ai-violet
+     #7C5CBF) reste reserve a altarys.ai et interdit ici. */
 
   /* --- Etats ------------------------------------------------------------ */
   --ok: #2e7d52;
@@ -34,38 +38,64 @@
   /* --- Voiles d'ivoire (opacites recurrentes du design) ------------------ */
   --ink-100: rgba(250, 247, 242, 0.9);
   --ink-80: rgba(250, 247, 242, 0.75);
+  --ink-72: rgba(250, 247, 242, 0.72); /* liens de navigation au repos */
   --ink-60: rgba(250, 247, 242, 0.55);
   --ink-50: rgba(250, 247, 242, 0.5);
   --ink-40: rgba(250, 247, 242, 0.4);
   --ink-25: rgba(250, 247, 242, 0.25);
   --ink-15: rgba(250, 247, 242, 0.15);
+  --ink-08: rgba(255, 255, 255, 0.08); /* bordures de panneaux */
+  --ink-06: rgba(255, 255, 255, 0.06); /* bordures de cartes services */
+  --ink-05: rgba(255, 255, 255, 0.05); /* filet du bandeau legal */
 
   /* --- Voiles d'or (bordures, fonds subtils) ---------------------------- */
+  --gold-03: rgba(200, 146, 42, 0.03); /* trame decorative du hero */
   --gold-06: rgba(200, 146, 42, 0.06);
   --gold-08: rgba(200, 146, 42, 0.08);
+  --gold-10: rgba(200, 146, 42, 0.1);
   --gold-12: rgba(200, 146, 42, 0.12);
+  --gold-15: rgba(200, 146, 42, 0.15); /* bordure des cartes produits */
   --gold-20: rgba(200, 146, 42, 0.2);
+  --gold-25: rgba(200, 146, 42, 0.25);
   --gold-30: rgba(200, 146, 42, 0.3);
+  --gold-40: rgba(200, 146, 42, 0.4); /* bordure du bouton secondaire */
+  --gold-65: rgba(200, 146, 42, 0.65); /* eyebrows de section */
 
   /* --- Typographie ------------------------------------------------------ */
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
   --font-mono: 'Space Mono', ui-monospace, monospace;
 
-  /* --- Rythme et formes ------------------------------------------------- */
-  --container: 1140px;
-  --gutter: 24px;
-  --section-y: 100px;
-  --radius: 4px;
-  --radius-sm: 3px;
-  --nav-h: 64px;
+  /* --- Rythme ------------------------------------------------------------ */
+  --container: 1400px;
+  --gutter: 64px;
+  --section-y: 96px;
+  --hero-y: 120px;
+  --nav-h: 72px;
+
+  /* --- Formes ----------------------------------------------------------- */
+  --radius-card: 8px;
+  --radius: 6px; /* panneaux, menus deroulants */
+  --radius-btn: 5px;
+  --radius-sm: 4px;
+  --radius-pill: 100px;
 
   /* --- Transitions ------------------------------------------------------ */
   --ease: 0.3s ease;
 }
 
-@media (max-width: 768px) {
+/* La gouttiere de 64px du design est une valeur desktop. Elle etoufferait le
+   contenu sur un telephone, ou l'essentiel de notre audience nous lit. */
+@media (max-width: 900px) {
   :root {
-    --section-y: 68px;
+    --gutter: 32px;
+    --section-y: 72px;
+    --hero-y: 88px;
+  }
+}
+
+@media (max-width: 520px) {
+  :root {
+    --gutter: 20px;
   }
 }
