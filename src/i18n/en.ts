@@ -48,7 +48,7 @@ export const en: Dictionary = {
     home: 'Home',
     products: 'Products',
     productsHr: 'Papillon HR Suite',
-    productsFinance: 'Papillon Corporate Finance',
+    productsFinance: 'Papillon Corporate Finance Suite',
     productsPcs: 'Papillon Collection Solution',
     services: 'Services',
     servicesConsulting: 'IT, HR and Finance Consulting',
@@ -139,7 +139,7 @@ export const en: Dictionary = {
         'A SaaS platform for human resources and payroll, built for small and mid-sized companies across Africa. Mobile-first and offline-first, so it keeps working where connectivity does not.',
     },
     productsFinance: {
-      title: 'Papillon Corporate Finance | Budgeting and expense management',
+      title: 'Papillon Corporate Finance Suite | Budgeting and expense management',
       description:
         'A SaaS platform for budgeting, commitment tracking and expense management, aligned with the SYSCOHADA accounting standard used across 17 African countries.',
     },

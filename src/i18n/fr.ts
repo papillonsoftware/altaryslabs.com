@@ -39,7 +39,7 @@ export const fr = {
     home: 'Accueil',
     products: 'Produits',
     productsHr: 'Papillon HR Suite',
-    productsFinance: 'Papillon Corporate Finance',
+    productsFinance: 'Papillon Corporate Finance Suite',
     productsPcs: 'Papillon Collection Solution',
     services: 'Services',
     servicesConsulting: 'Conseil IT, RH et Finance',
@@ -137,7 +137,7 @@ export const fr = {
         "Solution SaaS de gestion des ressources humaines et de paie pour les PME de la zone OHADA. Pensée mobile-first et offline-first pour les contextes à connectivité limitée.",
     },
     productsFinance: {
-      title: 'Papillon Corporate Finance | Budgétisation conforme SYSCOHADA',
+      title: 'Papillon Corporate Finance Suite | Budgétisation conforme SYSCOHADA',
       description:
         "Solution SaaS de gestion budgétaire, des engagements et des dépenses, conforme SYSCOHADA, pour les directions financières des PME de la zone OHADA.",
     },
