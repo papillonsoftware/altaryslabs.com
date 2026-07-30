@@ -12,14 +12,32 @@ interface Props {
   text: string;
   href: string;
   linkLabel: string;
+  /** Variante aeree du hub, ou la carte est le contenu principal. */
+  large?: boolean;
+  /**
+   * Niveau du titre. 3 sur l'accueil, ou un h2 porte deja le titre de section ;
+   * 2 sur le hub, ou le h1 est le titre de page.
+   */
+  headingLevel?: 2 | 3;
 }
 
-const { name, badge, badgeSolid = false, text, href, linkLabel } = Astro.props;
+const {
+  name,
+  badge,
+  badgeSolid = false,
+  text,
+  href,
+  linkLabel,
+  large = false,
+  headingLevel = 3,
+} = Astro.props;
+
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
 ---
 
-<article class="card">
+<article class:list={['card', { 'card--large': large }]}>
   <span class:list={['badge', badgeSolid ? 'badge--solid' : 'badge--soft']}>{badge}</span>
-  <h3 class="card-title">{name}</h3>
+  <Heading class="card-title">{name}</Heading>
   <p class="card-text">{text}</p>
   <a class="link-arrow" href={href}>
     {linkLabel}
@@ -39,5 +57,9 @@ const { name, badge, badgeSolid = false, text, href, linkLabel } = Astro.props;
 
   .badge {
     margin-bottom: 20px;
+  }
+
+  .card--large .badge {
+    margin-bottom: 22px;
   }
 </style>

@@ -1,0 +1,69 @@
+---
+/**
+ * Corps du hub Services, partage par les deux langues. Meme structure que le
+ * hub Produits, memes textes de carte que l'accueil.
+ */
+import PageHeader from './PageHeader.astro';
+import ServiceCard from './ServiceCard.astro';
+import CtaBanner from './CtaBanner.astro';
+import type { Locale } from '../i18n/config';
+import { localizedPath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const href = (key: Parameters<typeof localizedPath>[0]) => localizedPath(key, locale);
+---
+
+<PageHeader
+  label={t.servicesPage.label}
+  title={t.servicesPage.title}
+  intro={t.servicesPage.intro}
+/>
+
+<section class="section hub-grid-section">
+  <div class="container">
+    <div class="grid-3 fade-in">
+      <ServiceCard
+        name={t.pageName.servicesConsulting}
+        text={t.cards.services.servicesConsulting.text}
+        href={href('servicesConsulting')}
+        linkLabel={t.common.learnMore}
+        large
+        headingLevel={2}
+      />
+      <ServiceCard
+        name={t.pageName.servicesDev}
+        text={t.cards.services.servicesDev.text}
+        href={href('servicesDev')}
+        linkLabel={t.common.learnMore}
+        large
+        headingLevel={2}
+      />
+      <ServiceCard
+        name={t.pageName.servicesAi}
+        text={t.cards.services.servicesAi.text}
+        href={href('servicesAi')}
+        linkLabel={t.common.learnMore}
+        large
+        headingLevel={2}
+      />
+    </div>
+  </div>
+</section>
+
+<CtaBanner
+  title={t.servicesPage.ctaTitle}
+  label={t.servicesPage.ctaLabel}
+  href={href('contact')}
+/>
+
+<style>
+  .hub-grid-section {
+    padding-top: 0;
+  }
+</style>

@@ -269,6 +269,12 @@ h3 {
   border-color: var(--ink-06);
 }
 
+/* Variante des pages hub, ou la carte est le contenu principal et non un
+   resume renvoyant ailleurs : plus d'air, texte un cran plus lisible. */
+.card--large {
+  padding: 40px 32px;
+}
+
 .card-title {
   font-family: var(--font-display);
   font-size: 24px;
@@ -281,12 +287,27 @@ h3 {
   font-size: 22px;
 }
 
+.card--large .card-title {
+  font-size: 26px;
+  margin-bottom: 14px;
+}
+
+.card--prominent.card--large .card-title {
+  font-size: 24px;
+}
+
 .card-text {
   font-size: 13.5px;
   color: var(--muted-soft);
   line-height: 1.7;
   margin-bottom: 24px;
   flex: 1;
+}
+
+.card--large .card-text {
+  font-size: 14px;
+  line-height: 1.75;
+  margin-bottom: 26px;
 }
 
 /* --- Badges --------------------------------------------------------------- */
@@ -319,6 +340,10 @@ h3 {
   font-size: 13.5px;
   font-weight: 500;
   transition: color var(--ease);
+}
+
+.card--large .link-arrow {
+  font-size: 14px;
 }
 
 .link-arrow::after {

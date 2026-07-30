@@ -1,0 +1,51 @@
+---
+/**
+ * En-tete de page interieure : sur-titre, titre principal, chapo.
+ *
+ * Le design ne prevoit pas de fil d'Ariane sur ces pages. La navigation par le
+ * header suffit sur un site de onze pages, et le fil d'Ariane alourdissait
+ * l'entree en matiere.
+ */
+interface Props {
+  label: string;
+  title: string;
+  intro?: string;
+}
+
+const { label, title, intro } = Astro.props;
+---
+
+<section class="section page-header">
+  <div class="container page-header-inner">
+    <p class="section-label">{label}</p>
+    <h1 class="page-title">{title}</h1>
+    {intro && <p class="page-intro">{intro}</p>}
+  </div>
+</section>
+
+<style>
+  /* Moins d'air en bas qu'en haut : la grille qui suit enchaine directement. */
+  .page-header {
+    padding-bottom: 64px;
+  }
+
+  .page-header-inner {
+    max-width: 900px;
+    text-align: center;
+  }
+
+  .page-header-inner .section-label {
+    margin-bottom: 16px;
+  }
+
+  .page-title {
+    font-size: clamp(32px, 4vw, 48px);
+    margin-bottom: 22px;
+  }
+
+  .page-intro {
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+</style>
