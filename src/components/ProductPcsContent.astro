@@ -1,0 +1,41 @@
+---
+/**
+ * Corps de la fiche Papillon Collection Solution, partage par les deux langues.
+ *
+ * Page teaser volontairement courte, avec une seule sortie : le site dedie
+ * papillon-collection.com. Pas de bandeau de contact en bas, qui entrerait en
+ * concurrence avec ce lien unique.
+ */
+import PageHeader from './PageHeader.astro';
+import type { Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/utils';
+import { PCS_EXTERNAL_URL } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<PageHeader
+  label={t.product.label}
+  badge={t.availability.pcs}
+  title={t.pageName.productsPcs}
+  intro={t.productPcs.intro}
+>
+  <div class="header-actions" slot="actions">
+    <a class="btn-primary external-link" href={PCS_EXTERNAL_URL} target="_blank" rel="noopener">
+      {t.productPcs.externalCta}
+      <span class="visually-hidden">({t.common.newTab})</span>
+    </a>
+  </div>
+</PageHeader>
+
+<style>
+  /* Page courte : sans ce rattrapage, le pied de page remonterait trop haut. */
+  .header-actions {
+    margin-bottom: 40px;
+  }
+</style>

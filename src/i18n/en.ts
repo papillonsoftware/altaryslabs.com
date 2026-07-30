@@ -140,6 +140,95 @@ export const en: Dictionary = {
     ctaLabel: 'Talk to our team',
   },
 
+  product: {
+    label: 'Product',
+    ctaDemo: 'Request a demo',
+    ctaSales: 'Talk to our team',
+  },
+
+  productHr: {
+    intro:
+      'A SaaS platform for human resources and payroll, built for companies of 2 to 350 employees. Offline-first and mobile-first, so it keeps working where connectivity does not.',
+
+    features: [
+      {
+        title: 'Configurable compliance',
+        text: 'Payroll and social contribution rules set per country, starting with Ivorian regulations.',
+      },
+      {
+        title: 'Offline-first',
+        text: 'Works without a connection and synchronises when the network returns.',
+      },
+      {
+        title: 'Mobile-first',
+        text: 'Optimised for entry-level smartphones.',
+      },
+      {
+        title: '2 to 350 employees',
+        text: 'Designed around how small and mid-sized companies actually operate.',
+      },
+    ],
+
+    deploymentLabel: 'Rollout',
+    deploymentTitle: 'Progressive coverage across the OHADA zone',
+    deploymentText:
+      "The rollout starts in Côte d'Ivoire, then extends to Benin, Cameroon, Senegal and the Democratic Republic of the Congo, with the ambition of covering all 17 countries of the OHADA business-law zone by 2028.",
+    waves: [
+      {
+        label: 'Wave 1, 2026',
+        text: 'Attendance tracking, absence management, budget management, expense and commitment tracking.',
+      },
+      {
+        label: 'Wave 2, late 2026 into 2027',
+        text: 'Full payroll.',
+      },
+      {
+        label: 'Wave 3, 2027',
+        text: 'Appraisals and performance, recruitment.',
+      },
+    ],
+
+    modulesLabel: 'Platform modules',
+    modules: [
+      'Payroll and social contributions',
+      'QR attendance',
+      'Leave and absences',
+      'HR core',
+      'Employee management',
+      'Time and activities',
+      'Health and safety',
+      'Performance',
+      'Skills',
+      'Training',
+      'Recruitment',
+      'Advanced documents',
+    ],
+
+    ctaTitle: 'See Papillon HR Suite in action',
+  },
+
+  productFinance: {
+    intro:
+      'A SaaS platform for budgeting aligned with the SYSCOHADA accounting standard, built for the finance departments of small and mid-sized companies. It runs on the same technical platform as Papillon HR Suite, so company data stays consistent across both.',
+    cards: [
+      {
+        title: 'Expense management',
+        text: 'Tracking and approval of expense claims and day-to-day spending, with a full audit trail for your finance team.',
+      },
+      {
+        title: 'Budgets and commitments',
+        text: 'Budget control and commitment tracking, aligned with the SYSCOHADA accounting standard.',
+      },
+    ],
+    ctaTitle: 'See Papillon Corporate Finance Suite in action',
+  },
+
+  productPcs: {
+    intro:
+      'Papillon Collection Solution lets insurers and insurance brokers automate policy renewal and premium follow-up over SMS, WhatsApp and email, through to customer authentication and payment.',
+    externalCta: 'Discover PCS on papillon-collection.com',
+  },
+
   meta: {
     home: {
       title: 'ALTARYS LABS | Enterprise software for African markets',
