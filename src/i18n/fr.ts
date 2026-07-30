@@ -171,7 +171,7 @@ export const fr = {
     deploymentLabel: 'Déploiement',
     deploymentTitle: 'Une couverture progressive de la zone OHADA',
     deploymentText:
-      "Le déploiement démarre en Côte d'Ivoire, puis s'étend au Bénin, au Cameroun, au Sénégal et en RDC, avec l'ambition de couvrir les 17 pays de la zone OHADA à horizon 2028.",
+      "Le déploiement démarre en Côte d'Ivoire, puis s'étend au Bénin, au Cameroun, au Sénégal et en RDC, avec l'ambition d'étendre progressivement la couverture à l'ensemble de la zone OHADA.",
     waves: [
       {
         label: 'Vague 1, 2026',

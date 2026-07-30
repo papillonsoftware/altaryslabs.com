@@ -172,7 +172,7 @@ export const en: Dictionary = {
     deploymentLabel: 'Rollout',
     deploymentTitle: 'Progressive coverage across the OHADA zone',
     deploymentText:
-      "The rollout starts in Côte d'Ivoire, then extends to Benin, Cameroon, Senegal and the Democratic Republic of the Congo, with the ambition of covering all 17 countries of the OHADA business-law zone by 2028.",
+      "The rollout starts in Côte d'Ivoire, then extends to Benin, Cameroon, Senegal and the Democratic Republic of the Congo, with the ambition of progressively covering the whole OHADA business-law zone.",
     waves: [
       {
         label: 'Wave 1, 2026',
