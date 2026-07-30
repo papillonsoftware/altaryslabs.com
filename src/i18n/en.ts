@@ -308,7 +308,7 @@ export const en: Dictionary = {
     columnServices: 'Services',
     columnCompany: 'Company',
     legalEntity: "ALTARYS LABS, a company incorporated in Côte d'Ivoire",
-    rccm: 'Company registration CI-ABI-03-2026-B17-00070',
+    rccm: 'Company registration CI-ABJ-03-2026-B17-00070',
     location: "Abidjan, Côte d'Ivoire",
     rights: 'All rights reserved.',
   },

@@ -307,7 +307,7 @@ export const fr = {
     columnServices: 'Services',
     columnCompany: 'Entreprise',
     legalEntity: 'ALTARYS LABS, SASU de droit ivoirien',
-    rccm: 'RCCM CI-ABI-03-2026-B17-00070',
+    rccm: 'RCCM CI-ABJ-03-2026-B17-00070',
     location: "Abidjan, Côte d'Ivoire",
     rights: 'Tous droits réservés.',
   },
