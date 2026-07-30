@@ -1,0 +1,79 @@
+---
+/**
+ * Bandeau de caracteristiques d'un produit : quatre encarts courts, titre et
+ * une phrase. Ce sont des arguments, pas des titres de section : ils restent
+ * en paragraphes et ne prennent pas de niveau dans la hierarchie des titres.
+ */
+interface Feature {
+  title: string;
+  text: string;
+}
+
+interface Props {
+  features: readonly Feature[];
+}
+
+const { features } = Astro.props;
+---
+
+<section class="section feature-section">
+  <div class="container">
+    <ul class="feature-grid fade-in">
+      {
+        features.map((feature) => (
+          <li class="feature">
+            <p class="feature-title">{feature.title}</p>
+            <p class="feature-text">{feature.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* L'en-tete de page a deja pose l'espace haut. */
+  .feature-section {
+    padding-top: 0;
+    padding-bottom: 90px;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    list-style: none;
+  }
+
+  .feature {
+    background: var(--navy-card);
+    border: 1px solid var(--ink-06);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+
+  .feature-title {
+    font-weight: 500;
+    font-size: 14.5px;
+    color: var(--ivory);
+    margin-bottom: 8px;
+  }
+
+  .feature-text {
+    font-size: 13px;
+    color: var(--muted-soft);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 1000px) {
+    .feature-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .feature-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

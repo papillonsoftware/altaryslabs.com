@@ -1,0 +1,92 @@
+---
+/**
+ * Corps de la fiche Papillon Corporate Finance Suite, partage par les deux
+ * langues. Page volontairement plus sobre que celle de HR Suite : le produit
+ * couvre deux domaines, la page en montre deux.
+ */
+import PageHeader from './PageHeader.astro';
+import CtaBanner from './CtaBanner.astro';
+import type { Locale } from '../i18n/config';
+import { localizedPath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const contact = localizedPath('contact', locale);
+---
+
+<PageHeader
+  label={t.product.label}
+  title={t.pageName.productsFinance}
+  intro={t.productFinance.intro}
+  align="left"
+>
+  <div class="header-actions" slot="actions">
+    <a class="btn-primary" href={contact}>{t.product.ctaDemo}</a>
+    <a class="btn-secondary" href={contact}>{t.product.ctaSales}</a>
+  </div>
+</PageHeader>
+
+<section class="section domains-section">
+  <div class="container">
+    <ul class="domains fade-in">
+      {
+        t.productFinance.cards.map((card) => (
+          <li class="card">
+            <h2 class="card-title">{card.title}</h2>
+            <p class="card-text is-last">{card.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<CtaBanner
+  title={t.productFinance.ctaTitle}
+  label={t.product.ctaDemo}
+  href={contact}
+  secondary={{ label: t.product.ctaSales, href: contact }}
+/>
+
+<style>
+  .domains-section {
+    padding-top: 0;
+    padding-bottom: 90px;
+  }
+
+  .domains {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    list-style: none;
+  }
+
+  .card {
+    padding: 36px;
+  }
+
+  .card-title {
+    font-size: 22px;
+    margin-bottom: 14px;
+  }
+
+  /* Pas de lien apres le texte sur cette page : la marge basse ne sert a rien. */
+  .card-text.is-last {
+    font-size: 14px;
+    line-height: 1.75;
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 780px) {
+    .domains {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
