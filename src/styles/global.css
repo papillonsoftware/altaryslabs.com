@@ -2,6 +2,7 @@
    ALTARYS LABS - Styles globaux
    Primitives partagees uniquement. Les styles propres a un composant vivent
    dans le bloc <style> scope du composant .astro correspondant.
+   Valeurs alignees sur le handoff claude.ai/design.
    ========================================================================== */
 
 @import './tokens.css';
@@ -100,15 +101,49 @@ a {
 }
 
 .section {
-  padding: var(--section-y) var(--gutter);
+  padding: var(--section-y) 0;
+}
+
+.section--hero {
+  padding: var(--hero-y) 0 var(--section-y);
+}
+
+.section--deep {
+  background: var(--navy-deep);
 }
 
 .section--navy {
   background: var(--navy);
 }
 
-.section--deep {
-  background: var(--navy-deep);
+/* Fond des sections alternees, un cran plus clair que le fond principal. */
+.section--alt {
+  background: var(--navy-alt);
+}
+
+/* Bandeau d'appel a l'action de fin de page. */
+.section--cta {
+  background: linear-gradient(135deg, var(--navy-mid), var(--navy));
+  padding: 80px 0;
+  text-align: center;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1000px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* --- Typographie ---------------------------------------------------------- */
@@ -130,51 +165,62 @@ h3 {
   font-family: var(--font-mono);
 }
 
+/* Sur-titre technique en Space Mono, tres espace, au-dessus des titres. */
 .section-label {
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.2em;
+  font-size: 10px;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-65);
   margin-bottom: 12px;
 }
 
 .section-title {
   font-family: var(--font-display);
-  font-size: clamp(28px, 5vw, 42px);
-  font-weight: 400;
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 300;
   line-height: 1.2;
-  margin-bottom: 20px;
+  color: var(--gold-light);
+  margin-bottom: 48px;
 }
 
-.section-subtitle {
-  font-size: 15px;
+/* Titre de page, une echelle au-dessus des titres de section. */
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 5vw, 64px);
   font-weight: 300;
-  color: var(--ink-60);
-  max-width: 600px;
-  line-height: 1.75;
+  line-height: 1.15;
+  color: var(--ivory);
+  margin-bottom: 28px;
 }
 
+/* Emphase doree en italique, signature typographique de la marque. */
+.page-title em,
+.section-title em {
+  color: var(--gold-light);
+  font-style: italic;
+}
+
+.section-subtitle,
 .lede {
-  font-size: 15px;
-  font-weight: 300;
-  color: var(--ink-50);
-  line-height: 1.85;
-  max-width: 680px;
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 660px;
 }
 
 /* --- Boutons -------------------------------------------------------------- */
 .btn-primary,
-.btn-secondary,
-.btn-amber {
+.btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   font-family: var(--font-body);
-  font-size: 14px;
-  padding: 14px 32px;
-  border-radius: var(--radius-sm);
+  font-size: 15px;
+  padding: 15px 28px;
+  border-radius: var(--radius-btn);
   text-decoration: none;
   min-height: 48px;
   line-height: 1.4;
@@ -184,7 +230,7 @@ h3 {
 }
 
 .btn-primary {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--navy-deep);
   background: var(--gold);
 }
@@ -195,10 +241,10 @@ h3 {
 }
 
 .btn-secondary {
-  font-weight: 400;
-  color: var(--gold);
+  font-weight: 500;
+  color: var(--gold-light);
   background: transparent;
-  border-color: var(--gold-30);
+  border-color: var(--gold-40);
 }
 
 .btn-secondary:hover {
@@ -206,41 +252,95 @@ h3 {
   background: var(--gold-06);
 }
 
-.btn-amber {
-  font-weight: 500;
-  color: var(--navy-deep);
-  background: var(--pap-amber);
+/* --- Cartes --------------------------------------------------------------- */
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--navy-mid);
+  border: 1px solid var(--gold-15);
+  border-radius: var(--radius-card);
+  padding: 36px 32px;
 }
 
-.btn-amber:hover {
-  background: var(--pap-warm);
-  transform: translateY(-1px);
+/* Variante des cartes de service, volontairement plus effacee que les cartes
+   produits : les produits doivent primer dans la hierarchie visuelle. */
+.card--service {
+  background: var(--navy-card);
+  border-color: var(--ink-06);
 }
 
-/* --- Badges de statut ----------------------------------------------------- */
+.card-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--ivory);
+  margin-bottom: 12px;
+}
+
+.card--service .card-title {
+  font-size: 22px;
+}
+
+.card-text {
+  font-size: 13.5px;
+  color: var(--muted-soft);
+  line-height: 1.7;
+  margin-bottom: 24px;
+  flex: 1;
+}
+
+/* --- Badges --------------------------------------------------------------- */
 .badge {
   display: inline-block;
+  align-self: flex-start;
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.05em;
-  padding: 3px 8px;
-  border-radius: 2px;
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
   white-space: nowrap;
 }
 
-.badge-available {
-  background: rgba(46, 125, 82, 0.15);
-  color: var(--ok);
+/* Badge plein, reserve a l'information la plus saillante d'une carte. */
+.badge--solid {
+  background: var(--gold-light);
+  color: var(--navy-deep);
 }
 
-.badge-soon {
-  background: rgba(245, 166, 35, 0.12);
-  color: var(--pap-warm);
+.badge--soft {
+  background: var(--gold-12);
+  color: var(--gold);
 }
 
-.badge-dev {
-  background: rgba(107, 122, 150, 0.12);
-  color: var(--slate);
+/* --- Liens ---------------------------------------------------------------- */
+.link-arrow {
+  color: var(--gold-light);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: color var(--ease);
+}
+
+.link-arrow::after {
+  content: ' \2192';
+  display: inline-block;
+  transition: transform var(--ease);
+}
+
+.link-arrow:hover::after {
+  transform: translateX(3px);
+}
+
+.external-link::after {
+  content: '';
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  margin-left: 0.15em;
+  background: currentColor;
+  /* Fleche sortante, masquee pour heriter de la couleur du lien */
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14V3zM5 5h4v2H7v10h10v-2h2v4H5V5z'/%3E%3C/svg%3E")
+    no-repeat center / contain;
 }
 
 /* --- Puce losange des listes ---------------------------------------------- */
@@ -251,7 +351,7 @@ h3 {
 .list-diamond li {
   font-size: 13.5px;
   font-weight: 300;
-  color: var(--ink-60);
+  color: var(--muted-soft);
   padding: 6px 0 6px 18px;
   position: relative;
   line-height: 1.6;
@@ -266,19 +366,6 @@ h3 {
   height: 6px;
   border: 1px solid var(--gold);
   transform: rotate(45deg);
-}
-
-/* --- Lien externe --------------------------------------------------------- */
-.external-link::after {
-  content: '';
-  display: inline-block;
-  width: 0.7em;
-  height: 0.7em;
-  margin-left: 0.15em;
-  background: currentColor;
-  /* Fleche sortante, masquee pour heriter de la couleur du lien */
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14V3zM5 5h4v2H7v10h10v-2h2v4H5V5z'/%3E%3C/svg%3E")
-    no-repeat center / contain;
 }
 
 /* --- Apparition au defilement --------------------------------------------- */
