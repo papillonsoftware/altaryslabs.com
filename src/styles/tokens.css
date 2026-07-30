@@ -1,0 +1,71 @@
+/* ==========================================================================
+   ALTARYS LABS - Design tokens
+   Source de verite : docs/vitrine/altarys-brand-identity-v3.1.html
+   Ne pas redefinir ces valeurs ailleurs dans le projet.
+   ========================================================================== */
+
+:root {
+  /* --- Palette ALTARYS LABS (navy + gold) ------------------------------- */
+  --navy: #0f1724;
+  --navy-deep: #07111e;
+  --navy-mid: #1a2740;
+  --navy-soft: #253550;
+  --gold: #c8922a;
+  --gold-light: #e5b55a;
+  --gold-pale: #f5e6c8;
+  --ivory: #faf7f2;
+  --slate: #6b7a96;
+
+  /* --- Palette Papillon (produits) ------------------------------------- */
+  --pap-amber: #d4810a;
+  --pap-warm: #f5a623;
+
+  /* --- Palette ALTARYS ENTERPRISE -------------------------------------- */
+  --ent-teal: #1a8fa0;
+  --ent-teal-l: #4db8cc;
+
+  /* Le violet de la charte (--ai-violet #7C5CBF) est volontairement absent :
+     il est reserve a altarys.ai et interdit sur ce site. */
+
+  /* --- Etats ------------------------------------------------------------ */
+  --ok: #2e7d52;
+  --err: #b93838;
+
+  /* --- Voiles d'ivoire (opacites recurrentes du design) ------------------ */
+  --ink-100: rgba(250, 247, 242, 0.9);
+  --ink-80: rgba(250, 247, 242, 0.75);
+  --ink-60: rgba(250, 247, 242, 0.55);
+  --ink-50: rgba(250, 247, 242, 0.5);
+  --ink-40: rgba(250, 247, 242, 0.4);
+  --ink-25: rgba(250, 247, 242, 0.25);
+  --ink-15: rgba(250, 247, 242, 0.15);
+
+  /* --- Voiles d'or (bordures, fonds subtils) ---------------------------- */
+  --gold-06: rgba(200, 146, 42, 0.06);
+  --gold-08: rgba(200, 146, 42, 0.08);
+  --gold-12: rgba(200, 146, 42, 0.12);
+  --gold-20: rgba(200, 146, 42, 0.2);
+  --gold-30: rgba(200, 146, 42, 0.3);
+
+  /* --- Typographie ------------------------------------------------------ */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+
+  /* --- Rythme et formes ------------------------------------------------- */
+  --container: 1140px;
+  --gutter: 24px;
+  --section-y: 100px;
+  --radius: 4px;
+  --radius-sm: 3px;
+  --nav-h: 64px;
+
+  /* --- Transitions ------------------------------------------------------ */
+  --ease: 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-y: 68px;
+  }
+}

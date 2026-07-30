@@ -1,0 +1,150 @@
+---
+import Logo from './Logo.astro';
+import type { Locale } from '../i18n/config';
+import { localizedPath, useTranslations } from '../i18n/utils';
+import { PRODUCT_KEYS, SERVICE_KEYS, type PageKey } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+// Genere au build, pas au runtime : le site est entierement statique.
+const year = new Date().getFullYear();
+
+const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
+  { title: t.footer.columnProducts, keys: PRODUCT_KEYS },
+  { title: t.footer.columnServices, keys: SERVICE_KEYS },
+  { title: t.footer.columnCompany, keys: ['about', 'contact'] },
+];
+---
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href={localizedPath('home', locale)} aria-label={`ALTARYS LABS, ${t.nav.home}`}>
+        <Logo variant="full" width={150} />
+      </a>
+      <p class="footer-tagline">{t.footer.tagline}</p>
+    </div>
+
+    {
+      columns.map((column) => (
+        <nav class="footer-column" aria-label={column.title}>
+          <h2 class="footer-column-title">{column.title}</h2>
+          <ul>
+            {column.keys.map((key) => (
+              <li>
+                <a href={localizedPath(key, locale)}>{t.pageName[key]}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))
+    }
+  </div>
+
+  <div class="container footer-legal">
+    <p class="mono">
+      {t.footer.legalEntity} | {t.footer.rccm} | {t.footer.location}
+    </p>
+    <p>&copy; {year} ALTARYS LABS. {t.footer.rights}</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding: 64px 0 32px;
+    background: var(--navy-deep);
+    border-top: 1px solid var(--gold-08);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.6fr repeat(3, 1fr);
+    gap: 40px;
+    padding-bottom: 40px;
+  }
+
+  .footer-tagline {
+    margin-top: 20px;
+    max-width: 300px;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--ink-40);
+    line-height: 1.75;
+  }
+
+  .footer-column-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .footer-column ul {
+    list-style: none;
+  }
+
+  .footer-column li + li {
+    margin-top: 10px;
+  }
+
+  .footer-column a {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--ink-40);
+    text-decoration: none;
+    line-height: 1.5;
+    transition: color var(--ease);
+  }
+
+  .footer-column a:hover {
+    color: var(--gold);
+  }
+
+  .footer-legal {
+    padding-top: 28px;
+    border-top: 1px solid var(--gold-06);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .footer-legal p {
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--ink-25);
+  }
+
+  .footer-legal .mono {
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 900px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-legal {
+      flex-direction: column;
+    }
+  }
+</style>

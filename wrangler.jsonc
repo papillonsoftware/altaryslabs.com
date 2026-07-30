@@ -1,0 +1,25 @@
+{
+  // Configuration Cloudflare Pages pour altaryslabs.com
+  // Le build Astro produit ./dist ; les Pages Functions vivent dans ./functions
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "altaryslabs-com",
+  "compatibility_date": "2026-07-30",
+  "pages_build_output_dir": "./dist",
+
+  // Base D1 des soumissions du formulaire de contact (phase 4).
+  // A creer avant le premier deploiement :
+  //   npx wrangler d1 create altaryslabs-contact
+  // puis reporter l'identifiant retourne dans "database_id" ci-dessous.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "altaryslabs-contact",
+      "database_id": "REMPLACER_APRES_wrangler_d1_create"
+    }
+  ]
+
+  // Variables d'environnement a definir dans le dashboard Cloudflare Pages
+  // (Settings > Environment variables), jamais en dur dans ce fichier :
+  //   CONTACT_NOTIFY_EMAIL   adresse de notification des demandes entrantes
+  //   TURNSTILE_SECRET_KEY   cle secrete anti-spam Turnstile
+}

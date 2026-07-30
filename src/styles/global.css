@@ -1,0 +1,307 @@
+/* ==========================================================================
+   ALTARYS LABS - Styles globaux
+   Primitives partagees uniquement. Les styles propres a un composant vivent
+   dans le bloc <style> scope du composant .astro correspondant.
+   ========================================================================== */
+
+@import './tokens.css';
+
+/* --- Reset ---------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Compense le header fixe lors d'une navigation vers une ancre */
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--navy-deep);
+  color: var(--ivory);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Le header est fixe : on reserve sa hauteur pour ne pas masquer le contenu */
+  padding-top: var(--nav-h);
+}
+
+img,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+/* --- Accessibilite -------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  background: var(--gold);
+  color: var(--navy-deep);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 20px;
+  border-radius: 0 0 var(--radius-sm) 0;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- Layout --------------------------------------------------------------- */
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.section {
+  padding: var(--section-y) var(--gutter);
+}
+
+.section--navy {
+  background: var(--navy);
+}
+
+.section--deep {
+  background: var(--navy-deep);
+}
+
+/* --- Typographie ---------------------------------------------------------- */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.section-subtitle {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--ink-60);
+  max-width: 600px;
+  line-height: 1.75;
+}
+
+.lede {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--ink-50);
+  line-height: 1.85;
+  max-width: 680px;
+}
+
+/* --- Boutons -------------------------------------------------------------- */
+.btn-primary,
+.btn-secondary,
+.btn-amber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 14px 32px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  min-height: 48px;
+  line-height: 1.4;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background var(--ease), border-color var(--ease), transform 0.2s ease;
+}
+
+.btn-primary {
+  font-weight: 500;
+  color: var(--navy-deep);
+  background: var(--gold);
+}
+
+.btn-primary:hover {
+  background: var(--gold-light);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  font-weight: 400;
+  color: var(--gold);
+  background: transparent;
+  border-color: var(--gold-30);
+}
+
+.btn-secondary:hover {
+  border-color: var(--gold);
+  background: var(--gold-06);
+}
+
+.btn-amber {
+  font-weight: 500;
+  color: var(--navy-deep);
+  background: var(--pap-amber);
+}
+
+.btn-amber:hover {
+  background: var(--pap-warm);
+  transform: translateY(-1px);
+}
+
+/* --- Badges de statut ----------------------------------------------------- */
+.badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.badge-available {
+  background: rgba(46, 125, 82, 0.15);
+  color: var(--ok);
+}
+
+.badge-soon {
+  background: rgba(245, 166, 35, 0.12);
+  color: var(--pap-warm);
+}
+
+.badge-dev {
+  background: rgba(107, 122, 150, 0.12);
+  color: var(--slate);
+}
+
+/* --- Puce losange des listes ---------------------------------------------- */
+.list-diamond {
+  list-style: none;
+}
+
+.list-diamond li {
+  font-size: 13.5px;
+  font-weight: 300;
+  color: var(--ink-60);
+  padding: 6px 0 6px 18px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.list-diamond li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 13px;
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--gold);
+  transform: rotate(45deg);
+}
+
+/* --- Lien externe --------------------------------------------------------- */
+.external-link::after {
+  content: '';
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  margin-left: 0.15em;
+  background: currentColor;
+  /* Fleche sortante, masquee pour heriter de la couleur du lien */
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14V3zM5 5h4v2H7v10h10v-2h2v4H5V5z'/%3E%3C/svg%3E")
+    no-repeat center / contain;
+}
+
+/* --- Apparition au defilement --------------------------------------------- */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Sans JS, le contenu doit rester visible */
+.no-js .fade-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in {
+    opacity: 1;
+    transform: none;
+  }
+}

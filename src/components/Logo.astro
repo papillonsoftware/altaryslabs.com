@@ -1,0 +1,73 @@
+---
+/**
+ * Logomark ALTARYS LABS (diamant de la charte v3.1).
+ *
+ * Le SVG etait duplique deux fois en dur dans l'ancien index.html, avec la
+ * couleur ecrite en clair. Il est desormais unique et pilote par var(--gold),
+ * conformement a la charte.
+ */
+interface Props {
+  /** `full` inclut le mot-marque ALTARYS LABS, `mark` n'affiche que le diamant. */
+  variant?: 'full' | 'mark';
+  width?: number;
+  /** Titre accessible. Vide si le logo est purement decoratif ou deja libelle. */
+  title?: string;
+  class?: string;
+}
+
+const { variant = 'full', width = 160, title = '', class: className } = Astro.props;
+
+const viewBox = variant === 'full' ? '0 0 300 72' : '0 0 72 72';
+const height = variant === 'full' ? Math.round((width * 72) / 300) : width;
+---
+
+<svg
+  width={width}
+  height={height}
+  viewBox={viewBox}
+  fill="none"
+  class={className}
+  role={title ? 'img' : 'presentation'}
+  aria-hidden={title ? undefined : 'true'}
+>
+  {title && <title>{title}</title>}
+
+  <polygon points="36,5 72,36 36,67 0,36" fill="none" stroke="var(--gold)" stroke-width="1.5" />
+  <polygon points="36,16 57,36 36,56 15,36" fill="var(--gold)" opacity="0.11" />
+  <line x1="24" y1="56" x2="36" y2="17" stroke="var(--gold)" stroke-width="2.4" stroke-linecap="round" />
+  <line x1="48" y1="56" x2="36" y2="17" stroke="var(--gold)" stroke-width="2.4" stroke-linecap="round" />
+  <line x1="27" y1="45" x2="45" y2="45" stroke="var(--gold)" stroke-width="1.9" stroke-linecap="round" />
+  <circle cx="36" cy="5" r="2.2" fill="var(--gold)" />
+  <circle cx="72" cy="36" r="2.2" fill="var(--gold)" />
+  <circle cx="36" cy="67" r="2.2" fill="var(--gold)" />
+  <circle cx="0" cy="36" r="2.2" fill="var(--gold)" />
+
+  {
+    variant === 'full' && (
+      <>
+        <text
+          x="86"
+          y="38"
+          font-family="'DM Sans', sans-serif"
+          font-weight="300"
+          font-size="27"
+          letter-spacing="7"
+          fill="var(--ivory)">ALTARYS</text>
+        <text
+          x="87"
+          y="54"
+          font-family="'Space Mono', monospace"
+          font-size="9.5"
+          letter-spacing="6.5"
+          fill="var(--gold)">LABS</text>
+      </>
+    )
+  }
+</svg>
+
+<style>
+  svg {
+    display: block;
+    overflow: visible;
+  }
+</style>

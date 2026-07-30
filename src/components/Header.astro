@@ -1,0 +1,479 @@
+---
+import Logo from './Logo.astro';
+import LangSwitcher from './LangSwitcher.astro';
+import type { Locale } from '../i18n/config';
+import { localizedPath, useTranslations } from '../i18n/utils';
+import { PRODUCT_KEYS, SERVICE_KEYS, type PageKey } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  pageKey: PageKey;
+}
+
+const { locale, pageKey } = Astro.props;
+const t = useTranslations(locale);
+
+// Deux menus deroulants simples, pas de mega-menu : chacun liste le hub puis
+// ses trois sous-pages. L'ordre Produits avant Services est un choix de
+// positionnement, pas un hasard de mise en page.
+const menus = [
+  { key: 'products' as PageKey, label: t.nav.products, children: PRODUCT_KEYS },
+  { key: 'services' as PageKey, label: t.nav.services, children: SERVICE_KEYS },
+];
+
+/** Une entree est active si elle est la page courante ou son hub parent. */
+const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
+  pageKey === key || children.includes(pageKey);
+---
+
+<a class="skip-link" href="#main">{t.common.skipToContent}</a>
+
+<header class="nav" id="site-header">
+  <div class="nav-inner">
+    <a class="nav-logo" href={localizedPath('home', locale)}>
+      <Logo variant="full" width={160} title={`ALTARYS LABS, ${t.nav.home}`} />
+    </a>
+
+    <nav class="nav-primary" id="nav-primary" aria-label={t.nav.products + ' / ' + t.nav.services}>
+      <ul class="nav-list">
+        {
+          menus.map(({ key, label, children }) => (
+            <li class="nav-item has-menu">
+              <div class="nav-row">
+                <a
+                  class="nav-link"
+                  href={localizedPath(key, locale)}
+                  aria-current={pageKey === key ? 'page' : undefined}
+                  data-active={isActive(key, children)}
+                >
+                  {label}
+                </a>
+                <button
+                  type="button"
+                  class="nav-disclosure"
+                  aria-expanded="false"
+                  aria-controls={`menu-${key}`}
+                  aria-label={`${label} : ${t.nav.openMenu}`}
+                >
+                  <svg viewBox="0 0 12 8" width="10" height="7" aria-hidden="true">
+                    <path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" />
+                  </svg>
+                </button>
+              </div>
+
+              <ul class="nav-menu" id={`menu-${key}`}>
+                {children.map((childKey) => (
+                  <li>
+                    <a
+                      href={localizedPath(childKey, locale)}
+                      aria-current={pageKey === childKey ? 'page' : undefined}
+                    >
+                      <span class="nav-menu-name">{t.pageName[childKey]}</span>
+                      <span class="nav-menu-tagline">{t.pageTagline[childKey]}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href={localizedPath('about', locale)}
+            aria-current={pageKey === 'about' ? 'page' : undefined}
+            data-active={pageKey === 'about'}>{t.nav.about}</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href={localizedPath('contact', locale)}
+            aria-current={pageKey === 'contact' ? 'page' : undefined}
+            data-active={pageKey === 'contact'}>{t.nav.contact}</a
+          >
+        </li>
+      </ul>
+
+      <div class="nav-tail">
+        <LangSwitcher locale={locale} pageKey={pageKey} />
+        <a class="nav-cta" href={localizedPath('contact', locale)}>{t.nav.cta}</a>
+      </div>
+    </nav>
+
+    <button
+      type="button"
+      class="nav-toggle"
+      id="nav-toggle"
+      aria-expanded="false"
+      aria-controls="nav-primary"
+      aria-label={t.nav.openMenu}
+      data-label-open={t.nav.openMenu}
+      data-label-close={t.nav.closeMenu}
+    >
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(7, 17, 30, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--gold-08);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+    height: var(--nav-h);
+  }
+
+  .nav-logo {
+    flex-shrink: 0;
+  }
+
+  .nav-primary {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .nav-list {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .nav-item {
+    position: relative;
+  }
+
+  .nav-row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .nav-link {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink-60);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color var(--ease);
+  }
+
+  .nav-link:hover,
+  .nav-link[data-active='true'] {
+    color: var(--gold);
+  }
+
+  .nav-disclosure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: none;
+    border: none;
+    color: var(--ink-40);
+    cursor: pointer;
+    transition: color var(--ease), transform var(--ease);
+  }
+
+  .nav-disclosure:hover {
+    color: var(--gold);
+  }
+
+  .nav-disclosure[aria-expanded='true'] {
+    transform: rotate(180deg);
+    color: var(--gold);
+  }
+
+  /* --- Menu deroulant, desktop --- */
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 14px);
+    left: -16px;
+    min-width: 288px;
+    list-style: none;
+    background: rgba(7, 17, 30, 0.98);
+    border: 1px solid var(--gold-12);
+    border-radius: var(--radius);
+    padding: 8px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  /* Zone tampon invisible : evite que le menu se ferme en traversant le vide
+     entre le libelle et le panneau. */
+  .has-menu::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 14px;
+  }
+
+  .has-menu:hover .nav-menu,
+  .has-menu:focus-within .nav-menu,
+  .nav-menu[data-open='true'] {
+    display: block;
+  }
+
+  .nav-menu a {
+    display: block;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: background var(--ease);
+  }
+
+  .nav-menu a:hover {
+    background: var(--gold-06);
+  }
+
+  .nav-menu-name {
+    display: block;
+    font-size: 13.5px;
+    color: var(--ink-80);
+  }
+
+  .nav-menu a:hover .nav-menu-name,
+  .nav-menu a[aria-current='page'] .nav-menu-name {
+    color: var(--gold);
+  }
+
+  .nav-menu-tagline {
+    display: block;
+    margin-top: 2px;
+    font-size: 11.5px;
+    font-weight: 300;
+    color: var(--ink-40);
+    line-height: 1.5;
+  }
+
+  .nav-tail {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .nav-cta {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--navy-deep);
+    background: var(--gold);
+    padding: 10px 22px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background var(--ease), transform 0.2s ease;
+  }
+
+  .nav-cta:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+  }
+
+  /* --- Bouton hamburger --- */
+  .nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  .nav-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--ivory);
+    margin: 5px 0;
+    transition: transform var(--ease), opacity var(--ease);
+  }
+
+  .nav-toggle[aria-expanded='true'] span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  .nav-toggle[aria-expanded='true'] span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .nav-toggle[aria-expanded='true'] span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+
+  /* --- Mobile : le menu devient un accordeon plein ecran --- */
+  @media (max-width: 900px) {
+    .nav-toggle {
+      display: block;
+    }
+
+    .nav-primary {
+      display: none;
+      position: absolute;
+      top: var(--nav-h);
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 4px;
+      max-height: calc(100dvh - var(--nav-h));
+      overflow-y: auto;
+      padding: 20px var(--gutter) 28px;
+      background: rgba(7, 17, 30, 0.98);
+      border-bottom: 1px solid var(--gold-12);
+    }
+
+    .nav-primary[data-open='true'] {
+      display: flex;
+    }
+
+    .nav-list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 4px;
+    }
+
+    .nav-row {
+      justify-content: space-between;
+      padding: 4px 0;
+    }
+
+    .nav-link {
+      display: block;
+      flex: 1;
+      padding: 12px 0;
+      font-size: 15px;
+    }
+
+    .nav-disclosure {
+      width: 44px;
+      height: 44px;
+    }
+
+    .nav-menu {
+      position: static;
+      min-width: 0;
+      margin: 0 0 8px;
+      padding: 4px;
+      box-shadow: none;
+      background: rgba(250, 247, 242, 0.02);
+    }
+
+    /* Sur mobile le survol n'existe pas : seul le bouton ouvre le panneau. */
+    .has-menu:hover .nav-menu,
+    .has-menu:focus-within .nav-menu {
+      display: none;
+    }
+
+    .nav-menu[data-open='true'] {
+      display: block;
+    }
+
+    .has-menu::after {
+      display: none;
+    }
+
+    .nav-tail {
+      justify-content: space-between;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--gold-08);
+    }
+  }
+
+  /* Sans JavaScript, le hamburger ne peut rien ouvrir : on deplie tout. */
+  :global(.no-js) .nav-primary {
+    display: flex;
+  }
+
+  :global(.no-js) .nav-menu {
+    display: block;
+  }
+
+  :global(.no-js) .nav-disclosure {
+    display: none;
+  }
+
+  :global(.no-js) .nav-toggle {
+    display: none;
+  }
+</style>
+
+<script>
+  const header = document.getElementById('site-header');
+  const toggle = document.getElementById('nav-toggle');
+  const primary = document.getElementById('nav-primary');
+
+  if (header && toggle && primary) {
+    const disclosures = Array.from(
+      header.querySelectorAll<HTMLButtonElement>('.nav-disclosure')
+    );
+    const panelOf = (button: HTMLButtonElement) =>
+      document.getElementById(button.getAttribute('aria-controls') ?? '');
+
+    const setPanel = (button: HTMLButtonElement, open: boolean) => {
+      button.setAttribute('aria-expanded', String(open));
+      const panel = panelOf(button);
+      if (panel) panel.dataset.open = String(open);
+    };
+
+    const closeAllPanels = () => disclosures.forEach((b) => setPanel(b, false));
+
+    const setMenu = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      primary.dataset.open = String(open);
+      const label = open ? toggle.dataset.labelClose : toggle.dataset.labelOpen;
+      if (label) toggle.setAttribute('aria-label', label);
+      if (!open) closeAllPanels();
+    };
+
+    toggle.addEventListener('click', () => {
+      setMenu(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    disclosures.forEach((button) => {
+      button.addEventListener('click', () => {
+        const willOpen = button.getAttribute('aria-expanded') !== 'true';
+        closeAllPanels();
+        setPanel(button, willOpen);
+      });
+    });
+
+    // Fermeture au clic exterieur et a la touche Echap.
+    document.addEventListener('click', (event) => {
+      if (!header.contains(event.target as Node)) {
+        closeAllPanels();
+        setMenu(false);
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      closeAllPanels();
+      if (toggle.getAttribute('aria-expanded') === 'true') {
+        setMenu(false);
+        toggle.focus();
+      }
+    });
+  }
+</script>

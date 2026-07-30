@@ -1,0 +1,135 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { HTML_LANG, OG_LOCALE, SITE_URL, type Locale } from '../i18n/config';
+import { absoluteUrl, alternates, localizedPath, useTranslations } from '../i18n/utils';
+import type { PageKey } from '../i18n/routes';
+import '../styles/global.css';
+
+interface Props {
+  locale: Locale;
+  pageKey: PageKey;
+  /** Surcharge ponctuelle du titre ou de la description issus du dictionnaire. */
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+// Vignette de partage par defaut, declinee par langue : c'est elle qui apparait
+// dans les previews WhatsApp et LinkedIn, tres utilisees par notre audience.
+const OG_DEFAULT: Record<Locale, string> = {
+  fr: '/og-image.png',
+  en: '/og-image-en.png',
+};
+
+const { locale, pageKey, title, description, ogImage } = Astro.props;
+
+const t = useTranslations(locale);
+const meta = t.meta[pageKey];
+
+const pageTitle = title ?? meta.title;
+const pageDescription = description ?? meta.description;
+
+const canonical = absoluteUrl(localizedPath(pageKey, locale));
+const hreflangs = alternates(pageKey);
+const ogImageUrl = absoluteUrl(ogImage ?? OG_DEFAULT[locale]);
+
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'ALTARYS LABS',
+  url: SITE_URL,
+  logo: absoluteUrl('/assets/favicon.svg'),
+  description: t.meta.home.description,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Abidjan',
+    addressCountry: 'CI',
+  },
+  identifier: 'CI-ABI-03-2026-B17-00070',
+};
+---
+
+<!doctype html>
+<html lang={HTML_LANG[locale]} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonical} />
+
+    {
+      hreflangs.map((alt) => (
+        <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+      ))
+    }
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ALTARYS LABS" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={OG_LOCALE[locale]} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap"
+    />
+
+    <script is:inline>
+      // Retire la classe no-js avant le premier rendu, pour eviter tout
+      // scintillement. Les replis CSS sans JavaScript restent actifs sinon.
+      document.documentElement.classList.remove('no-js');
+    </script>
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(organization)} />
+  </head>
+
+  <body>
+    <Header locale={locale} pageKey={pageKey} />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer locale={locale} />
+
+    <script>
+      // Apparition au defilement. Degrade proprement : sans JavaScript ou avec
+      // les animations reduites, le contenu est visible d'emblee (voir global.css).
+      const targets = document.querySelectorAll('.fade-in');
+
+      if (targets.length && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+        );
+
+        targets.forEach((target) => observer.observe(target));
+      } else {
+        targets.forEach((target) => target.classList.add('visible'));
+      }
+    </script>
+  </body>
+</html>

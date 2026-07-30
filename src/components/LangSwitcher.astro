@@ -1,0 +1,53 @@
+---
+import { LOCALE_LABEL, HTML_LANG, type Locale } from '../i18n/config';
+import { localizedPath, otherLocale, useTranslations } from '../i18n/utils';
+import type { PageKey } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  pageKey: PageKey;
+}
+
+const { locale, pageKey } = Astro.props;
+const t = useTranslations(locale);
+const target = otherLocale(locale);
+
+// Le selecteur pointe vers la traduction exacte de la page courante, jamais
+// vers l'accueil : la table ROUTES garantit la correspondance des slugs.
+const href = localizedPath(pageKey, target);
+---
+
+<a
+  class="lang-switcher"
+  href={href}
+  hreflang={HTML_LANG[target]}
+  lang={HTML_LANG[target]}
+  aria-label={`${t.common.switchLanguage} : ${LOCALE_LABEL[target]}`}
+>
+  <span aria-hidden="true">{target.toUpperCase()}</span>
+</a>
+
+<style>
+  .lang-switcher {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    min-height: 32px;
+    padding: 0 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-60);
+    text-decoration: none;
+    border: 1px solid var(--gold-12);
+    border-radius: var(--radius-sm);
+    transition: color var(--ease), border-color var(--ease), background var(--ease);
+  }
+
+  .lang-switcher:hover {
+    color: var(--gold);
+    border-color: var(--gold-30);
+    background: var(--gold-06);
+  }
+</style>

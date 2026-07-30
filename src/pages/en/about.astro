@@ -1,0 +1,11 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageScaffold from '~/components/PageScaffold.astro';
+
+const locale = 'en' as const;
+const pageKey = 'about' as const;
+---
+
+<BaseLayout locale={locale} pageKey={pageKey}>
+  <PageScaffold locale={locale} pageKey={pageKey} />
+</BaseLayout>

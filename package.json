@@ -1,0 +1,24 @@
+{
+  "name": "altaryslabs-com",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Site vitrine ALTARYS LABS - Astro statique bilingue FR/EN, deploye sur Cloudflare Pages",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.1.6"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  }
+}
