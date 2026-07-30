@@ -1,0 +1,43 @@
+---
+/**
+ * Carte produit. Utilisee sur l'accueil et sur le hub Produits, avec le meme
+ * contenu : une seule source, pas de divergence possible entre les deux pages.
+ */
+interface Props {
+  name: string;
+  /** Etiquette courte : disponibilite pour PCS, categorie pour les autres. */
+  badge: string;
+  /** Badge plein, reserve au produit le plus saillant du moment. */
+  badgeSolid?: boolean;
+  text: string;
+  href: string;
+  linkLabel: string;
+}
+
+const { name, badge, badgeSolid = false, text, href, linkLabel } = Astro.props;
+---
+
+<article class="card">
+  <span class:list={['badge', badgeSolid ? 'badge--solid' : 'badge--soft']}>{badge}</span>
+  <h3 class="card-title">{name}</h3>
+  <p class="card-text">{text}</p>
+  <a class="link-arrow" href={href}>
+    {linkLabel}
+    <span class="visually-hidden">: {name}</span>
+  </a>
+</article>
+
+<style>
+  .card {
+    transition: border-color var(--ease), transform var(--ease);
+  }
+
+  .card:hover {
+    border-color: var(--gold-30);
+    transform: translateY(-2px);
+  }
+
+  .badge {
+    margin-bottom: 20px;
+  }
+</style>

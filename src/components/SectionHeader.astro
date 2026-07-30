@@ -1,0 +1,26 @@
+---
+/**
+ * En-tete de section : sur-titre technique en Space Mono, puis titre en
+ * Cormorant. Le couple des deux est la signature de rythme du design ; le
+ * centraliser evite qu'il derive d'une page a l'autre.
+ */
+interface Props {
+  label: string;
+  title: string;
+  /** Centre l'en-tete, pour les sections institutionnelles. */
+  centered?: boolean;
+}
+
+const { label, title, centered = false } = Astro.props;
+---
+
+<div class:list={['section-header', { 'section-header--centered': centered }]}>
+  <p class="section-label">{label}</p>
+  <h2 class="section-title">{title}</h2>
+</div>
+
+<style>
+  .section-header--centered {
+    text-align: center;
+  }
+</style>
