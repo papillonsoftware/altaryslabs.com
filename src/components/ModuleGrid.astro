@@ -1,0 +1,82 @@
+---
+/**
+ * Grille des modules d'une plateforme.
+ *
+ * Libelles metier uniquement. Les codes techniques internes (PAYROL, QRCONTR
+ * et les autres) n'ont aucun sens pour un directeur qui evalue un prestataire,
+ * et donnent l'impression de lire une specification plutot qu'une offre.
+ *
+ * Aucun statut de disponibilite par module : la page porte deja des vagues de
+ * deploiement, et deux niveaux d'echeancier se contrediraient tot ou tard.
+ */
+interface Props {
+  label: string;
+  modules: readonly string[];
+  /**
+   * Espace au-dessus. Faux quand la grille enchaine directement sur l'en-tete
+   * de page, vrai quand elle suit une section a fond different, qu'il faut
+   * bien detacher.
+   */
+  spacedTop?: boolean;
+}
+
+const { label, modules, spacedTop = false } = Astro.props;
+---
+
+<section class:list={['section', 'module-section', { 'is-spaced': spacedTop }]}>
+  <div class="container">
+    <p class="module-label mono">{label}</p>
+    <ul class="module-grid fade-in">
+      {modules.map((module) => <li class="module">{module}</li>)}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .module-section {
+    padding-top: 0;
+    padding-bottom: 90px;
+  }
+
+  .module-section.is-spaced {
+    padding-top: 90px;
+  }
+
+  /* Sur-titre volontairement neutre, et non dore : cette grille est une liste
+     de reference, pas un argument de vente. */
+  .module-label {
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--ink-25);
+    margin-bottom: 24px;
+  }
+
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    list-style: none;
+  }
+
+  .module {
+    background: var(--navy-card);
+    border: 1px solid var(--ink-06);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    font-size: 14px;
+    color: var(--ink-80);
+  }
+
+  @media (max-width: 1000px) {
+    .module-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .module-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

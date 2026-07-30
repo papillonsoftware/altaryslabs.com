@@ -138,6 +138,96 @@ export const fr = {
     ctaLabel: 'Contactez notre équipe commerciale',
   },
 
+  /** Libellés partagés par les trois fiches produit. */
+  product: {
+    label: 'Produit',
+    ctaDemo: 'Demander une démo',
+    ctaSales: 'Contactez notre équipe commerciale',
+  },
+
+  productHr: {
+    intro:
+      "Solution SaaS de ressources humaines et de paie conforme OHADA, pensée pour les PME de 2 à 350 employés, offline-first et mobile-first pour les zones à connectivité limitée.",
+
+    features: [
+      {
+        title: 'Conformité CNPS et ITS',
+        text: 'Alignée sur la réglementation ivoirienne dès la première version.',
+      },
+      {
+        title: 'Offline-first',
+        text: 'Fonctionne sans connexion, synchronisation au retour du réseau.',
+      },
+      {
+        title: 'Mobile-first',
+        text: "Optimisée pour les smartphones d'entrée de gamme.",
+      },
+      {
+        title: '2 à 350 employés',
+        text: 'Pensée pour la réalité opérationnelle des PME.',
+      },
+    ],
+
+    deploymentLabel: 'Déploiement',
+    deploymentTitle: 'Une couverture progressive de la zone OHADA',
+    deploymentText:
+      "Le déploiement démarre en Côte d'Ivoire, puis s'étend au Bénin, au Cameroun, au Sénégal et en RDC, avec l'ambition d'étendre progressivement la couverture à l'ensemble de la zone OHADA.",
+    waves: [
+      {
+        label: 'Vague 1, 2026',
+        text: "Contrôle de présence, gestion des absences, gestion budgétaire, gestion des dépenses et engagements.",
+      },
+      {
+        label: 'Vague 2, fin 2026 et début 2027',
+        text: 'Paie complète.',
+      },
+      {
+        label: 'Vague 3, 2027',
+        text: 'Évaluation et performance, recrutement.',
+      },
+    ],
+
+    modulesLabel: 'Modules de la plateforme',
+    modules: [
+      'Paie CNPS et ITS',
+      'Présences QR',
+      'Congés et absences',
+      'RH Core',
+      'Gestion employés',
+      'Temps et activités',
+      'Santé et sécurité',
+      'Performance',
+      'Compétences',
+      'Formation',
+      'Recrutement',
+      'Documents avancés',
+    ],
+
+    ctaTitle: 'Voir Papillon HR Suite en action',
+  },
+
+  productFinance: {
+    intro:
+      "Solution SaaS de budgétisation conforme SYSCOHADA, destinée aux directions financières des PME de la zone OHADA. Elle s'appuie sur la même plateforme technique que Papillon HR Suite, pour une cohérence totale de vos données d'entreprise.",
+    cards: [
+      {
+        title: 'Gestion des dépenses',
+        text: "Suivi et validation des notes de frais et des dépenses courantes, avec traçabilité complète pour vos équipes financières.",
+      },
+      {
+        title: 'Budget et engagements',
+        text: 'Pilotage budgétaire et suivi des engagements financiers, conforme au référentiel SYSCOHADA.',
+      },
+    ],
+    ctaTitle: 'Voir Papillon Corporate Finance Suite en action',
+  },
+
+  productPcs: {
+    intro:
+      "Papillon Collection Solution permet aux assureurs et aux courtiers en assurance de la zone CIMA d'automatiser le renouvellement de contrats et la relance de primes, par SMS, WhatsApp et email, jusqu'à l'authentification et au paiement par leurs clients.",
+    externalCta: 'Découvrir PCS sur papillon-collection.com',
+  },
+
   meta: {
     home: {
       title: 'ALTARYS LABS | Solutions technologiques pour les entreprises OHADA et CIMA',
