@@ -1,21 +1,29 @@
 ---
 /**
- * Carte service. Volontairement plus effacee que la carte produit : fond plus
- * sombre, bordure neutre, pas de badge. La hierarchie visuelle du design fait
- * primer les produits, les services les accompagnent.
+ * Carte service.
+ *
+ * Sur l'accueil elle est volontairement plus effacee que la carte produit : la
+ * hierarchie du design y fait primer les produits. Sur son propre hub, ou elle
+ * n'a plus a s'effacer devant personne, elle reprend le fond des cartes
+ * produits. C'est le parti pris du handoff, et il se tient.
  */
 interface Props {
   name: string;
   text: string;
   href: string;
   linkLabel: string;
+  /** Variante aeree du hub, ou la carte est le contenu principal. */
+  large?: boolean;
+  headingLevel?: 2 | 3;
 }
 
-const { name, text, href, linkLabel } = Astro.props;
+const { name, text, href, linkLabel, large = false, headingLevel = 3 } = Astro.props;
+
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
 ---
 
-<article class="card card--service">
-  <h3 class="card-title">{name}</h3>
+<article class:list={['card', large ? 'card--prominent card--large' : 'card--service']}>
+  <Heading class="card-title">{name}</Heading>
   <p class="card-text">{text}</p>
   <a class="link-arrow" href={href}>
     {linkLabel}
@@ -31,5 +39,12 @@ const { name, text, href, linkLabel } = Astro.props;
   .card:hover {
     border-color: var(--ink-15);
     transform: translateY(-2px);
+  }
+
+  /* Fond des cartes produits, mais bordure neutre : l'or reste reserve aux
+     produits, meme quand le service occupe le premier plan. */
+  .card--prominent {
+    background: var(--navy-mid);
+    border-color: var(--ink-06);
   }
 </style>

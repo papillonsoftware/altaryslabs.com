@@ -120,6 +120,24 @@ export const fr = {
     ctaLabel: 'Contactez notre équipe commerciale',
   },
 
+  productsPage: {
+    label: 'Produits',
+    title: "Trois suites SaaS pour l'OHADA et le CIMA",
+    intro:
+      "Chacune répond aux exigences réglementaires et opérationnelles propres aux entreprises de la zone. Conformité, connectivité limitée et pluralité des pays sont traitées dès la conception, pas ajoutées après coup.",
+    ctaTitle: 'Une question sur nos produits ?',
+    ctaLabel: 'Contactez notre équipe commerciale',
+  },
+
+  servicesPage: {
+    label: 'Services',
+    title: 'Une expertise au service de vos projets',
+    intro:
+      "Notre expertise sectorielle nourrit aussi bien nos produits que nos missions de conseil et de développement pour compte de tiers. Ce que nous éprouvons sur nos propres plateformes, nous le mettons au service des vôtres.",
+    ctaTitle: 'Discutons de votre besoin',
+    ctaLabel: 'Contactez notre équipe commerciale',
+  },
+
   meta: {
     home: {
       title: 'ALTARYS LABS | Solutions technologiques pour les entreprises OHADA et CIMA',

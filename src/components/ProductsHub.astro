@@ -1,0 +1,76 @@
+---
+/**
+ * Corps du hub Produits, partage par les deux langues.
+ *
+ * Les cartes lisent le meme dictionnaire que l'accueil : une description de
+ * produit ne peut pas diverger entre la page d'accueil et le hub.
+ */
+import PageHeader from './PageHeader.astro';
+import ProductCard from './ProductCard.astro';
+import CtaBanner from './CtaBanner.astro';
+import type { Locale } from '../i18n/config';
+import { localizedPath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const href = (key: Parameters<typeof localizedPath>[0]) => localizedPath(key, locale);
+---
+
+<PageHeader
+  label={t.productsPage.label}
+  title={t.productsPage.title}
+  intro={t.productsPage.intro}
+/>
+
+<section class="section hub-grid-section">
+  <div class="container">
+    <div class="grid-3 fade-in">
+      <ProductCard
+        name={t.pageName.productsPcs}
+        badge={t.availability.pcs}
+        badgeSolid
+        text={t.cards.products.productsPcs.text}
+        href={href('productsPcs')}
+        linkLabel={t.common.learnMore}
+        large
+        headingLevel={2}
+      />
+      <ProductCard
+        name={t.pageName.productsHr}
+        badge={t.cards.products.productsHr.badge}
+        text={t.cards.products.productsHr.text}
+        href={href('productsHr')}
+        linkLabel={t.common.learnMore}
+        large
+        headingLevel={2}
+      />
+      <ProductCard
+        name={t.pageName.productsFinance}
+        badge={t.cards.products.productsFinance.badge}
+        text={t.cards.products.productsFinance.text}
+        href={href('productsFinance')}
+        linkLabel={t.common.learnMore}
+        large
+        headingLevel={2}
+      />
+    </div>
+  </div>
+</section>
+
+<CtaBanner
+  title={t.productsPage.ctaTitle}
+  label={t.productsPage.ctaLabel}
+  href={href('contact')}
+/>
+
+<style>
+  /* L'en-tete de page a deja pose l'espace haut : la grille enchaine. */
+  .hub-grid-section {
+    padding-top: 0;
+  }
+</style>

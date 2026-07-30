@@ -1,11 +1,11 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import PageScaffold from '~/components/PageScaffold.astro';
+import ProductsHub from '~/components/ProductsHub.astro';
 
 const locale = 'en' as const;
 const pageKey = 'products' as const;
 ---
 
 <BaseLayout locale={locale} pageKey={pageKey}>
-  <PageScaffold locale={locale} pageKey={pageKey} />
+  <ProductsHub locale={locale} />
 </BaseLayout>

@@ -122,6 +122,24 @@ export const en: Dictionary = {
     ctaLabel: 'Talk to our team',
   },
 
+  productsPage: {
+    label: 'Products',
+    title: 'Three SaaS suites for African markets',
+    intro:
+      'Each one answers the regulatory and operational realities of the region. Compliance, limited connectivity and multi-country operations are designed in from the start, not bolted on afterwards.',
+    ctaTitle: 'A question about our products?',
+    ctaLabel: 'Talk to our team',
+  },
+
+  servicesPage: {
+    label: 'Services',
+    title: 'Expertise applied to your projects',
+    intro:
+      'The same sector expertise drives our own products and the consulting and development work we deliver for others. What we prove on our platforms, we bring to yours.',
+    ctaTitle: "Let's discuss what you need",
+    ctaLabel: 'Talk to our team',
+  },
+
   meta: {
     home: {
       title: 'ALTARYS LABS | Enterprise software for African markets',
