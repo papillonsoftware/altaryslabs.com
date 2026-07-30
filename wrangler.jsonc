@@ -4,19 +4,21 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "altaryslabs-com",
   "compatibility_date": "2026-07-30",
-  "pages_build_output_dir": "./dist",
+  "pages_build_output_dir": "./dist"
 
   // Base D1 des soumissions du formulaire de contact (phase 4).
-  // A creer avant le premier deploiement :
+  // Bloc neutralise volontairement : un "database_id" factice fait echouer le
+  // build Cloudflare Pages. A reactiver en phase 4, apres avoir cree la base :
   //   npx wrangler d1 create altaryslabs-contact
-  // puis reporter l'identifiant retourne dans "database_id" ci-dessous.
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "altaryslabs-contact",
-      "database_id": "REMPLACER_APRES_wrangler_d1_create"
-    }
-  ]
+  // puis reporter l'identifiant retourne dans "database_id".
+  // Ne pas oublier de remettre une virgule apres "pages_build_output_dir".
+  // "d1_databases": [
+  //   {
+  //     "binding": "DB",
+  //     "database_name": "altaryslabs-contact",
+  //     "database_id": "<identifiant retourne par wrangler d1 create>"
+  //   }
+  // ]
 
   // Variables d'environnement a definir dans le dashboard Cloudflare Pages
   // (Settings > Environment variables), jamais en dur dans ce fichier :
