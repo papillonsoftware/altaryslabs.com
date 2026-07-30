@@ -38,6 +38,9 @@ export const ROUTES = {
 
   about: { fr: '/a-propos', en: '/en/about' },
   contact: { fr: '/contact', en: '/en/contact' },
+
+  legalNotice: { fr: '/mentions-legales', en: '/en/legal-notice' },
+  privacy: { fr: '/confidentialite', en: '/en/privacy' },
 } as const satisfies Record<string, Record<Locale, string>>;
 
 export type PageKey = keyof typeof ROUTES;
@@ -60,6 +63,9 @@ export const SERVICE_KEYS = [
   'servicesDev',
   'servicesAi',
 ] as const satisfies readonly PageKey[];
+
+/** Pages legales, listees dans le bandeau du pied de page. */
+export const LEGAL_KEYS = ['legalNotice', 'privacy'] as const satisfies readonly PageKey[];
 
 /** Lien externe unique vers le site dedie a PCS. */
 export const PCS_EXTERNAL_URL = 'https://papillon-collection.com';

@@ -47,6 +47,8 @@ export const fr = {
     servicesAi: 'IA souveraine',
     about: 'À propos',
     contact: 'Contact',
+    legalNotice: 'Mentions légales',
+    privacy: 'Politique de confidentialité',
   } satisfies Record<PageKey, string>,
 
   /** Accroche courte de chaque page, affichée dans les menus déroulants. */
@@ -62,6 +64,8 @@ export const fr = {
     servicesAi: 'Aide à la décision et souveraineté des données',
     about: '',
     contact: '',
+    legalNotice: '',
+    privacy: '',
   } satisfies Record<PageKey, string>,
 
   /**
@@ -284,6 +288,16 @@ export const fr = {
       description:
         "Échangez avec notre équipe commerciale sur vos besoins en solutions RH, finance, recouvrement, conseil ou développement sur mesure.",
     },
+    legalNotice: {
+      title: 'Mentions légales | ALTARYS LABS',
+      description:
+        "Éditeur, hébergement, propriété intellectuelle et droit applicable du site altaryslabs.com, édité par ALTARYS LABS, SASU de droit ivoirien.",
+    },
+    privacy: {
+      title: 'Politique de confidentialité | ALTARYS LABS',
+      description:
+        "Comment ALTARYS LABS traite les données personnelles collectées sur altaryslabs.com, conformément à la loi ivoirienne n° 2013-450 du 19 juin 2013.",
+    },
   } satisfies Record<PageKey, { title: string; description: string }>,
 
   footer: {
@@ -296,6 +310,15 @@ export const fr = {
     rccm: 'RCCM CI-ABI-03-2026-B17-00070',
     location: "Abidjan, Côte d'Ivoire",
     rights: 'Tous droits réservés.',
+  },
+
+  /** Libellés communs aux deux pages légales. */
+  legal: {
+    /* Sur-titre commun : répéter le titre de la page juste au-dessus de
+       lui-même n'apporte rien au lecteur. */
+    sectionLabel: 'Informations légales',
+    lastUpdated: 'Dernière mise à jour',
+    updatedOn: '30 juillet 2026',
   },
 } as const;
 

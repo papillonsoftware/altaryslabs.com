@@ -1,0 +1,102 @@
+---
+/**
+ * Legal notice, English version.
+ *
+ * Provided for information only. Unlike the rest of the English site, this is a
+ * close translation rather than a re-adaptation: a legal document must say the
+ * same thing in both languages. The French version prevails.
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import LegalPage from '~/components/LegalPage.astro';
+
+const locale = 'en' as const;
+const pageKey = 'legalNotice' as const;
+---
+
+<BaseLayout locale={locale} pageKey={pageKey}>
+  <LegalPage locale={locale} pageKey={pageKey}>
+    <h2>Site publisher</h2>
+    <p>
+      <strong>altaryslabs.com</strong> is published by <strong>ALTARYS LABS</strong>, a SaaS
+      publisher and provider of consulting and custom development services.
+    </p>
+    <ul>
+      <li>Legal form: Société par Actions Simplifiée Unipersonnelle (SASU)</li>
+      <li>
+        Registered office: Abidjan, Abobo Biabou, Derrière la pharmacie Rédemption, Lot 3108 Ilot
+        273, Côte d'Ivoire
+      </li>
+      <li>Company registration (RCCM): CI-ABI-03-2026-B17-00070</li>
+      <li>Publication director: Emmanuel BLONVIA</li>
+      <li>Contact: <a href="mailto:contact@altaryslabs.com">contact@altaryslabs.com</a></li>
+    </ul>
+
+    <h2>Hosting</h2>
+    <p>
+      altaryslabs.com is hosted by <strong>Cloudflare, Inc.</strong>, 101 Townsend Street, San
+      Francisco, CA 94107, United States.
+    </p>
+    <p>
+      Products published by ALTARYS LABS run on separate infrastructure, described on their
+      respective websites.
+    </p>
+
+    <h2>Intellectual property</h2>
+    <p>
+      All content on this site, including text, graphics, visuals, product screenshots, trademarks,
+      logos, icons, documents and any other accessible element, is the exclusive property of
+      ALTARYS LABS unless expressly stated otherwise.
+    </p>
+    <p>
+      Any reproduction, representation, adaptation, distribution or exploitation, in whole or in
+      part, of the site or its content, by any means whatsoever, without the prior written consent
+      of ALTARYS LABS, is prohibited.
+    </p>
+    <p>
+      Third-party trademarks or distinctive signs mentioned on the site remain the exclusive
+      property of their respective owners.
+    </p>
+
+    <h2>Liability</h2>
+    <p>
+      ALTARYS LABS endeavours to provide information on this site that is as accurate as possible.
+      However, published information is indicative and may be modified, updated or corrected at any
+      time without notice. It constitutes neither a contractual offer nor a commitment as to
+      availability or timing.
+    </p>
+    <p>ALTARYS LABS may not be held liable for:</p>
+    <ul>
+      <li>temporary interruptions of access to the site;</li>
+      <li>bugs or errors;</li>
+      <li>any inaccuracy or omission in the information available on the site;</li>
+      <li>any direct or indirect damage resulting from access to or use of the site.</li>
+    </ul>
+
+    <h2>Links to third-party sites</h2>
+    <p>
+      This site contains links to sites published by ALTARYS LABS or by third parties. ALTARYS LABS
+      exercises no control over third-party content and accepts no liability for it or for any use
+      made of it.
+    </p>
+
+    <h2>Personal data</h2>
+    <p>
+      How personal data submitted through this site is collected and processed, in particular
+      through the contact form, is described in the{' '}
+      <a href="/en/privacy">privacy policy</a>.
+    </p>
+
+    <h2>Governing law</h2>
+    <p>
+      This legal notice is governed by Ivorian law. Any dispute relating to its interpretation,
+      validity or performance falls, unless a mandatory legal provision states otherwise, within the
+      jurisdiction of the courts of Abidjan.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      For any question about the site or its content, please write to{' '}
+      <a href="mailto:contact@altaryslabs.com">contact@altaryslabs.com</a>.
+    </p>
+  </LegalPage>
+</BaseLayout>

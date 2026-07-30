@@ -56,6 +56,8 @@ export const en: Dictionary = {
     servicesAi: 'Sovereign AI',
     about: 'About',
     contact: 'Contact',
+    legalNotice: 'Legal notice',
+    privacy: 'Privacy policy',
   },
 
   pageTagline: {
@@ -70,6 +72,8 @@ export const en: Dictionary = {
     servicesAi: 'Decision support and data sovereignty',
     about: '',
     contact: '',
+    legalNotice: '',
+    privacy: '',
   },
 
   cards: {
@@ -285,6 +289,16 @@ export const en: Dictionary = {
       description:
         'Talk to our team about HR, finance, premium collection, consulting or custom development.',
     },
+    legalNotice: {
+      title: 'Legal notice | ALTARYS LABS',
+      description:
+        'Publisher, hosting, intellectual property and applicable law for altaryslabs.com, published by ALTARYS LABS, a company incorporated in Cote d\'Ivoire.',
+    },
+    privacy: {
+      title: 'Privacy policy | ALTARYS LABS',
+      description:
+        'How ALTARYS LABS handles personal data collected on altaryslabs.com, under Ivorian law no. 2013-450 of 19 June 2013.',
+    },
   },
 
   footer: {
@@ -297,5 +311,11 @@ export const en: Dictionary = {
     rccm: 'Company registration CI-ABI-03-2026-B17-00070',
     location: "Abidjan, Côte d'Ivoire",
     rights: 'All rights reserved.',
+  },
+
+  legal: {
+    sectionLabel: 'Legal information',
+    lastUpdated: 'Last updated',
+    updatedOn: '30 July 2026',
   },
 };

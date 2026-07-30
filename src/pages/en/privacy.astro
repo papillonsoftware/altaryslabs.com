@@ -1,0 +1,168 @@
+---
+/**
+ * Privacy policy, English version.
+ *
+ * Provided for information only. Close translation rather than re-adaptation:
+ * a legal document must say the same thing in both languages. The French
+ * version prevails.
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import LegalPage from '~/components/LegalPage.astro';
+
+const locale = 'en' as const;
+const pageKey = 'privacy' as const;
+
+const intro =
+  'This policy describes how ALTARYS LABS processes personal data collected on altaryslabs.com.';
+---
+
+<BaseLayout locale={locale} pageKey={pageKey}>
+  <LegalPage locale={locale} pageKey={pageKey} intro={intro}>
+    <h2>1. Who processes your data</h2>
+    <p>
+      <strong>ALTARYS LABS</strong> is the controller of the data collected on this site.
+    </p>
+    <ul>
+      <li>Legal form: Société par Actions Simplifiée Unipersonnelle (SASU)</li>
+      <li>
+        Registered office: Abidjan, Abobo Biabou, Derrière la pharmacie Rédemption, Lot 3108 Ilot
+        273, Côte d'Ivoire
+      </li>
+      <li>Company registration (RCCM): CI-ABI-03-2026-B17-00070</li>
+      <li>Contact: <a href="mailto:contact@altaryslabs.com">contact@altaryslabs.com</a></li>
+    </ul>
+
+    <h2>2. What data is collected</h2>
+    <p>
+      This site only collects data when you voluntarily complete the contact form. The following is
+      then collected:
+    </p>
+    <ul>
+      <li>your name;</li>
+      <li>your company or organisation name;</li>
+      <li>your contact email address;</li>
+      <li>your contact phone number;</li>
+      <li>the offering your enquiry relates to;</li>
+      <li>the content of your message.</li>
+    </ul>
+    <p>
+      The form is protected by <strong>Cloudflare Turnstile</strong>, an anti-bot mechanism. For
+      that purpose Cloudflare processes technical signals from your browser, such as device
+      characteristics or browsing behaviour, to verify that the submission is not automated.
+    </p>
+    <p>
+      No other data is collected without your knowledge on this site: there are no analytics
+      cookies and no advertising trackers.
+    </p>
+
+    <h2>3. Why this data is collected</h2>
+    <p>This data is used solely to handle your enquiry, that is to:</p>
+    <ul>
+      <li>get back to you;</li>
+      <li>understand your requirement and respond to it;</li>
+      <li>follow up on your enquiry commercially.</li>
+    </ul>
+    <p>It is never sold, transferred or used for advertising purposes.</p>
+
+    <h2>4. Legal basis</h2>
+    <p>
+      Processing is based on your consent, given when you voluntarily complete the contact form,
+      and where applicable on pre-contractual steps taken at your request.
+    </p>
+
+    <h2>5. How long it is kept</h2>
+    <p>
+      Your data is kept for as long as strictly necessary to handle your enquiry and the commercial
+      follow-up arising from it.
+    </p>
+    <p>
+      In line with the proportionality principle set out in article 35 of Ivorian law no. 2013-450
+      of 19 June 2013, which requires data to be erased once it is no longer necessary for the
+      purpose of the processing, ALTARYS LABS applies the following retention periods:
+    </p>
+    <ul>
+      <li>
+        if your enquiry leads to a commercial relationship, your data is kept for the duration of
+        that relationship and then for 3 years after it ends;
+      </li>
+      <li>
+        if your enquiry does not lead to a commercial relationship, your data is kept for 3 years
+        from your last contact with ALTARYS LABS;
+      </li>
+      <li>
+        technical data processed by Cloudflare Turnstile is kept for the periods defined by
+        Cloudflare for that service, generally short.
+      </li>
+    </ul>
+    <p>
+      At the end of these periods your data is deleted or anonymised, unless a longer legal
+      retention obligation applies, for example for accounting purposes or in the event of a
+      dispute.
+    </p>
+
+    <h2>6. Where your data is hosted</h2>
+    <p>
+      Data submitted through the contact form is stored in a database operated by{' '}
+      <strong>Cloudflare, Inc.</strong> and hosted in <strong>Europe</strong>. It is therefore
+      transferred outside Côte d'Ivoire.
+    </p>
+    <p>
+      Cloudflare is a processor providing contractual data protection guarantees. ALTARYS LABS is
+      reviewing the relocation of this hosting to the African continent.
+    </p>
+
+    <h2>7. Who has access</h2>
+    <p>
+      Only authorised ALTARYS LABS staff responsible for commercial follow-up have access to your
+      data.
+    </p>
+    <p>The following technical processors are involved, strictly within the scope of their work:</p>
+    <ul>
+      <li>
+        <strong>Cloudflare, Inc.</strong>: site hosting, Turnstile anti-bot protection and storage
+        of enquiries;
+      </li>
+      <li><strong>Resend</strong>: sending notification emails for incoming enquiries.</li>
+    </ul>
+    <p>
+      ALTARYS LABS ensures that these processors offer sufficient data protection guarantees and
+      access your data only as far as necessary to perform their service.
+    </p>
+
+    <h2>8. Your rights</h2>
+    <p>
+      Under <strong
+        >Ivorian law no. 2013-450 of 19 June 2013 on the protection of personal data</strong
+      >, you have the right to access, rectify, object to and delete data concerning you.
+    </p>
+    <p>
+      To exercise these rights, please write to{' '}
+      <a href="mailto:contact@altaryslabs.com">contact@altaryslabs.com</a>.
+    </p>
+    <p>
+      You may also refer the matter to the{' '}
+      <strong>Telecommunications/ICT Regulatory Authority of Côte d'Ivoire (ARTCI)</strong>, the
+      Ivorian data protection authority, if you consider that your rights are not being respected.
+    </p>
+
+    <h2>9. Cookies</h2>
+    <p>This site places no analytics cookies and no advertising cookies.</p>
+    <p>
+      Only cookies strictly necessary for the Cloudflare Turnstile anti-bot mechanism may be placed
+      when the contact form is submitted.
+    </p>
+
+    <h2>10. Changes to this policy</h2>
+    <p>
+      ALTARYS LABS reserves the right to amend this policy at any time to reflect changes to the
+      site, its services or applicable regulations. The version in force is the one published on
+      the site at the time of consultation.
+    </p>
+
+    <h2>11. Contact</h2>
+    <p>
+      For any question about this policy or the processing of your personal data, please write to{' '}
+      <a href="mailto:contact@altaryslabs.com">contact@altaryslabs.com</a>.
+    </p>
+  </LegalPage>
+</BaseLayout>
