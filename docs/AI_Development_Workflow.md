@@ -1,0 +1,191 @@
+# altaryslabs.com - AI-Assisted Development Workflow
+
+*v1.0 - showcase website - ALTARYS LABS, Cote d'Ivoire*
+
+---
+
+## Purpose
+
+A pragmatic AI workflow for the ALTARYS LABS showcase website, sized for a solo founder plus Claude. It is deliberately lighter than the workflow used on the product repositories: this is a static bilingual marketing site, not a multi-tenant application.
+
+Two things it keeps from the heavier pipeline, because they are what actually prevents defects:
+
+1. **Fresh-session personalities**, so each step gets unbiased input.
+2. **The Writer / Reviewer separation**, so nobody reviews their own work.
+
+Everything else is trimmed.
+
+---
+
+## What makes this project different
+
+The failure modes here are not crashes. They are **credibility failures**, and they are silent:
+
+- an English sentence on a French page
+- a page that exists in French but not in English
+- a violet accent that belongs to a product not yet launched
+- an Open Graph image referenced but never uploaded, killing every WhatsApp preview
+- a client name published without approval
+- a fabricated figure that a prospect can disprove in one question
+
+The visitor is an Ivorian executive (DG, DSI, DRH) evaluating IT contractors for tenders worth 20 to 100 million FCFA. The site has about 30 seconds to establish that ALTARYS LABS is a serious engineering company. That is the quality bar.
+
+---
+
+## Deployed files
+
+| Content | Location |
+|---|---|
+| Personality system prompts | `.claude/personalities/*.md` |
+| This workflow | `docs/AI_Development_Workflow.md` |
+| Project AI context | `CLAUDE.md` |
+| Reference documents (spec, brand, PRD, blueprint) | `docs/vitrine/` |
+| Redesign mission and design brief | `docs/vitrine/refonte/` |
+| Decision log | `docs/DECISIONS.md` |
+| Work item docs | `docs/work-items/<ID>.md` |
+| Reviews | `docs/reviews/<ID>-review.md` |
+| Design handoffs and mockups | `docs/design/` |
+
+Folders that do not exist yet are created by the first work item that needs them.
+
+---
+
+## The two personalities
+
+| # | Personality | File | Role |
+|---|---|---|---|
+| - | *Human: founder* | - | Sets editorial and commercial direction, approves the plan, approves the done gate, merges |
+| 1 | **TECH_LEAD** | `.claude/personalities/TECH_LEAD.md` | Architect + product owner + developer + designer, in one session with a single plan gate |
+| 2 | **REVIEWER** | `.claude/personalities/REVIEWER.md` | Independent review: build, bilingual parity, brand, editorial guardrails, SEO, accessibility, performance, deployment |
+| - | *Human: founder* | - | Merges the PR, then updates `CLAUDE.md` with anything the next session must know |
+
+**Why fresh sessions matter**: Claude will not be biased toward content or code it just wrote. Always launch a new session for the REVIEWER. Never reuse the TECH_LEAD session. This is non-negotiable and no deadline justifies waiving it.
+
+The heavier product repositories run seven personalities (analyst, legal auditor, architect, designer, product owner, developer, reviewer). Two is enough here because there is no legal exposure in a marketing page, no data model, and no cross-module architecture. If the site ever grows a real application surface, revisit this.
+
+---
+
+## End-to-end flow for one work item
+
+```
+1  Founder states the need                                    (human)
+2  TECH_LEAD orients: CLAUDE.md, DECISIONS.md, docs/vitrine/,
+   routes.ts, dictionaries, tokens                            (Claude - fresh session)
+3  TECH_LEAD presents a unified plan                          (Claude)
+4  Founder approves the plan                          [PLAN GATE - human]
+5  TECH_LEAD writes the work item doc + D-rows               (Claude)
+6  TECH_LEAD implements, in a dedicated worktree              (Claude)
+7  TECH_LEAD presents the done gate                   [DONE GATE - human]
+8  Founder approves, PR is opened via /commit-push-pr         (human + Claude)
+9  REVIEWER reviews, round R1                                 (Claude - fresh session)
+10 Fix, push, then R2, then R3 if needed                       (Claude)
+11 Founder merges                                             (human)
+12 Founder updates CLAUDE.md if anything durable changed      (human)
+```
+
+Steps 4, 7 and 11 are **human gates**. They cannot be automated, inferred or self-granted. A question that times out with an invitation to proceed is **not** an approval; the session waits.
+
+Ship **one work item at a time**. Never batch.
+
+---
+
+## Work item nomenclature
+
+The pipeline formally models a change of any kind. Decide the type first.
+
+First question: **does a visitor see a difference?**
+
+```
+"does a visitor see a difference?"
+|- YES ........................................ STORY  <PFX>-NNN
+|- NO, but something was broken ............... FIX    <PFX>-FIX-NNN   (incl. a doc that LIES)
+|- NO, and nothing was broken
+     |- "is code or configuration touched?"
+          |- YES ............................... REF    <PFX>-REF-NNN
+          |- NO ................................ CHR    <PFX>-CHR-NNN
+```
+
+A document that asserts something false is a **FIX**, not a chore: the defect is the false claim, not the file extension. Posing a new convention that simply did not exist yet is a **CHR**: nothing was broken.
+
+### Prefixes (LOCKED)
+
+| Prefix | Scope |
+|---|---|
+| `SITE` | Cross-cutting: build, tooling, repository-wide conventions, dependencies |
+| `PAGE` | Pages, routing, navigation structure |
+| `UI` | Components, tokens, styles, visual layer |
+| `I18N` | Dictionaries, bilingual routing, FR and EN parity |
+| `SEO` | Titles, meta, Open Graph, hreflang, sitemap, JSON-LD, robots |
+| `FORM` | Contact form, Pages Function, D1, Turnstile, email notification |
+| `OPS` | Cloudflare Pages, DNS, deployment, domain switch |
+
+### Table
+
+| Type | ID | Branch | Tracking doc | Review |
+|---|---|---|---|---|
+| Story | `<PFX>-NNN` | `feat/<slug>` | `docs/work-items/<PFX>-NNN.md` | `docs/reviews/<PFX>-NNN-review.md` |
+| Fix | `<PFX>-FIX-NNN` | `fix/<slug>` | `docs/work-items/<PFX>-FIX-NNN.md` | `docs/reviews/<PFX>-FIX-NNN-review.md` |
+| Refactor | `<PFX>-REF-NNN` | `refactor/<slug>` | `docs/work-items/<PFX>-REF-NNN.md` | `docs/reviews/<PFX>-REF-NNN-review.md` |
+| Chore | `<PFX>-CHR-NNN` | `chore/<slug>` | `docs/work-items/<PFX>-CHR-NNN.md` | `docs/reviews/<PFX>-CHR-NNN-review.md` |
+
+- **Separate counter per (prefix, type)**, each starting at `001`, three digits. `PAGE-004` and `PAGE-REF-001` do not collide.
+- Re-grep before reserving an ID, **on every open branch, not only the current one**. IDs collide the same way D-numbers do.
+- `grep -rhoE "PAGE-(FIX-|REF-|CHR-)?[0-9]{3}" docs | sort -u | tail -1`
+
+### When does an item need an ID and a doc?
+
+- `FIX` and `REF` always bear an ID.
+- `CHR` bears an ID only when it must be **tracked**: either it is deferred, or it carries a D-row because it poses a durable convention. Otherwise a slug-only branch is normal and sufficient.
+- The **tracking doc is required for a deferred item** (it is what a future session picks up) and **optional for an item executed immediately** (branch plus D-row plus review suffice).
+
+---
+
+## Decision log
+
+Every structural decision, editorial call, design choice or scope decision goes into `docs/DECISIONS.md` as a **D-row** before the session closes, citing the work item ID.
+
+Format:
+
+```markdown
+| D | Date | Item | Decision | Rationale | Rejected alternatives |
+|---|---|---|---|---|---|
+| D001 | 2026-07-30 | PAGE-001 | FR at the root, EN prefixed under /en/ with translated slugs | ... | ... |
+```
+
+Grep for the highest D-number before assigning new ones, across every open branch. An unrecorded decision is future drift.
+
+A superseded clause in an existing D-row is **not** a defect. A D-row is a dated journal entry: it is annotated, never rewritten.
+
+---
+
+## Branch and worktree discipline
+
+- **Never work in the main checkout.** Every work item gets its own worktree: `git worktree add -b <type>/<slug> .claude/worktrees/<slug> <base>`
+- **Never commit on `main`.**
+- The current working branch is `refonte-multipages`. Redesign work branches from it and targets it, not `main`.
+- **`main` still serves the live site through GitHub Pages**, and the redesign commit removes `CNAME`. Merging into `main` before the DNS switch breaks the live site immediately. That merge is a founder decision, made once, deliberately.
+
+---
+
+## Critical rules
+
+1. **Plan before execute.** No file written, no command run that changes state, before the founder has explicitly approved the plan. A timeout is not an approval.
+2. **Fresh session for the REVIEWER, always.** The author never reviews their own work.
+3. **FR and EN parity is complete.** All 11 pages exist in both languages. `Dictionary` is derived from `fr.ts` so a missing English key fails the build; never weaken that derivation to unblock yourself.
+4. **English is a readaptation, not a translation.** Audiences: anglophone Africa, international investors, donors and NGOs. OHADA and CIMA spelled out, emphasis on offline-first and multi-country rather than on CNPS and ITS.
+5. **`routes.ts` is the single source of truth for routing.** Slugs are translated, so no URL can be derived from the other language. Never hardcode a cross-language URL.
+6. **Palette is strict and violet is forbidden.** Navy and gold for ALTARYS LABS, amber for Papillon HR Suite, teal for ALTARYS ENTERPRISE. Violet belongs to altarys.ai, which is not launched.
+7. **Never invent.** No client name without approval, no figure, no testimonial, no exact date, no price. Every factual claim traces to a document under `docs/vitrine/` or to a recorded founder decision.
+8. **Services first, Products second.** The visitor is evaluating a contractor, not shopping for SaaS.
+9. **Never merge into `main` before the DNS switch.**
+10. **One work item at a time.** No umbrella branches.
+
+---
+
+## Typography rule (machine-wide)
+
+The em-dash and the middle dot are never used in generated text, file content, commit messages or comments. Use `-`, `.`, `;` or `|` instead.
+
+---
+
+*Document version 1.0 - initial workflow for the showcase site.*
