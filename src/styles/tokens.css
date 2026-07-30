@@ -49,6 +49,7 @@
   --ink-05: rgba(255, 255, 255, 0.05); /* filet du bandeau legal */
 
   /* --- Voiles d'or (bordures, fonds subtils) ---------------------------- */
+  --gold-03: rgba(200, 146, 42, 0.03); /* trame decorative du hero */
   --gold-06: rgba(200, 146, 42, 0.06);
   --gold-08: rgba(200, 146, 42, 0.08);
   --gold-10: rgba(200, 146, 42, 0.1);

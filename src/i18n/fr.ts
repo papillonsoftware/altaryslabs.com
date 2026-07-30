@@ -1,21 +1,32 @@
 import type { PageKey } from './routes';
 
 /**
- * Dictionnaire francais. C'est la langue de reference : le type Dictionary est
- * derive de ce fichier, donc toute cle ajoutee ici devient obligatoire en
- * anglais et le build echoue tant qu'elle manque.
+ * Dictionnaire français. C'est la langue de référence : le type Dictionary est
+ * dérivé de ce fichier, donc toute clé ajoutée ici devient obligatoire en
+ * anglais et le build échoue tant qu'elle manque.
  */
 export const fr = {
   common: {
     skipToContent: 'Aller au contenu principal',
     newTab: 'ouvre un nouvel onglet',
     switchLanguage: 'Changer de langue',
+    learnMore: 'En savoir plus',
+    discover: 'Découvrir',
+  },
+
+  /**
+   * Disponibilité de Papillon Collection Solution, centralisée ici et nulle
+   * part ailleurs. Le jour du lancement, une seule ligne à changer pour passer
+   * à "Disponible". Jamais de date exacte sur une page publique.
+   */
+  availability: {
+    pcs: 'Disponible T3 2026',
   },
 
   nav: {
     products: 'Produits',
     services: 'Services',
-    about: 'A propos',
+    about: 'À propos',
     contact: 'Contact',
     cta: 'Discutons',
     openMenu: 'Ouvrir le menu',
@@ -23,56 +34,112 @@ export const fr = {
     home: 'Accueil',
   },
 
-  /** Libelle court de chaque page, utilise en navigation et en fil d'Ariane. */
+  /** Libellé court de chaque page, utilisé en navigation et en fil d'Ariane. */
   pageName: {
     home: 'Accueil',
     products: 'Produits',
     productsHr: 'Papillon HR Suite',
-    productsFinance: 'Papillon Corporate Finance Suite',
+    productsFinance: 'Papillon Corporate Finance',
     productsPcs: 'Papillon Collection Solution',
     services: 'Services',
     servicesConsulting: 'Conseil IT, RH et Finance',
-    servicesDev: 'Developpement sur mesure',
+    servicesDev: 'Développement sur mesure',
     servicesAi: 'IA souveraine',
-    about: 'A propos',
+    about: 'À propos',
     contact: 'Contact',
   } satisfies Record<PageKey, string>,
 
-  /** Accroche courte de chaque page, affichee dans les menus deroulants. */
+  /** Accroche courte de chaque page, affichée dans les menus déroulants. */
   pageTagline: {
     home: '',
     products: '',
     productsHr: 'SaaS RH et paie conforme OHADA',
-    productsFinance: 'Budgetisation conforme SYSCOHADA',
+    productsFinance: 'Budgétisation conforme SYSCOHADA',
     productsPcs: 'Recouvrement de primes en zone CIMA',
     services: '',
-    servicesConsulting: "Systemes d'information, RH et gestion financiere",
-    servicesDev: 'Applications web, mobile et integrations',
-    servicesAi: "Aide a la decision et souverainete des donnees",
+    servicesConsulting: "Systèmes d'information, RH et gestion financière",
+    servicesDev: 'Applications web, mobile et intégrations',
+    servicesAi: 'Aide à la décision et souveraineté des données',
     about: '',
     contact: '',
   } satisfies Record<PageKey, string>,
+
+  /**
+   * Cartes produits et services. Une seule source pour l'accueil et pour les
+   * pages hub : les deux ne peuvent pas diverger.
+   */
+  cards: {
+    products: {
+      /* PCS n'a pas de badge propre : il porte sa disponibilité, lue dans
+         `availability.pcs` pour rester centralisée. */
+      productsPcs: {
+        text: "Automatise le renouvellement de contrats et la relance de primes des assureurs et courtiers de la zone CIMA, par SMS, WhatsApp et email.",
+      },
+      productsHr: {
+        badge: 'SaaS RH et paie',
+        text: "Ressources humaines et paie conformes OHADA, pensées pour les PME de 2 à 350 employés, offline-first et mobile-first.",
+      },
+      productsFinance: {
+        badge: 'SaaS Finance',
+        text: "Budgétisation conforme SYSCOHADA pour les directions financières des PME de la zone OHADA, dépenses et engagements.",
+      },
+    },
+    services: {
+      servicesConsulting: {
+        text: "Accompagnement des entreprises OHADA sur leurs systèmes d'information, leurs processus RH et leur gestion financière.",
+      },
+      servicesDev: {
+        text: "Applications web et mobiles, intégrations et architectures cloud-native conçues pour vos besoins métier.",
+      },
+      servicesAi: {
+        text: "Solutions d'aide à la décision alimentées par une IA souveraine, hébergée et opérée en Afrique.",
+      },
+    },
+  },
+
+  home: {
+    heroBadge: 'Papillon Collection Solution',
+    heroTitle: "Des solutions technologiques pour les entreprises d'Afrique.",
+    heroEmphasis: 'Zones OHADA et CIMA',
+    heroSubtitle:
+      "Ressources humaines, finance d'entreprise et recouvrement de créances, trois domaines où nos suites logicielles et notre expertise conseil accompagnent la croissance des entreprises.",
+    heroPrimary: 'Contactez notre équipe commerciale',
+    heroSecondary: 'Découvrir nos produits',
+
+    productsLabel: 'Nos produits',
+    productsTitle: "Trois suites SaaS pensées pour l'OHADA et le CIMA",
+
+    servicesLabel: 'Nos services',
+    servicesTitle: 'Une expertise sectorielle au service de vos projets',
+
+    aboutLabel: 'ALTARYS LABS',
+    aboutText:
+      "Une SASU de droit ivoirien, active sur les zones OHADA et CIMA, portée par une équipe d'experts techniques et fonctionnels expérimentés en banque, en assurance et dans la mise en œuvre de systèmes métiers complexes et sécurisés.",
+
+    ctaTitle: 'Discutons de votre projet',
+    ctaLabel: 'Contactez notre équipe commerciale',
+  },
 
   meta: {
     home: {
       title: 'ALTARYS LABS | Solutions technologiques pour les entreprises OHADA et CIMA',
       description:
-        "Editeur de suites SaaS et prestataire de conseil et de developpement pour les entreprises d'Afrique de l'Ouest et Centrale. Ressources humaines, finance d'entreprise, recouvrement et assurance.",
+        "Éditeur de suites SaaS et prestataire de conseil et de développement pour les entreprises d'Afrique de l'Ouest et Centrale. Ressources humaines, finance d'entreprise, recouvrement et assurance.",
     },
     products: {
       title: 'Nos produits | ALTARYS LABS',
       description:
-        'Trois suites SaaS concues pour les specificites reglementaires et operationnelles des entreprises des zones OHADA et CIMA.',
+        'Trois suites SaaS conçues pour les spécificités réglementaires et opérationnelles des entreprises des zones OHADA et CIMA.',
     },
     productsHr: {
       title: 'Papillon HR Suite | SaaS RH et paie conforme OHADA',
       description:
-        "Solution SaaS de gestion des ressources humaines et de paie pour les PME de la zone OHADA. Pensee mobile-first et offline-first pour les contextes a connectivite limitee.",
+        "Solution SaaS de gestion des ressources humaines et de paie pour les PME de la zone OHADA. Pensée mobile-first et offline-first pour les contextes à connectivité limitée.",
     },
     productsFinance: {
-      title: 'Papillon Corporate Finance Suite | Budgetisation conforme SYSCOHADA',
+      title: 'Papillon Corporate Finance | Budgétisation conforme SYSCOHADA',
       description:
-        "Solution SaaS de gestion budgetaire, des engagements et des depenses, conforme SYSCOHADA, pour les directions financieres des PME de la zone OHADA.",
+        "Solution SaaS de gestion budgétaire, des engagements et des dépenses, conforme SYSCOHADA, pour les directions financières des PME de la zone OHADA.",
     },
     productsPcs: {
       title: 'Papillon Collection Solution | Recouvrement de primes en zone CIMA',
@@ -82,56 +149,55 @@ export const fr = {
     services: {
       title: 'Nos services | ALTARYS LABS',
       description:
-        'Conseil IT, RH et Finance, developpement sur mesure et solutions d\'aide a la decision par IA souveraine pour les entreprises des zones OHADA et CIMA.',
+        "Conseil IT, RH et Finance, développement sur mesure et solutions d'aide à la décision par IA souveraine pour les entreprises des zones OHADA et CIMA.",
     },
     servicesConsulting: {
       title: 'Conseil IT, RH et Finance | ALTARYS LABS',
       description:
-        "Accompagnement des entreprises OHADA sur leurs systemes d'information, leurs processus RH et leur gestion financiere.",
+        "Accompagnement des entreprises OHADA sur leurs systèmes d'information, leurs processus RH et leur gestion financière.",
     },
     servicesDev: {
-      title: 'Developpement sur mesure | ALTARYS LABS',
+      title: 'Développement sur mesure | ALTARYS LABS',
       description:
-        "Conception et developpement d'applications web et mobile et d'integrations sur mesure, sur une architecture cloud-native eprouvee en production.",
+        "Conception et développement d'applications web et mobile et d'intégrations sur mesure, sur une architecture cloud-native éprouvée en production.",
     },
     servicesAi: {
-      title: "Solutions d'aide a la decision par IA souveraine | ALTARYS LABS",
+      title: "Solutions d'aide à la décision par IA souveraine | ALTARYS LABS",
       description:
-        "Conception de solutions d'aide a la decision alimentees par une IA souveraine, hebergee et operee en Afrique, pour repondre aux enjeux de souverainete des donnees des entreprises OHADA.",
+        "Conception de solutions d'aide à la décision alimentées par une IA souveraine, hébergée et opérée en Afrique, pour répondre aux enjeux de souveraineté des données des entreprises OHADA.",
     },
     about: {
-      title: 'A propos | ALTARYS LABS',
+      title: 'À propos | ALTARYS LABS',
       description:
-        "ALTARYS LABS, SASU de droit ivoirien, rend accessibles aux entreprises OHADA et CIMA des outils SaaS et une expertise conseil habituellement reserves aux grands groupes.",
+        "ALTARYS LABS, SASU de droit ivoirien, rend accessibles aux entreprises OHADA et CIMA des outils SaaS et une expertise conseil habituellement réservés aux grands groupes.",
     },
     contact: {
       title: 'Contact | ALTARYS LABS',
       description:
-        "Echangez avec notre equipe commerciale sur vos besoins en solutions RH, finance, recouvrement, conseil ou developpement sur mesure.",
+        "Échangez avec notre équipe commerciale sur vos besoins en solutions RH, finance, recouvrement, conseil ou développement sur mesure.",
     },
   } satisfies Record<PageKey, { title: string; description: string }>,
 
   footer: {
     tagline:
-      "Editeur de solutions SaaS et partenaire technologique des entreprises des zones OHADA et CIMA.",
+      "Solutions technologiques pour les entreprises d'Afrique, zones OHADA et CIMA.",
     columnProducts: 'Produits',
     columnServices: 'Services',
     columnCompany: 'Entreprise',
     legalEntity: 'ALTARYS LABS, SASU de droit ivoirien',
     rccm: 'RCCM CI-ABI-03-2026-B17-00070',
-    location: 'Abidjan, Cote d\'Ivoire',
-    rights: 'Tous droits reserves.',
+    location: "Abidjan, Côte d'Ivoire",
+    rights: 'Tous droits réservés.',
   },
 } as const;
 
 /**
- * Meme forme que `fr`, mais avec des `string` au lieu des litteraux figes par
- * `as const`. C'est le contrat que doit remplir chaque traduction : memes cles,
- * texte libre. Une cle oubliee ou en trop fait echouer le build.
+ * Même forme que `fr`, mais avec des `string` au lieu des littéraux figés par
+ * `as const`. C'est le contrat que doit remplir chaque traduction : mêmes clés,
+ * texte libre. Une clé oubliée ou en trop fait échouer le build.
  */
 type Translated<T> = {
   [K in keyof T]: T[K] extends string ? string : Translated<T[K]>;
 };
 
 export type Dictionary = Translated<typeof fr>;
-

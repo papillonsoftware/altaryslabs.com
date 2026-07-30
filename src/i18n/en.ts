@@ -21,6 +21,16 @@ export const en: Dictionary = {
     skipToContent: 'Skip to main content',
     newTab: 'opens in a new tab',
     switchLanguage: 'Change language',
+    learnMore: 'Learn more',
+    discover: 'Explore',
+  },
+
+  /**
+   * Papillon Collection Solution availability, defined here and nowhere else.
+   * One line to change on launch day. Never an exact date on a public page.
+   */
+  availability: {
+    pcs: 'Available Q3 2026',
   },
 
   nav: {
@@ -38,7 +48,7 @@ export const en: Dictionary = {
     home: 'Home',
     products: 'Products',
     productsHr: 'Papillon HR Suite',
-    productsFinance: 'Papillon Corporate Finance Suite',
+    productsFinance: 'Papillon Corporate Finance',
     productsPcs: 'Papillon Collection Solution',
     services: 'Services',
     servicesConsulting: 'IT, HR and Finance Consulting',
@@ -62,6 +72,56 @@ export const en: Dictionary = {
     contact: '',
   },
 
+  cards: {
+    products: {
+      productsPcs: {
+        text: 'Automates policy renewal and premium follow-up for insurers and brokers, over SMS, WhatsApp and email.',
+      },
+      productsHr: {
+        badge: 'HR and payroll SaaS',
+        text: 'HR and payroll for companies of 2 to 350 employees, offline-first and mobile-first, with compliance rules configurable country by country.',
+      },
+      productsFinance: {
+        badge: 'Finance SaaS',
+        text: 'Budgeting, commitments and expense management aligned with the SYSCOHADA accounting standard used across 17 African countries.',
+      },
+    },
+    services: {
+      servicesConsulting: {
+        text: 'We help African organisations strengthen their information systems, HR processes and financial management.',
+      },
+      servicesDev: {
+        text: 'Web and mobile applications, systems integration and cloud-native architecture, designed around how your teams actually work.',
+      },
+      servicesAi: {
+        text: 'AI-powered decision support, hosted and operated in Africa, for organisations whose data cannot leave the continent.',
+      },
+    },
+  },
+
+  home: {
+    heroBadge: 'Papillon Collection Solution',
+    heroTitle: 'Enterprise software built for African companies.',
+    heroEmphasis: 'West and Central Africa',
+    heroSubtitle:
+      'Human resources, corporate finance and insurance premium collection. Three domains where our software and our consulting practice support the growth of African organisations.',
+    heroPrimary: 'Talk to our team',
+    heroSecondary: 'Explore our products',
+
+    productsLabel: 'Our products',
+    productsTitle: 'Three SaaS suites designed for African regulatory realities',
+
+    servicesLabel: 'Our services',
+    servicesTitle: 'Sector expertise applied to your projects',
+
+    aboutLabel: 'ALTARYS LABS',
+    aboutText:
+      'An Ivorian company operating across the OHADA business-law zone and the CIMA insurance zone, run by technical and functional specialists with a background in banking, insurance and the delivery of complex, secure business systems.',
+
+    ctaTitle: "Let's discuss your project",
+    ctaLabel: 'Talk to our team',
+  },
+
   meta: {
     home: {
       title: 'ALTARYS LABS | Enterprise software for African markets',
@@ -79,7 +139,7 @@ export const en: Dictionary = {
         'A SaaS platform for human resources and payroll, built for small and mid-sized companies across Africa. Mobile-first and offline-first, so it keeps working where connectivity does not.',
     },
     productsFinance: {
-      title: 'Papillon Corporate Finance Suite | Budgeting and expense management',
+      title: 'Papillon Corporate Finance | Budgeting and expense management',
       description:
         'A SaaS platform for budgeting, commitment tracking and expense management, aligned with the SYSCOHADA accounting standard used across 17 African countries.',
     },
@@ -122,13 +182,13 @@ export const en: Dictionary = {
 
   footer: {
     tagline:
-      'SaaS provider and technology partner to organisations across West and Central Africa.',
+      'Enterprise software for African companies, across West and Central Africa.',
     columnProducts: 'Products',
     columnServices: 'Services',
     columnCompany: 'Company',
-    legalEntity: 'ALTARYS LABS, a company incorporated in Cote d\'Ivoire',
+    legalEntity: "ALTARYS LABS, a company incorporated in Côte d'Ivoire",
     rccm: 'Company registration CI-ABI-03-2026-B17-00070',
-    location: 'Abidjan, Cote d\'Ivoire',
+    location: "Abidjan, Côte d'Ivoire",
     rights: 'All rights reserved.',
   },
 };
