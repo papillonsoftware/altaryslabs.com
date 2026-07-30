@@ -56,24 +56,23 @@ const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
 
 <style>
   .footer {
-    padding: 64px 0 32px;
-    background: var(--navy-deep);
-    border-top: 1px solid var(--gold-08);
+    padding: 64px 0 28px;
+    background: var(--navy-footer);
+    border-top: 1px solid var(--ink-06);
   }
 
   .footer-grid {
     display: grid;
-    grid-template-columns: 1.6fr repeat(3, 1fr);
-    gap: 40px;
-    padding-bottom: 40px;
+    grid-template-columns: 1.4fr repeat(3, 1fr);
+    gap: 48px;
+    padding-bottom: 48px;
   }
 
   .footer-tagline {
-    margin-top: 20px;
-    max-width: 300px;
+    margin-top: 16px;
+    max-width: 280px;
     font-size: 13px;
-    font-weight: 300;
-    color: var(--ink-40);
+    color: var(--slate);
     line-height: 1.75;
   }
 
@@ -81,10 +80,10 @@ const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
     font-family: var(--font-mono);
     font-size: 10px;
     font-weight: 400;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--gold);
-    margin-bottom: 16px;
+    margin-bottom: 18px;
   }
 
   .footer-column ul {
@@ -92,25 +91,24 @@ const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
   }
 
   .footer-column li + li {
-    margin-top: 10px;
+    margin-top: 11px;
   }
 
   .footer-column a {
-    font-size: 13px;
-    font-weight: 300;
-    color: var(--ink-40);
+    font-size: 13.5px;
+    color: var(--muted);
     text-decoration: none;
     line-height: 1.5;
     transition: color var(--ease);
   }
 
   .footer-column a:hover {
-    color: var(--gold);
+    color: var(--gold-light);
   }
 
   .footer-legal {
-    padding-top: 28px;
-    border-top: 1px solid var(--gold-06);
+    padding-top: 22px;
+    border-top: 1px solid var(--ink-05);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -118,13 +116,13 @@ const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
   }
 
   .footer-legal p {
-    font-size: 11px;
-    font-weight: 300;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
     color: var(--ink-25);
   }
 
   .footer-legal .mono {
-    letter-spacing: 0.04em;
+    letter-spacing: 0.03em;
   }
 
   @media (max-width: 900px) {
