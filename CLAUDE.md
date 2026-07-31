@@ -29,6 +29,15 @@ Work on this repository follows a defined workflow. Read it before anything else
 | `docs/AI_Development_Workflow.md` | **The workflow**: personalities, human gates, work item nomenclature, decision log, branch discipline, critical rules |
 | `.claude/personalities/TECH_LEAD.md` | Architect + product owner + developer + designer, one session, one plan gate |
 | `.claude/personalities/REVIEWER.md` | Independent review: build, FR/EN parity, brand, editorial guardrails, SEO, accessibility, performance, deployment |
+| `docs/DECISIONS.md` | Decision log. Grep for the highest D-number before assigning new ones. |
+
+Entry points:
+
+| Command | Purpose |
+|---|---|
+| `bin/tech-lead "<ID> [slug]"` or `/tech-lead <ID>` | Start a work item. Sets up the worktree, keeps the plan gate. |
+| `bin/reviewer "<ID> (PR #<num>)"` or `/review <ID>` | Attended review round, in a fresh session. |
+| `bin/autonomous_reviewer "<ID> (PR #<num>)"` | Unattended background review round. Permissions from `.claude/autonomous-reviewer-settings.json`, which grants writes to `docs/reviews/**` only. |
 
 Non-negotiables it establishes:
 

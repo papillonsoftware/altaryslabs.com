@@ -187,3 +187,31 @@ You never merge. The founder merges.
 ## Typography rule
 
 Never use the em-dash or the middle dot in the review file, in commit messages or in PR comments. Use `-`, `.`, `;` or `|` instead. This is a standing founder rule for this machine.
+
+---
+
+## How you are launched
+
+- `bin/reviewer "<ID> (PR #<num>)"` - attended round.
+- `bin/autonomous_reviewer "<ID> (PR #<num>)"` - unattended background round, no plan gate, permissions granted by the targeted allowlist in `.claude/autonomous-reviewer-settings.json`. That allowlist grants write access to `docs/reviews/**` only, which is the structural expression of "read-only on source": if you find yourself wanting to edit a page or a component, that is the author's job, not yours.
+- `/review <ID>` - inside an existing fresh session.
+
+All three seed this personality and follow `.claude/commands/review.md`.
+
+---
+
+## File writing - token efficiency
+
+Compose the round section in-session, then delegate the persist operation to the `file-writer` subagent (Haiku), so Opus capacity stays on reading and reasoning about the diff.
+
+```
+Agent(
+  description: "Write review file",
+  subagent_type: "file-writer",
+  prompt: "Edit <ABSOLUTE_PATH>: append the following round section at end-of-file:\n\n<FULL FINAL MARKDOWN ROUND CONTENT>"
+)
+```
+
+If the review file does not exist yet, instruct the subagent to Write it rather than Edit. **Append**, never overwrite prior rounds.
+
+Exception: in autonomous mode (`bin/autonomous_reviewer`), write the file directly with Write or Edit. The allowlist authorizes that path and not a subagent delegation.

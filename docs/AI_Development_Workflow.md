@@ -37,6 +37,11 @@ The visitor is an Ivorian executive (DG, DSI, DRH) evaluating IT contractors for
 | Content | Location |
 |---|---|
 | Personality system prompts | `.claude/personalities/*.md` |
+| CLI launchers | `bin/tech-lead`, `bin/reviewer`, `bin/autonomous_reviewer` |
+| Slash commands | `.claude/commands/*.md` |
+| Shared reviewer procedure | `.claude/reviewer-append.txt` |
+| Autonomous reviewer allowlist | `.claude/autonomous-reviewer-settings.json` |
+| Write-delegate subagent | `.claude/agents/file-writer.md` |
 | This workflow | `docs/AI_Development_Workflow.md` |
 | Project AI context | `CLAUDE.md` |
 | Reference documents (spec, brand, PRD, blueprint) | `docs/vitrine/` |
@@ -52,16 +57,44 @@ Folders that do not exist yet are created by the first work item that needs them
 
 ## The two personalities
 
-| # | Personality | File | Role |
-|---|---|---|---|
-| - | *Human: founder* | - | Sets editorial and commercial direction, approves the plan, approves the done gate, merges |
-| 1 | **TECH_LEAD** | `.claude/personalities/TECH_LEAD.md` | Architect + product owner + developer + designer, in one session with a single plan gate |
-| 2 | **REVIEWER** | `.claude/personalities/REVIEWER.md` | Independent review: build, bilingual parity, brand, editorial guardrails, SEO, accessibility, performance, deployment |
-| - | *Human: founder* | - | Merges the PR, then updates `CLAUDE.md` with anything the next session must know |
+| # | Personality | File | Launcher | Role |
+|---|---|---|---|---|
+| - | *Human: founder* | - | - | Sets editorial and commercial direction, approves the plan, approves the done gate, merges |
+| 1 | **TECH_LEAD** | `.claude/personalities/TECH_LEAD.md` | `bin/tech-lead`, `/tech-lead` | Architect + product owner + developer + designer, in one session with a single plan gate |
+| 2 | **REVIEWER** | `.claude/personalities/REVIEWER.md` | `bin/reviewer`, `bin/autonomous_reviewer`, `/review` | Independent review: build, bilingual parity, brand, editorial guardrails, SEO, accessibility, performance, deployment |
+| - | *Human: founder* | - | - | Merges the PR, then updates `CLAUDE.md` with anything the next session must know |
+
+A third, non-personality helper sits alongside them: `.claude/agents/file-writer.md`, a Haiku subagent that persists finalized documentation writes. See "Write delegation" below.
 
 **Why fresh sessions matter**: Claude will not be biased toward content or code it just wrote. Always launch a new session for the REVIEWER. Never reuse the TECH_LEAD session. This is non-negotiable and no deadline justifies waiving it.
 
 The heavier product repositories run seven personalities (analyst, legal auditor, architect, designer, product owner, developer, reviewer). Two is enough here because there is no legal exposure in a marketing page, no data model, and no cross-module architecture. If the site ever grows a real application surface, revisit this.
+
+---
+
+## Launching a personality
+
+Each launcher in `bin/` is a thin wrapper around `claude --system-prompt-file .claude/personalities/<ROLE>.md`. Run them from the repository root.
+
+```bash
+bin/tech-lead "PAGE-004 page-contact"          # plan gate kept, founder in the loop
+bin/reviewer "PAGE-004 (PR #17)"               # attended review round
+bin/autonomous_reviewer "PAGE-004 (PR #17)"    # unattended background round
+```
+
+Inside an existing session, the equivalent slash commands are `/tech-lead <ID> [slug]` and `/review <ID>`.
+
+The two reviewer launchers share `.claude/reviewer-append.txt`, which carries the stable review procedure. That is why the call itself only passes `<ID> (PR #<num>)`: the procedure is not retyped per prompt, so it cannot silently drift between rounds.
+
+**`bin/autonomous_reviewer` differs from `bin/reviewer` on three points only**: it drops the plan gate (it is pre-authorized to run the review end to end), it runs headless with `-p`, and it takes its permissions from the targeted allowlist in `.claude/autonomous-reviewer-settings.json` rather than from `--dangerously-skip-permissions`. That allowlist grants write access to `docs/reviews/**` and nothing else, which is how "the reviewer is read-only on source" is enforced structurally rather than by good intentions. Autonomy covers the **review**, never a founder decision: it still never merges, never edits a page, and stops on any editorial or commercial call.
+
+## Write delegation
+
+`.claude/agents/file-writer.md` is a Haiku subagent that only persists text. Both personalities delegate their bulky documentation writes to it, once the content is final, so the Opus session keeps its capacity for reading and reasoning.
+
+It **never drafts**. If you find yourself asking it to compose something, that is a misuse: compose in-session, delegate the write.
+
+Source files (`.astro`, `.ts`, `.css`) are written directly, not delegated.
 
 ---
 

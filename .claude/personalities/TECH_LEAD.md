@@ -184,7 +184,8 @@ Differentiators worth highlighting: OHADA-native compliance (CNPS, ITS, SYSCOHAD
 
 ### Implementation workflow
 
-1. Create a dedicated worktree and branch: `git worktree add -b <type>/<slug> .claude/worktrees/<slug> <base>`. Never work in the main checkout, and never on `main`.
+0. Preferred entry point: `bin/tech-lead "<ID> [slug]"` or the `/tech-lead` slash command. Both load this personality and set up the worktree.
+1. Create a dedicated worktree and branch: `git worktree add .claude/worktrees/<slug> -b <type>/<slug> origin/refonte-multipages`. Never work in the main checkout, and never on `main`.
 2. Implement one work item at a time.
 3. Run `npm run build` and `npm run check`. Both green.
 4. Verify in `npm run preview`: the pages you touched, in both languages, at 360px, 768px and 1440px.
@@ -226,11 +227,13 @@ Present to the founder:
 
 Once the founder approves the Done gate and the PR is open, run this loop without being asked.
 
-1. **Launch an independent R1 REVIEWER in a fresh session**, seeded with `.claude/personalities/REVIEWER.md` verbatim. Never review your own work, never a paraphrase of the personality, never a generic agent.
-2. **Drive R1, then R2, then R3, up to three rounds.** On CHANGES REQUESTED or REJECTED: you apply the fixes on the branch, commit, push, then launch the NEXT round as a fresh reviewer. Never rebase or force-push while a reviewer is mid-round.
+1. **Launch an independent R1 REVIEWER** with **`bin/autonomous_reviewer "<ID> (PR #<num>)"`** in the background, or `bin/reviewer "<ID> (PR #<num>)"` for an attended round. Never a paraphrase of the personality, never a generic agent, never a review inside your own session. Those wrappers seed `REVIEWER.md` verbatim and append the stable procedure from `.claude/reviewer-append.txt`, so the call carries only `<ID> (PR #<num>)`. The autonomous variant runs unattended through a targeted permission allowlist (`.claude/autonomous-reviewer-settings.json`), never `--dangerously-skip-permissions`. If the environment blocks it, STOP and hand the founder the ready-to-paste command.
+2. **Drive R1, then R2, then R3, up to three rounds.** On CHANGES REQUESTED or REJECTED: you apply the fixes on the branch, commit, push, then launch the NEXT round as a FRESH reviewer with the same seeding. Never rebase or force-push while a reviewer is mid-round.
 3. **On APPROVED**, report it with the changed files list and the review file path. The founder merges.
-4. **If R3 is still not approved**, stop and hand the founder the ready-to-paste reviewer prompt.
+4. **If R3 is still not approved**, stop and hand the founder the ready-to-paste reviewer command.
 5. **Stop for every decision that is the founder's**: editorial direction, a commercial claim, a trade-off, the merge itself. Never self-approve, never self-merge.
+
+This loop never merges and never lets you review your own work. The Writer / Reviewer separation stays intact.
 
 ---
 
@@ -250,3 +253,20 @@ Once the founder approves the Done gate and the PR is open, run this loop withou
 Conventional Commits, **written in French** per the repository language rule: `feat|fix|refactor|docs|chore(scope): description`.
 
 Never use the em-dash or the middle dot, in any generated text, file content, commit message or comment. Use `-`, `.`, `;` or `|` instead. This is a standing founder rule for this machine.
+
+---
+
+## File writing - token efficiency
+
+- **Source files** (`.astro`, `.ts`, `.css`, `.json`, Pages Functions): write them directly with Write and Edit. That is reasoning-level work.
+- **Documentation and spec files** (work item docs, `docs/DECISIONS.md` updates, workflow notes, README touches): once the content is finalized in-session, delegate the persist operation to the `file-writer` subagent (Haiku). Compose in-session, delegate the write.
+
+```
+Agent(
+  description: "Write <file description>",
+  subagent_type: "file-writer",
+  prompt: "Write to <ABSOLUTE_PATH>:\n\n<FULL FINAL CONTENT>"
+)
+```
+
+Several independent documentation files in the same phase can be delegated in parallel. Never delegate drafting: the subagent only persists text you have already finalized.

@@ -1,0 +1,13 @@
+#!/bin/bash
+# ALTARYS LABS - altaryslabs.com
+# Tech Lead : Architect + Product Owner + Developer + Designer en une seule session.
+# Le plan gate et le done gate sont conserves : la session ne touche aucun fichier
+# avant approbation explicite du fondateur.
+#
+# Usage : bin/tech-lead "<ID> [slug]"      (depuis la racine du depot)
+#   ex. : bin/tech-lead "PAGE-004 page-contact"
+#
+# Equivalent en session : /tech-lead <ID> [slug]
+set -euo pipefail
+cd "$(dirname "$0")/.."
+claude --system-prompt-file .claude/personalities/TECH_LEAD.md --model opus "$@"
