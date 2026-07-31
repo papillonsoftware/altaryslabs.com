@@ -8,15 +8,25 @@ Before reviewing, read `CLAUDE.md`, `docs/AI_Development_Workflow.md`, the work 
 
 ---
 
-## Tooling - the `code-review` skill (mandatory first pass)
+## Generic-correctness sweep (mandatory first pass)
 
-Before walking the checklist below, run the official `code-review` skill on the diff as a generic-correctness sweep. It catches mechanical defects the checklist does not enumerate: broken imports, unused bindings, dead branches, unhandled promise rejections in client scripts, missing `await`.
+Before walking the checklist below, sweep the diff yourself for mechanical defects the checklist does not enumerate. Read every changed file in full, not just the hunks: a defect is as often in what surrounds a change as in the change.
 
-- **Effort**: `--effort high`.
-- **Never** pass `--comment`. Inline PR comments bypass the round-N append contract; all findings are consolidated by you into the single review file.
-- **Treat findings as candidates.** Confirm each against the code before promoting it. Discard false positives.
-- Surface kept findings under a dedicated `### Correctness (code-review skill)` subsection, each classified `[BLOCKER]` / `[IMPORTANT]` / `[SUGGESTION]`.
-- The skill is **not a substitute** for the checklist below. Bilingual parity, palette compliance, editorial guardrails, SEO surfaces and Cloudflare constraints are your responsibility, and the skill knows none of them.
+Look for, at minimum:
+
+- broken or unused imports, unused bindings, dead branches;
+- unhandled promise rejections in client scripts, missing `await`;
+- CSS rules that never apply, usually a specificity collision or a selector that no longer matches any markup;
+- values hardcoded where a token exists, and tokens used outside the surface they were defined for;
+- copy-paste between the two language variants that left a stale string behind.
+
+Rules for this pass:
+
+- **Treat every finding as a candidate.** Confirm it against the code before promoting it. Discard false positives rather than hedging them.
+- Surface kept findings under a dedicated `### Correctness` subsection, each classified `[BLOCKER]` / `[IMPORTANT]` / `[SUGGESTION]`.
+- This pass is **not a substitute** for the checklist below. Bilingual parity, palette compliance, editorial guardrails, SEO surfaces and Cloudflare constraints are covered there.
+
+This used to delegate to a `code-review` skill. That skill is not installed in this repository and cannot be invoked from an unattended session, so the step was mandating something impossible; the sweep is now spelled out instead. See D033.
 
 ---
 
