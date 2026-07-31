@@ -569,6 +569,75 @@ h3 {
   background: var(--gold-12);
 }
 
+/* Cartes a fond navy : elles deviennent blanches, comme les cartes de module
+   du prototype. Sans cela un libelle deja converti se retrouve sur navy. */
+.section--light.section--light .module,
+.section--light.section--light .feature {
+  background: var(--surface);
+  border-color: var(--navy-08);
+  box-shadow: var(--shadow-card);
+}
+
+.section--light.section--light .module p,
+.section--light.section--light .feature-title {
+  color: var(--navy-text);
+}
+
+.section--light.section--light .feature-text {
+  color: var(--slate-body);
+}
+
+/* Corps des pages legales. `LegalPage` style son contenu passe en slot avec
+   `.legal-body :global(p)` et consorts, a (0,2,1) : il faut donc surcharger
+   au-dessus, d'ou le selecteur descendant complet. Sur creme, le gras tombait
+   a 1.04:1, ce qui rendait "ALTARYS LABS" litteralement invisible. */
+.section--light.section--light .legal-body p,
+.section--light.section--light .legal-body li {
+  color: var(--slate-body);
+}
+
+.section--light.section--light .legal-body h2 {
+  color: var(--gold-deeper);
+}
+
+.section--light.section--light .legal-body h3,
+.section--light.section--light .legal-body strong {
+  color: var(--navy-text);
+}
+
+.section--light.section--light .legal-body a {
+  color: var(--gold-deeper);
+}
+
+.section--light.section--light .legal-body a:hover {
+  color: var(--gold-deep);
+}
+
+.section--light.section--light .legal-body li::before {
+  border-color: var(--gold-deep);
+}
+
+/* `PageScaffold` disparaitra avec les pages Contact, mais tant qu'il rend il
+   doit rendre correctement : 1.02:1 pour le fil d'Ariane, 1.56:1 pour la
+   note. */
+.section--light.section--light .breadcrumb li {
+  color: var(--slate-body);
+}
+
+.section--light.section--light .breadcrumb a {
+  color: var(--gold-deeper);
+}
+
+.section--light.section--light .breadcrumb li + li::before {
+  color: var(--gold-deep);
+}
+
+.section--light.section--light .scaffold-note {
+  color: var(--gold-deeper);
+  background: var(--gold-12);
+  border-color: var(--gold-deep);
+}
+
 /* --- Controles de formulaire -----------------------------------------------
    Poses ici pour que le lot FORM n'ait pas a inventer son propre style au
    moment ou il ecrira la page Contact. Aucune page ne les utilise a ce jour.
