@@ -286,6 +286,37 @@ export const en: Dictionary = {
     externalCta: 'Discover PCS on papillon-collection.com',
   },
 
+  about: {
+    title: 'Why ALTARYS LABS',
+    intro:
+      "ALTARYS LABS is a company incorporated in Côte d'Ivoire, operating across the OHADA business-law zone and the CIMA insurance zone. Our mission is to bring SaaS tools and consulting expertise, usually reserved for large corporations, within reach of the companies of those regions.",
+    team:
+      'Our team brings together technical and functional specialists with a background in banking, insurance and the delivery of complex, secure business systems, working to support the growth of African companies.',
+
+    approachLabel: 'Our approach',
+    approach: [
+      {
+        title: 'Regional compliance',
+        text: 'Regional frameworks are designed in from the start: country payroll and social contribution rules, and the SYSCOHADA accounting standard for budgeting. Compliance is never bolted on afterwards.',
+      },
+      {
+        title: 'Offline-first by design',
+        text: 'Our applications keep working without a permanent connection and synchronise when the network returns. They are built for entry-level smartphones and 3G networks.',
+      },
+      {
+        title: 'Data isolation',
+        text: 'Every customer gets its own space. Several database isolation levels cover requirements from small companies to large organisations.',
+      },
+    ],
+
+    leadershipLabel: 'Leadership',
+    leaderName: 'Emmanuel Blonvia',
+    leaderRole: 'Founder and President',
+
+    ctaTitle: "Let's discuss your project",
+    ctaLabel: 'Talk to our team',
+  },
+
   meta: {
     home: {
       title: 'ALTARYS LABS | Enterprise software for African markets',

@@ -35,6 +35,9 @@ const { label, title, intro, align = 'center', badge } = Astro.props;
 
     {intro && <p class="page-intro">{intro}</p>}
 
+    {/* Prolonge le chapo quand une page en demande plusieurs paragraphes. */}
+    <slot />
+
     <slot name="actions" />
   </div>
 </section>

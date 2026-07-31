@@ -1,11 +1,11 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import PageScaffold from '~/components/PageScaffold.astro';
+import AboutContent from '~/components/AboutContent.astro';
 
 const locale = 'fr' as const;
 const pageKey = 'about' as const;
 ---
 
 <BaseLayout locale={locale} pageKey={pageKey}>
-  <PageScaffold locale={locale} pageKey={pageKey} />
+  <AboutContent locale={locale} />
 </BaseLayout>
