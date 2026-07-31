@@ -82,6 +82,9 @@
   --gold-deeper: #8b5e1b; /* tout texte dore sur clair */
 
   /* --- Textes sur fond clair -------------------------------------------- */
+  /* Meme valeur que --navy-mid, et c'est voulu : la teinte qui sert de fond de
+     carte sur sombre sert de couleur de titre sur clair. Deux roles, deux noms,
+     pour qu'un ajustement de l'un ne deplace pas l'autre par surprise. */
   --navy-text: #1a2740; /* titres et texte fort sur clair */
   --slate-body: #5b6472; /* corps de texte sur clair, 5.33:1 sur creme */
   --slate-nav: #3a4256; /* liens de navigation au repos */
@@ -96,8 +99,10 @@
   --navy-10: rgba(26, 39, 64, 0.1); /* bordure des menus deroulants */
   --navy-14: rgba(26, 39, 64, 0.14); /* bordure des champs de formulaire */
   --navy-15: rgba(26, 39, 64, 0.15);
-  --shadow-card: 0 1px 3px rgba(26, 39, 64, 0.04);
-  --shadow-menu: 0 20px 50px rgba(26, 39, 64, 0.14);
+  /* Composees depuis les voiles ci-dessus plutot qu'en dur : cette PR pose la
+     regle "jamais d'hexadecimal en dur hors de ce fichier", elle se l'applique. */
+  --shadow-card: 0 1px 3px var(--navy-04);
+  --shadow-menu: 0 20px 50px var(--navy-14);
 
   /* --- Typographie ------------------------------------------------------ */
   --font-display: 'Cormorant Garamond', Georgia, serif;

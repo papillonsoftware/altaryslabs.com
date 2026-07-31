@@ -79,7 +79,7 @@ This used to delegate to a `code-review` skill. That skill is not installed in t
 
 For any item that delivers or touches a rendered surface which has a mockup, verify the delivered page against it in-session. Do not defer this to an owed founder eyeball by default. This applies to a newly built page and equally to a copy-only or wiring-only change on an existing page, where it becomes a visual non-regression check.
 
-The visual reference for the rebuild is the claude.ai/design project `53d1c228-d274-4df3-8022-1a427dd96c15`, folder `design_handoff_altaryslabs_refonte`: 11 FR pages plus a shared Header and Footer, as `.dc.html` prototypes. They are visual references, not production code.
+The visual reference for the rebuild is the claude.ai/design project `53d1c228-d274-4df3-8022-1a427dd96c15`, **ROOT** of the project, never the frozen `design_handoff_altaryslabs_refonte/` folder (that folder is the first, all-navy iteration and already caused the About page to be built obsolete on the day it merged): 13 FR pages plus a shared Header and Footer, as `.dc.html` prototypes. They are visual references, not production code.
 
 - [ ] Identify the page and the matching prototype referenced by the work item
 - [ ] Verify the implementation **recreates** the prototype with the repository's own components. Inline-styled HTML copied from a `.dc.html` file is a blocker, and so is anything pulled from its `support.js` prototyping runtime.

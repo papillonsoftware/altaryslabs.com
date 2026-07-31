@@ -78,11 +78,18 @@ repository's own components; never copy the inline-styled HTML. `support.js` is
 only the prototyping runtime and is irrelevant here, as is the `localStorage`
 language switcher the prototypes use in place of our real routes.
 
-**The prototypes are wrong on six points and the repository wins.** See D020,
-D017, D029, D030 and D032: the RCCM is `CI-ABJ` and not `CI-ABI`; the product is
-"Papillon Corporate Finance Suite"; the HR page keeps the softened OHADA
-coverage wording and no "MVP" jargon; the legal texts are locked and the handoff
-only moves their footer links; and several prototype colours fail WCAG AA.
+**The prototypes are wrong on six points and the repository wins.** See D017,
+D020, D029, D030, D032 and D037:
+
+1. the RCCM is `CI-ABJ`, not `CI-ABI`;
+2. the product is "Papillon Corporate Finance Suite", with its "Suite";
+3. the HR page keeps the softened OHADA coverage wording and no "MVP" jargon;
+4. the legal texts are locked and the handoff only moves their footer links;
+5. several prototype colours fail WCAG AA and are deliberately darkened;
+6. **the English hero was left on the old positioning** while the French one
+   changed. Rebuilding an English page from the prototype would silently revert
+   it. The validated English line is "Your technology partner for businesses
+   across Africa." with "OHADA and CIMA regions".
 
 ## Build & Deploy
 
