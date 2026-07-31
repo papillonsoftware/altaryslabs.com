@@ -232,3 +232,262 @@ tous deux sous le seuil de 3:1 des elements non textuels. La collision de
 specificite de `LegalPage` est reelle et visible sur quatre pages publiques ;
 elle n'a pas a etre corrigee ici, mais son item de suivi doit exister avant la
 fusion.
+
+---
+
+## Round 2 - 2026-07-31
+
+**Verdict**: CHANGES REQUESTED
+
+Base : `refonte-multipages` a `480d4d4`. Tete relue : `798c104`.
+
+### Ce qui a ete verifie, et comment
+
+Revue conduite dans un worktree independant forke sur `origin/feat/surfaces-claires`
+(`798c104`), en lecture seule sur les sources.
+
+- `npm ci`, puis `npm run build` : vert, 26 pages, `sitemap-0.xml` a 26 URL.
+  `npm run check` : 0 erreur, 0 avertissement, 0 indice sur 60 fichiers. Aucun
+  `any`, aucun `@ts-ignore`, aucun affaiblissement de `Dictionary` dans le diff.
+- `npm run preview` servi depuis le worktree de revue sur le port 4334, pilote
+  par une instance Chrome isolee via le protocole DevTools. Captures en FR et en
+  EN a 360px, 768px et 1440px sur `/`, `/produits`, `/services`, `/a-propos`,
+  `/mentions-legales`, `/en`, `/en/products`, `/en/about`, `/en/legal-notice`.
+  Le site rendu est integralement navy : la fondation est bien dormante, aucune
+  page ne porte `.section--light`, aucune regression de mise en page.
+- **Balayage de contraste automatise sur les 10 pages ci-dessus**, tous les
+  elements textuels visibles, avec composition alpha sur la pile de fonds :
+  **zero echec AA**. Les onze corrections annoncees produisent bien leur effet
+  en production ; le bandeau legal du pied de page, a 2.09:1 avant, est
+  redevenu lisible sur la capture.
+- **Les trois blocages du Round 1 sont fermes, chacun remesure sur la page** en
+  forcant la pseudo-classe via le protocole DevTools, fondation reveillee :
+  - anneau de focus sur clair : `outline-color` calcule `rgb(184, 121, 30)`,
+    solid, 2px, offset 3px, soit **3.63:1** sur `--surface` et **3.25:1** sur
+    `--cream`. Au-dessus du seuil de 3:1. Sur sombre il reste a 6.86:1 ;
+  - bordure du bouton secondaire sur clair : `rgb(184, 121, 30)`, **3.25:1**
+    contre `--cream`, et le libelle a 5.06:1 ;
+  - le pointeur vers le dossier fige est corrige dans les quatre documents,
+    `CLAUDE.md`, `TECH_LEAD.md`, `REVIEWER.md` et `review.md`.
+- Le cran de specificite `.section--light.section--light` fonctionne comme
+  annonce : survol de carte sur clair mesure a `rgb(184, 121, 30)`, **3.25:1**,
+  donc le `.card:hover` scope de `ProductCard` a (0,3,0) est bien battu par les
+  (0,4,0) du peritexte. Les valeurs de specificite du commentaire sont exactes.
+  Avertissement de methode pour la prochaine ronde : `.card` et `.link-arrow`
+  portent une `transition` sur `border-color` et sur `color`, donc un releve de
+  style calcule pris immediatement apres l'injection de la classe renvoie la
+  valeur de depart. Il faut attendre la fin de la transition, sans quoi on
+  conclut a tort que le peritexte perd.
+- Fidelite au prototype verifiee token par token via `DesignSync` a la racine du
+  projet `53d1c228-d274-4df3-8022-1a427dd96c15` : `#F6F2E9`, `#FFFFFF`,
+  `rgba(26,39,64,.08)`, `0 1px 3px rgba(26,39,64,.04)`, `rgba(26,39,64,.1)`,
+  `rgba(26,39,64,.15)`, `0 20px 50px rgba(26,39,64,.14)`, `rgba(251,249,244,0.94)`,
+  `#3A4256`, `#1A2740`, `#5B6472`. Tous presents et exacts. Le badge plein sur
+  clair du prototype, `#07111E` sur `#E5B55A`, est reproduit au chiffre pres.
+  Les deux divergences volontaires, `#B8791E` remplace par `#8B5E1B` pour le
+  texte et `#8A93A6` ecarte, sont conformes a D030. Le decompte de 13 pages plus
+  `Header` et `Footer` a la racine est exact.
+- SEO et deploiement, verifies bien qu'absents du diff : `public/og-image.png` et
+  `public/og-image-en.png` existent, `hreflang` reciproque et `x-default` presents,
+  `robots.txt` coherent, sitemap a 26 URL, bloc D1 toujours neutralise et sans
+  virgule parasite apres `pages_build_output_dir`, pas de `CNAME`, aucun secret
+  dans le diff. La PR vise bien `refonte-multipages`.
+- Garde-fous editoriaux et marque : aucun prix, aucun nom de client, aucune date
+  exacte, aucun ALTARYS ENTERPRISE, aucun violet, aucun ambre, aucun teal, aucun
+  hexadecimal en dur hors de `tokens.css`. PCS reste "Disponible T3 2026" depuis
+  la constante du dictionnaire, "Papillon Corporate Finance Suite" garde son
+  "Suite" sur la page rendue comme dans `fr.ts` et `en.ts`, la page A propos ne
+  nomme qu'Emmanuel Blonvia. Aucun tiret cadratin ni point median dans les lignes
+  ajoutees. Aucune cle de dictionnaire ni route touchee : la parite FR / EN est
+  inchangee.
+- **Le plugin `code-review` n'est toujours pas installe sur ce depot** :
+  `installed_plugins.json` ne l'enregistre que pour le projet `renew-insurance`.
+  La passe de correctness generique a de nouveau ete conduite a l'equivalent, par
+  un agent adversarial dedie, dont chaque candidat a ete reconfirme a la main
+  avant promotion. Point de procedure a trancher par le fondateur, deuxieme
+  ronde consecutive.
+
+### Etat des points du Round 1
+
+Les trois blocages sont fermes. Les six points importants sont traites : le
+peritexte est double, les etats de survol sont couverts, le commentaire du badge
+passe a 10.0:1, le sixieme ecart avec les prototypes est ajoute a `CLAUDE.md`, et
+`docs/work-items/UI-FIX-001.md` plus la ligne de decision existent. Le R1
+demandait "la ligne D033" ; la ligne livree est D038, ce qui est correct sur le
+fond. Le R1 n'est pas modifie, la reconciliation est enregistree ici.
+
+Cinq suggestions du R1 restent ouvertes et sont reprises plus bas ; deux ont ete
+fermees, `--shadow-card` compose desormais depuis `var(--navy-04)` et l'alias
+`--navy-text` est commente.
+
+Ce qui bloque au Round 2 est nouveau, et tient d'abord a un defaut introduit par
+la PR dans le journal de decisions lui-meme.
+
+### Blockers
+
+- [ ] **[BLOCKER]** `docs/DECISIONS.md:47` et `docs/DECISIONS.md:53` - Deux lignes
+  vides inserees a l'interieur du tableau le cassent en trois fragments. En
+  Markdown GitHub un tableau se termine a la premiere ligne vide, et une suite de
+  lignes `| ... |` sans couple en-tete plus separateur n'est plus un tableau.
+  **Verifie en soumettant le fichier au moteur de rendu de GitHub** (`POST
+  /markdown`, mode `gfm`) : la sortie contient **un seul `<table>`**, qui
+  s'arrete a D027, puis **deux `<p>`** contenant D028 a D032 et D036 a D038 en
+  texte brut avec les barres verticales. Les onze lignes que cette PR ajoute,
+  c'est-a-dire exactement celles qui verrouillent la palette a deux surfaces, les
+  deux regles d'accessibilite, le nom du produit et la reference visuelle, ne
+  s'affichent plus comme des decisions dans le journal que `CLAUDE.md` et
+  `docs/AI_Development_Workflow.md` designent comme la memoire du projet. La
+  premiere ligne vide vient de `fac23a3`, la seconde de `798c104` : les deux sont
+  des lignes ajoutees par cette PR.
+  -> Supprimer les deux lignes vides, lignes 47 et 53, pour que les lignes D028 a
+  D038 rejoignent le tableau ouvert ligne 18.
+
+### Important
+
+- [ ] **[IMPORTANT]** `src/styles/global.css:509` - La famille claire couvre
+  `.btn-secondary` et laisse `.btn-primary` sans traitement. **Mesure en page**,
+  bouton injecte dans une section reveillee : le remplissage `--gold` vaut
+  **2.47:1** contre `--cream` et **2.63:1** contre `--cream-header`, sous le seuil
+  de 3:1 de SC 1.4.11 que cette PR applique elle-meme, commentaire a l'appui, a la
+  bordure du bouton secondaire et a l'anneau de focus. Le libelle interieur reste
+  a 6.86:1, donc le bouton se lit ; c'est sa limite contre la page qui disparait.
+  Ce n'est pas un cas theorique : le `Header.dc.html` du prototype pose exactement
+  ce bouton, `#C8922A` plein, sur un fond `rgba(251,249,244,0.94)`, et c'est le
+  premier appel a l'action commercial de chaque page. L'asymetrie entre les deux
+  boutons n'est documentee nulle part.
+  -> Trancher explicitement dans cet item, qui est celui de la fondation : soit
+  ajouter une limite `1px solid var(--gold-deep)` au bouton plein sur clair, soit
+  assombrir le remplissage sur clair, soit enregistrer une ligne de decision qui
+  assume l'ecart. Ne pas laisser UI-002 decouvrir la question page par page.
+
+- [ ] **[IMPORTANT]** `src/styles/global.css:445` - Le peritexte clair ne couvre
+  que les primitives globales, alors que le commentaire d'ouverture annonce que
+  l'on "redefinit les couleurs des composants" plutot que de les dupliquer. Les
+  classes propres aux composants de page restent sur les jetons de surface
+  sombre. **Releve sur la page, fondation reveillee sur les sections de contenu**,
+  huit classes distinctes sur quatre pages :
+
+  | Page | Classe | Ratio sur clair |
+  |---|---|---|
+  | `/` | `.about-text` | 1.05:1 |
+  | `/a-propos` | `.leadership-name` | 1.07:1 |
+  | `/a-propos` | `.leadership-label` | 1.89:1 |
+  | `/a-propos` | `.about-team` | 2.17:1 |
+  | `/a-propos` | `.leadership-role` | 2.91:1 |
+  | `/a-propos` | `.legal-line` | 2.61:1 |
+  | `/produits/papillon-hr-suite` | `.module-label` | 1.02:1 |
+  | `/produits/papillon-hr-suite` | `.roadmap-intro` | 2.17:1 |
+
+  `/produits` et `/services`, qui n'utilisent que des primitives globales,
+  passent a zero echec : la fondation est juste, elle est simplement incomplete.
+  La section "Out of scope" de `docs/work-items/UI-001.md` liste le fond par
+  defaut, le header, le pied de page, les pages et les dictionnaires, mais pas
+  les couleurs propres aux composants de page. L'omission n'est donc ni
+  documentee ni tracee.
+  -> Soit etendre le peritexte a ces huit classes, soit restreindre le
+  commentaire et inscrire cette liste dans "Out of scope" et dans le perimetre de
+  UI-002, pour qu'elle ne soit pas redecouverte page par page.
+
+- [ ] **[IMPORTANT]** `docs/DECISIONS.md:54` - Le journal saute de D032 a D036.
+  D033, D034 et D035 n'existent **sur aucune branche**, locale ou distante :
+  verifie par `git show <ref>:docs/DECISIONS.md` sur la totalite des references.
+  `docs/AI_Development_Workflow.md:188` demande de relever le plus haut numero
+  avant d'en attribuer un nouveau ; le plus haut etait D032. Trois numeros sont
+  desormais brules sans ligne, et un lecteur futur ne peut pas distinguer un saut
+  volontaire de trois lignes perdues dans une fusion.
+  -> Renumeroter en D033, D034 et D035, et repercuter les references dans
+  `src/styles/global.css`, `CLAUDE.md`, `docs/work-items/UI-FIX-001.md` et le
+  present fichier ; ou, a defaut, ajouter une ligne de note expliquant le saut.
+
+- [ ] **[IMPORTANT]** `CLAUDE.md:81` - "The prototypes are wrong on six points"
+  cite six numeros de decision, `D017, D020, D029, D030, D032 et D037`, mais ils
+  ne couvrent que cinq des six points : point 1 par D020, point 2 par D017, point
+  4 par D032, point 5 par D029 et D030 a la fois, point 6 par D037. **Le point 3,
+  "the HR page keeps the softened OHADA coverage wording and no MVP jargon", n'a
+  aucune ligne de decision** : recherche faite dans `docs/DECISIONS.md` sur MVP,
+  HR Suite, "17 countries" et couverture, rien. C'est exactement la classe de
+  defaut que D037 vient de fermer sur ce meme paragraphe : une enumeration dont
+  le decompte annonce ne correspond pas a ce qui est reellement adosse a une
+  decision. Le point 3 est aussi celui qui engage le plus la credibilite, puisque
+  c'est un arbitrage sur une affirmation commerciale de couverture OHADA.
+  -> Ouvrir la ligne de decision manquante pour le point 3, ou retirer son numero
+  du renvoi et dire explicitement qu'il repose sur un arbitrage du fondateur non
+  encore consigne.
+
+- [ ] **[IMPORTANT]** `docs/work-items/UI-001.md:5` - "**Decisions** D028 to D032"
+  est desormais incomplet : `docs/DECISIONS.md:54` et `:55` attribuent aussi D036
+  et D037 a UI-001. Le document de suivi de l'item donne donc un jeu de decisions
+  tronque, sur l'item meme qui vient de faire de l'exhaustivite des renvois un
+  sujet, en ouvrant D037.
+  -> Etendre la mention aux lignes reellement portees par l'item.
+
+### Correctness (passe generique, equivalent `code-review`)
+
+Le plugin n'etant pas installe sur ce depot, la passe a ete conduite par un agent
+adversarial dedie sur le diff, puis chaque candidat reconfirme a la main contre
+le code. Les faux positifs sont ecartes. Les defauts de fond remontes par cette
+passe sont deja portes plus haut, en blocage ou en point important ; ce qui suit
+est le reste.
+
+- **[SUGGESTION]** `src/styles/global.css:500` - `.section--light.section--light
+  .badge--solid` redeclare mot pour mot la paire de `.badge--solid` ligne 328, et
+  rien ne s'interpose entre les deux : la regle est sans effet. Le commentaire qui
+  l'accompagne affirme une intention, "le badge plein garde l'or clair", que le
+  CSS n'impose pas puisqu'il ne surcharge rien. Assumer la redondance comme
+  auto-documentation est defendable, mais alors le commentaire doit le dire.
+- **[SUGGESTION]** `src/styles/global.css:476` - Le second membre de la paire de
+  selecteurs, `.section--light.section--light .card--service`, est mort :
+  `.card--service` n'est jamais emis sans `.card` (`ServiceCard.astro:25`,
+  `AboutContent.astro:43`), et le membre `.card` de la ligne 475, a specificite
+  identique, couvre deja ces elements avec les memes declarations.
+- **[SUGGESTION]** `src/styles/global.css:564` - `.field-input:focus` et ses deux
+  voisines utilisent `:focus` et non `:focus-visible`, et `outline-offset: 1px` la
+  ou tout le site est a `3px`. A (0,2,0) elles battent le `:focus-visible` global
+  a (0,1,0). Point deja souleve au R1, toujours ouvert. Ces regles sont posees
+  precisement pour le lot FORM : l'argument "rien ne s'affiche encore" ne les
+  couvre pas, elles s'afficheront telles quelles.
+- **[SUGGESTION]** `src/styles/tokens.css:45,65,73,90,99,101,105` - Sept jetons
+  sans consommateur : `--cream-header`, `--slate-nav`, `--navy-10`, `--navy-15`
+  et `--shadow-menu`, introduits par cette PR pour UI-002 ; plus `--gold-65` et
+  `--ink-25`, rendus orphelins par les substitutions de cette PR et desormais
+  cites uniquement dans des commentaires. Les deux derniers sont le point
+  sensible : `CLAUDE.md:142` et `:145` en font des regles normatives, or une
+  regle portant sur un jeton que personne n'utilise se perime sans bruit. Point
+  deja souleve au R1, toujours ouvert.
+- **[SUGGESTION]** `src/styles/global.css:374` - `.list-diamond` et ses trois
+  regles ne sont referencees par aucun composant. Code mort preexistant, expedie a
+  chaque page. `.list-diamond li` en `--muted-soft` vaudrait 2.61:1 sur creme,
+  ratio confirme en page sur `.legal-line` qui porte la meme couleur : a couvrir
+  ou a supprimer avant UI-002. Point deja souleve au R1, toujours ouvert.
+- **[SUGGESTION]** `src/styles/tokens.css:42` - `--ink-60` vaut `0.55`, pas
+  `0.60`. Nom trompeur, preexistant, mais cette PR en fait le jeton canonique du
+  texte discret sur sombre et l'inscrit comme tel dans `CLAUDE.md`. Point deja
+  souleve au R1, toujours ouvert.
+- **[SUGGESTION]** Procedure - Installer le plugin `code-review` sur ce depot,
+  pour que l'etape 6 de `.claude/commands/review.md` soit executable telle
+  qu'ecrite. Deuxieme ronde consecutive ou elle est remplacee par un equivalent.
+
+Verifie et propre : aucun `var(--x)` non defini sur l'ensemble de `src/` et de
+`functions/`, accolades equilibrees, aucun selecteur malforme, aucun import
+casse, aucun bloc commente laisse en place, aucun secret. Les commentaires
+ajoutes sont en francais et les documents de specification en anglais,
+conformement a la regle du depot. Le diff sur les sept composants ne touche que
+des declarations `color`. La collision de specificite de `LegalPage` est bien
+decrite par `UI-FIX-001.md` : `.legal-body :global(p)` compile en (0,2,1) et bat
+les deux regles a (0,2,0).
+
+### Summary
+
+Les trois blocages du Round 1 sont fermes et remesures sur la page : anneau de
+focus a 3.63:1 sur blanc et 3.25:1 sur creme, bordure du bouton secondaire a
+3.25:1, pointeur vers le dossier de maquettes fige corrige dans les quatre
+documents de procedure. Le balayage de contraste automatise sur dix pages, FR et
+EN, ne trouve plus aucun echec AA, et le site rendu reste integralement navy :
+la fondation est bien dormante et sans regression. Ce qui bloque desormais est un
+defaut que la PR a introduit dans le journal de decisions : deux lignes vides
+cassent le tableau en trois, et le moteur de rendu de GitHub confirme que les
+onze lignes ajoutees par cet item ne s'affichent plus comme des decisions. S'y
+ajoutent quatre points importants, dont deux trous de couverture de la famille
+claire, le bouton primaire a 2.47:1 sur creme et huit classes de composants
+laissees sur les jetons de surface sombre, a trancher dans la fondation plutot
+que page par page dans UI-002.
