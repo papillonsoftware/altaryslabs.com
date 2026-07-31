@@ -59,7 +59,45 @@
   --gold-25: rgba(200, 146, 42, 0.25);
   --gold-30: rgba(200, 146, 42, 0.3);
   --gold-40: rgba(200, 146, 42, 0.4); /* bordure du bouton secondaire */
-  --gold-65: rgba(200, 146, 42, 0.65); /* eyebrows de section */
+  /* Bordures et decor UNIQUEMENT. Cette valeur a longtemps servi de couleur
+     de sur-titre : a 10px sur navy elle ne donne que 3.49:1, sous le seuil AA
+     de 4.5:1. Les sur-titres sur fond sombre utilisent --gold-light. */
+  --gold-65: rgba(200, 146, 42, 0.65);
+
+  /* --- Surfaces claires -------------------------------------------------
+     Le handoff de juillet 2026 introduit une alternance clair / sombre : le
+     document devient creme, les sections Hero, Deploiement et le bandeau
+     d'appel a l'action restent navy. La regle "navy et or" n'est pas levee,
+     elle gagne une seconde famille de surfaces. Voir D028. */
+  --cream: #f6f2e9; /* fond des sections claires */
+  --cream-header: #fbf9f4; /* fond du header, pose a 94% avec flou */
+  --surface: #ffffff; /* cartes et champs de formulaire sur clair */
+
+  /* --- Or sur fond clair -------------------------------------------------
+     Deux valeurs, et la distinction est une regle d'accessibilite, pas un
+     gout : --gold-deep ne passe pas le seuil AA en petit texte sur creme
+     (3.25:1) ni sur blanc (3.63:1). Tout TEXTE dore sur fond clair utilise
+     --gold-deeper : 5.06:1 sur creme, 5.66:1 sur blanc. Voir D029 et D030. */
+  --gold-deep: #b8791e; /* bordures et decor sur clair */
+  --gold-deeper: #8b5e1b; /* tout texte dore sur clair */
+
+  /* --- Textes sur fond clair -------------------------------------------- */
+  --navy-text: #1a2740; /* titres et texte fort sur clair */
+  --slate-body: #5b6472; /* corps de texte sur clair, 5.33:1 sur creme */
+  --slate-nav: #3a4256; /* liens de navigation au repos */
+
+  /* La maquette pose #8a93a6 pour les mentions discretes sur clair. Ecarte
+     volontairement : 2.76:1, tres au-dessous du seuil. Ces mentions prennent
+     --slate-body. Voir D030. */
+
+  /* --- Voiles de navy (bordures et ombres sur fond clair) --------------- */
+  --navy-04: rgba(26, 39, 64, 0.04);
+  --navy-08: rgba(26, 39, 64, 0.08); /* bordure des cartes sur clair */
+  --navy-10: rgba(26, 39, 64, 0.1); /* bordure des menus deroulants */
+  --navy-14: rgba(26, 39, 64, 0.14); /* bordure des champs de formulaire */
+  --navy-15: rgba(26, 39, 64, 0.15);
+  --shadow-card: 0 1px 3px rgba(26, 39, 64, 0.04);
+  --shadow-menu: 0 20px 50px rgba(26, 39, 64, 0.14);
 
   /* --- Typographie ------------------------------------------------------ */
   --font-display: 'Cormorant Garamond', Georgia, serif;

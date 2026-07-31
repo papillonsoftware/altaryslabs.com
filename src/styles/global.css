@@ -165,13 +165,15 @@ h3 {
   font-family: var(--font-mono);
 }
 
-/* Sur-titre technique en Space Mono, tres espace, au-dessus des titres. */
+/* Sur-titre technique en Space Mono, tres espace, au-dessus des titres.
+   La couleur etait --gold-65, soit 3.49:1 a 10px sur navy, sous le seuil AA.
+   --gold-light donne 10.03:1 pour un rendu quasi identique a l'oeil. D029. */
 .section-label {
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: var(--gold-65);
+  color: var(--gold-light);
   margin-bottom: 12px;
 }
 
@@ -416,4 +418,120 @@ h3 {
     opacity: 1;
     transform: none;
   }
+}
+
+/* --- Surface claire --------------------------------------------------------
+   Le handoff de juillet 2026 fait alterner des sections creme et des sections
+   navy. Plutot que de dupliquer chaque composant en version claire, on
+   redefinit ses couleurs sous `.section--light` : le balisage et les classes
+   des composants ne changent pas, seule la surface qui les porte change.
+
+   Aucune page n'utilise encore cette classe. La bascule du fond par defaut et
+   la conversion des pages appartiennent a UI-002. Voir D028.
+   -------------------------------------------------------------------------- */
+.section--light {
+  background: var(--cream);
+  color: var(--slate-body);
+}
+
+.section--light h1,
+.section--light h2,
+.section--light h3,
+.section--light h4,
+.section--light .card-title {
+  color: var(--navy-text);
+}
+
+.section--light .page-title em,
+.section--light .section-title em,
+.section--light .section-title {
+  color: var(--gold-deeper);
+}
+
+.section--light .section-label {
+  color: var(--gold-deeper);
+}
+
+.section--light .lede,
+.section--light .section-subtitle,
+.section--light .page-intro,
+.section--light .card-text {
+  color: var(--slate-body);
+}
+
+.section--light .card,
+.section--light .card--service {
+  background: var(--surface);
+  border-color: var(--navy-08);
+  box-shadow: var(--shadow-card);
+}
+
+.section--light .link-arrow {
+  color: var(--gold-deeper);
+}
+
+.section--light .badge--soft {
+  color: var(--gold-deeper);
+  background: var(--gold-12);
+}
+
+/* Le badge plein garde l'or clair et le texte navy : deja 8.4:1. */
+.section--light .badge--solid {
+  color: var(--navy-deep);
+  background: var(--gold-light);
+}
+
+.section--light .btn-secondary {
+  color: var(--gold-deeper);
+  border-color: var(--gold-40);
+}
+
+.section--light .btn-secondary:hover {
+  border-color: var(--gold-deep);
+  background: var(--gold-06);
+}
+
+/* --- Controles de formulaire -----------------------------------------------
+   Poses ici pour que le lot FORM n'ait pas a inventer son propre style au
+   moment ou il ecrira la page Contact. Aucune page ne les utilise a ce jour.
+   -------------------------------------------------------------------------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 12.5px;
+  color: var(--slate-body);
+}
+
+.field-input,
+.field-select,
+.field-textarea {
+  background: var(--surface);
+  border: 1px solid var(--navy-14);
+  border-radius: var(--radius-btn);
+  padding: 12px 14px;
+  color: var(--navy-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+
+.field-textarea {
+  resize: vertical;
+}
+
+/* La maquette pose #9AA3B4 en texte indicatif, soit 2.53:1 sur blanc.
+   --slate-body reste secondaire a l'oeil et passe a 5.96:1. */
+.field-input::placeholder,
+.field-textarea::placeholder {
+  color: var(--slate-body);
+}
+
+.field-input:focus,
+.field-select:focus,
+.field-textarea:focus {
+  outline: 2px solid var(--gold-deep);
+  outline-offset: 1px;
 }

@@ -48,7 +48,8 @@ const { label, modules, spacedTop = false } = Astro.props;
     font-size: 10px;
     letter-spacing: 0.35em;
     text-transform: uppercase;
-    color: var(--ink-25);
+    /* --ink-25 donnait 2.09:1. --ink-60 reste neutre et passe a 5.90:1. */
+    color: var(--ink-60);
     margin-bottom: 24px;
   }
 
