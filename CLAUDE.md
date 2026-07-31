@@ -64,11 +64,33 @@ Read these before generating or modifying the website:
 | `docs/vitrine/prompt-vitrine-altaryslabs-v2.md` | Legacy one-page spec, kept for history only |
 
 The visual reference for the rebuild is the claude.ai/design project
-`53d1c228-d274-4df3-8022-1a427dd96c15`, folder `design_handoff_altaryslabs_refonte`:
-11 FR pages plus shared Header and Footer, as `.dc.html` prototypes. Those are
-visual references, not production code. Recreate them with the repository's own
-components; never copy the inline-styled HTML. Its `support.js` is only the
-prototyping runtime and is irrelevant here.
+`53d1c228-d274-4df3-8022-1a427dd96c15`, read through the `DesignSync` tool.
+
+**Read the prototypes at the project ROOT, not the ones in
+`design_handoff_altaryslabs_refonte/`.** That folder is a frozen export of the
+first, all-navy iteration. The root holds the live set: 13 `.dc.html` pages plus
+shared `Header` and `Footer`, including `mentions-legales` and `confidentialite`
+which the folder never had. Building the About page against the frozen folder
+once already produced a page that was obsolete on the day it merged.
+
+These are visual references, not production code. Recreate them with the
+repository's own components; never copy the inline-styled HTML. `support.js` is
+only the prototyping runtime and is irrelevant here, as is the `localStorage`
+language switcher the prototypes use in place of our real routes.
+
+**The prototypes are wrong on six points and the repository wins.** Each has a
+row in `docs/DECISIONS.md`: D020, D017, D041, D032, D029 with D030, and D037,
+in the order below.
+
+1. the RCCM is `CI-ABJ`, not `CI-ABI`;
+2. the product is "Papillon Corporate Finance Suite", with its "Suite";
+3. the HR page keeps the softened OHADA coverage wording and no "MVP" jargon;
+4. the legal texts are locked and the handoff only moves their footer links;
+5. several prototype colours fail WCAG AA and are deliberately darkened;
+6. **the English hero was left on the old positioning** while the French one
+   changed. Rebuilding an English page from the prototype would silently revert
+   it. The validated English line is "Your technology partner for businesses
+   across Africa." with "OHADA and CIMA regions".
 
 ## Build & Deploy
 
@@ -100,11 +122,28 @@ prototyping runtime and is irrelevant here.
   than on CNPS/ITS specifics.
 
 ### Color Palette (Strict)
-- **Navy + Gold only**: `#07111E` and `#0F1724` backgrounds, `#1A2740` cards,
-  `#C8922A` and `#E5B55A` accents, `#FAF7F2` text
+
+**Navy and gold only, across two surface families.** The July 2026 handoff makes
+the site alternate cream and navy sections; it did not widen the palette beyond
+navy and gold. See D028.
+
+- **Dark surfaces**: `#07111E` and `#0F1724` backgrounds, `#1A2740` cards,
+  `#040C16` footer, `#FAF7F2` text, `#C8922A` and `#E5B55A` accents
+- **Light surfaces**: `#F6F2E9` background, `#FFFFFF` cards and form fields,
+  `#FBF9F4` header, `#1A2740` headings, `#5B6472` body text, `#8B5E1B` gold text
 - **Amber and teal are gone.** They belonged to a product split that no longer
   exists. Do not reintroduce them.
 - **Violet is FORBIDDEN**: reserved for altarys.ai, a future product
+- **Always a token from `tokens.css`, never a hardcoded hex in a component.**
+
+**Two accessibility rules that override the mockups.** The prototypes fail WCAG
+AA on small text in several places; the repository deliberately diverges. See
+D029 and D030.
+
+- `--gold-65` is a **border and decoration value only**, never a text colour.
+  Eyebrows are `--gold-light` on dark and `--gold-deeper` on light.
+- Small muted text is `--ink-60` on dark and `--slate-body` on light. Never
+  `--ink-25`, `--ink-40` or `#8A93A6`, all of which fall below 4.5:1.
 
 ### Typography (Google Fonts)
 - **Cormorant Garamond** (300, 400, 600, italic 300): marketing headings
@@ -120,7 +159,7 @@ Products before Services, a deliberate positioning choice.
 | Products hub | `/produits` | `/en/products` |
 | Papillon Collection Solution | `/produits/pcs` | `/en/products/pcs` |
 | Papillon HR Suite | `/produits/papillon-hr-suite` | `/en/products/papillon-hr-suite` |
-| Papillon Corporate Finance | `/produits/papillon-corporate-finance` | `/en/products/papillon-corporate-finance` |
+| Papillon Corporate Finance Suite | `/produits/papillon-corporate-finance` | `/en/products/papillon-corporate-finance` |
 | Services hub | `/services` | `/en/services` |
 | Consulting | `/services/conseil` | `/en/services/consulting` |
 | Custom development | `/services/developpement-sur-mesure` | `/en/services/custom-development` |
@@ -142,8 +181,10 @@ Three SaaS products on a shared Spring Boot 4 / Spring Modulith backend:
 - **Papillon HR Suite**: OHADA-compliant HR and payroll for SMEs of 2 to 350
   employees, mobile-first and offline-first. Presented as 12 business-facing
   module labels, never as internal technical codes.
-- **Papillon Corporate Finance**: SYSCOHADA-compliant budgeting for OHADA SME
-  finance departments, covering expenses and commitments.
+- **Papillon Corporate Finance Suite**: SYSCOHADA-compliant budgeting for OHADA
+  SME finance departments, covering expenses and commitments. The name keeps
+  "Suite". The design handoff drops it in most files and keeps it in
+  `contact.dc.html`; the founder refused the rename. See D017 and D031.
 
 Differentiators worth highlighting: OHADA-native compliance (CNPS, ITS,
 SYSCOHADA), offline-first design for 3G connectivity, multi-tenancy with four

@@ -43,7 +43,8 @@ const { label, text, tags } = Astro.props;
     font-size: 10px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--gold-65);
+    /* --gold-65 donnait 3.06:1 sur la carte. --gold-light : 7.87:1. D029. */
+    color: var(--gold-light);
     margin-bottom: 16px;
   }
 

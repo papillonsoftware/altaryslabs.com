@@ -165,13 +165,15 @@ h3 {
   font-family: var(--font-mono);
 }
 
-/* Sur-titre technique en Space Mono, tres espace, au-dessus des titres. */
+/* Sur-titre technique en Space Mono, tres espace, au-dessus des titres.
+   La couleur etait --gold-65, soit 3.49:1 a 10px sur navy, sous le seuil AA.
+   --gold-light donne 10.03:1 pour un rendu quasi identique a l'oeil. D029. */
 .section-label {
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: var(--gold-65);
+  color: var(--gold-light);
   margin-bottom: 12px;
 }
 
@@ -416,4 +418,267 @@ h3 {
     opacity: 1;
     transform: none;
   }
+}
+
+/* --- Surface claire --------------------------------------------------------
+   Le handoff de juillet 2026 fait alterner des sections creme et des sections
+   navy. Plutot que de dupliquer chaque composant en version claire, on
+   redefinit ses couleurs sous `.section--light` : le balisage et les classes
+   des composants ne changent pas, seule la surface qui les porte change.
+
+   Aucune page n'utilise encore cette classe. La bascule du fond par defaut et
+   la conversion des pages appartiennent a UI-002. Voir D028.
+
+   POURQUOI `.section--light.section--light` PARTOUT. La classe est repetee
+   volontairement, ce qui ajoute un cran de specificite sans changer ce que le
+   selecteur designe. Sans cela, le peritexte se retrouve a egalite avec les
+   styles scopes des composants, `.page-intro[data-astro-cid-...]` valant lui
+   aussi (0,2,0), et l'arbitrage se joue alors sur l'ordre d'emission. Or Astro
+   place les styles scopes tantot avant tantot apres le bundle global selon la
+   route : `ProductCard` passe avant global sur /produits et apres sur /,
+   `CtaBanner` avant sur /a-propos et apres sur seize autres pages. Le peritexte
+   gagnait donc par chance. Il doit gagner par construction, puisque UI-002 va
+   etendre tout le site sur cette fondation. Le doublement porte les regles de
+   base a (0,3,0) et celles d'etat a (0,4,0), au-dessus des `.card:hover` scopes
+   de `ProductCard` et `ServiceCard` qui valent (0,3,0). Voir D036.
+   -------------------------------------------------------------------------- */
+.section--light.section--light {
+  background: var(--cream);
+  color: var(--slate-body);
+}
+
+.section--light.section--light h1,
+.section--light.section--light h2,
+.section--light.section--light h3,
+.section--light.section--light h4,
+.section--light.section--light .card-title {
+  color: var(--navy-text);
+}
+
+.section--light.section--light .page-title em,
+.section--light.section--light .section-title em,
+.section--light.section--light .section-title {
+  color: var(--gold-deeper);
+}
+
+.section--light.section--light .section-label {
+  color: var(--gold-deeper);
+}
+
+.section--light.section--light .lede,
+.section--light.section--light .section-subtitle,
+.section--light.section--light .page-intro,
+.section--light.section--light .card-text {
+  color: var(--slate-body);
+}
+
+.section--light.section--light .card,
+.section--light.section--light .card--service {
+  background: var(--surface);
+  border-color: var(--navy-08);
+  box-shadow: var(--shadow-card);
+}
+
+/* `ProductCard` et `ServiceCard` posent chacun leur propre `.card:hover`, en
+   or a 30% ou en ivoire a 15%. Sur une carte blanche, l'ivoire a 15% est
+   pratiquement du blanc : l'affordance de survol disparaitrait. */
+.section--light.section--light .card:hover {
+  border-color: var(--gold-deep);
+}
+
+.section--light.section--light .link-arrow {
+  color: var(--gold-deeper);
+}
+
+.section--light.section--light .badge--soft {
+  color: var(--gold-deeper);
+  background: var(--gold-12);
+}
+
+/* Le badge plein garde l'or clair et le texte navy : deja 10.0:1, la meme
+   paire que celle mesuree plus haut pour `.section-label`. */
+.section--light.section--light .badge--solid {
+  color: var(--navy-deep);
+  background: var(--gold-light);
+}
+
+/* La bordure heritait de --gold-40, une valeur pensee pour fond sombre : une
+   fois composee sur le creme elle donne #E4CB9C, soit 1.41:1, une limite de
+   bouton invisible. --gold-deep en pleine opacite donne 3.25:1, le seuil de
+   SC 1.4.11 pour la limite d'un composant d'interface. */
+.section--light.section--light .btn-secondary {
+  color: var(--gold-deeper);
+  border-color: var(--gold-deep);
+}
+
+.section--light.section--light .btn-secondary:hover {
+  border-color: var(--gold-deeper);
+  background: var(--gold-06);
+}
+
+/* L'indicateur de focus clavier est le seul reperage du site. En or standard
+   il ne vaut que 2.47:1 sur creme et 2.76:1 sur blanc, sous les 3:1 exiges par
+   SC 1.4.11 et SC 2.4.11. --gold-deep donne 3.25:1. */
+.section--light.section--light :focus-visible {
+  outline-color: var(--gold-deep);
+}
+
+/* Le bouton plein garde le remplissage or de la maquette, qui le pose telle
+   quelle sur le header creme, mais gagne une limite : --gold sur --cream ne
+   vaut que 2.47:1, sous le seuil de 3:1 de SC 1.4.11 pour la limite d'un
+   composant. Le libelle interieur reste a 6.86:1. Assombrir le remplissage
+   aurait respecte le seuil aussi, au prix d'un ecart visible avec le handoff
+   sur le premier appel a l'action commercial de chaque page. Voir D039. */
+.section--light.section--light .btn-primary {
+  border: 1px solid var(--gold-deep);
+}
+
+/* --- Classes propres aux composants sur surface claire ---------------------
+   Le peritexte ci-dessus ne couvre que les primitives globales. Les composants
+   de page portent leurs propres classes, restees sur les jetons de surface
+   sombre : mesurees de 1.02:1 a 2.91:1 une fois la fondation reveillee. Une
+   fondation qui n'en couvrirait qu'une partie forcerait UI-002 a les
+   redecouvrir page par page, ce qui est exactement ce qu'elle doit eviter.
+
+   Regle pour la suite : toute nouvelle classe de composant portant une couleur
+   doit etre ajoutee ici en meme temps qu'elle est ecrite. Voir D040.
+   -------------------------------------------------------------------------- */
+.section--light.section--light .about-text,
+.section--light.section--light .leadership-name {
+  color: var(--navy-text);
+}
+
+.section--light.section--light .about-team,
+.section--light.section--light .leadership-role,
+.section--light.section--light .legal-line,
+.section--light.section--light .module-label,
+.section--light.section--light .roadmap-intro,
+.section--light.section--light .approach-text {
+  color: var(--slate-body);
+}
+
+.section--light.section--light .leadership-label,
+.section--light.section--light .approach-label {
+  color: var(--gold-deeper);
+}
+
+/* L'etiquette technique garde son fond dore tres pale, lisible sur clair
+   comme sur sombre, mais son texte passe a l'or fonce : 5.05:1. */
+.section--light.section--light .approach-tag {
+  color: var(--gold-deeper);
+  background: var(--gold-12);
+}
+
+/* Cartes a fond navy : elles deviennent blanches, comme les cartes de module
+   du prototype. Sans cela un libelle deja converti se retrouve sur navy. */
+.section--light.section--light .module,
+.section--light.section--light .feature {
+  background: var(--surface);
+  border-color: var(--navy-08);
+  box-shadow: var(--shadow-card);
+}
+
+.section--light.section--light .module p,
+.section--light.section--light .feature-title {
+  color: var(--navy-text);
+}
+
+.section--light.section--light .feature-text {
+  color: var(--slate-body);
+}
+
+/* Corps des pages legales. `LegalPage` style son contenu passe en slot avec
+   `.legal-body :global(p)` et consorts, a (0,2,1) : il faut donc surcharger
+   au-dessus, d'ou le selecteur descendant complet. Sur creme, le gras tombait
+   a 1.04:1, ce qui rendait "ALTARYS LABS" litteralement invisible. */
+.section--light.section--light .legal-body p,
+.section--light.section--light .legal-body li {
+  color: var(--slate-body);
+}
+
+.section--light.section--light .legal-body h2 {
+  color: var(--gold-deeper);
+}
+
+.section--light.section--light .legal-body h3,
+.section--light.section--light .legal-body strong {
+  color: var(--navy-text);
+}
+
+.section--light.section--light .legal-body a {
+  color: var(--gold-deeper);
+}
+
+.section--light.section--light .legal-body a:hover {
+  color: var(--gold-deep);
+}
+
+.section--light.section--light .legal-body li::before {
+  border-color: var(--gold-deep);
+}
+
+/* `PageScaffold` disparaitra avec les pages Contact, mais tant qu'il rend il
+   doit rendre correctement : 1.02:1 pour le fil d'Ariane, 1.56:1 pour la
+   note. */
+.section--light.section--light .breadcrumb li {
+  color: var(--slate-body);
+}
+
+.section--light.section--light .breadcrumb a {
+  color: var(--gold-deeper);
+}
+
+.section--light.section--light .breadcrumb li + li::before {
+  color: var(--gold-deep);
+}
+
+.section--light.section--light .scaffold-note {
+  color: var(--gold-deeper);
+  background: var(--gold-12);
+  border-color: var(--gold-deep);
+}
+
+/* --- Controles de formulaire -----------------------------------------------
+   Poses ici pour que le lot FORM n'ait pas a inventer son propre style au
+   moment ou il ecrira la page Contact. Aucune page ne les utilise a ce jour.
+   -------------------------------------------------------------------------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 12.5px;
+  color: var(--slate-body);
+}
+
+.field-input,
+.field-select,
+.field-textarea {
+  background: var(--surface);
+  border: 1px solid var(--navy-14);
+  border-radius: var(--radius-btn);
+  padding: 12px 14px;
+  color: var(--navy-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+
+.field-textarea {
+  resize: vertical;
+}
+
+/* La maquette pose #9AA3B4 en texte indicatif, soit 2.53:1 sur blanc.
+   --slate-body reste secondaire a l'oeil et passe a 5.96:1. */
+.field-input::placeholder,
+.field-textarea::placeholder {
+  color: var(--slate-body);
+}
+
+.field-input:focus,
+.field-select:focus,
+.field-textarea:focus {
+  outline: 2px solid var(--gold-deep);
+  outline-offset: 1px;
 }

@@ -64,16 +64,24 @@ const t = useTranslations(locale);
     max-width: 820px;
   }
 
+  /* ATTENTION : ces deux regles sont actuellement SANS EFFET sur la couleur et
+     la taille. `.legal-body :global(p)` plus bas a une specificite superieure
+     et les ecrase, si bien que les deux paragraphes s'affichent en --muted a
+     14.5px. Le contraste reel est donc bon, par accident.
+     Les valeurs passent quand meme de --ink-25 et --ink-40 a --ink-60 : le jour
+     ou la collision de specificite sera corrigee, la regle ne doit pas se
+     reveiller a 2.09:1. La collision elle-meme est hors perimetre de UI-001,
+     elle est signalee a la porte de fin. D029. */
   .legal-updated {
     font-size: 11px;
     letter-spacing: 0.05em;
-    color: var(--ink-25);
+    color: var(--ink-60);
     margin-bottom: 40px;
   }
 
   .legal-prevails {
     font-size: 13px;
-    color: var(--ink-40);
+    color: var(--ink-60);
     line-height: 1.7;
     border-left: 2px solid var(--gold-30);
     padding-left: 16px;
