@@ -491,3 +491,289 @@ ajoutent quatre points importants, dont deux trous de couverture de la famille
 claire, le bouton primaire a 2.47:1 sur creme et huit classes de composants
 laissees sur les jetons de surface sombre, a trancher dans la fondation plutot
 que page par page dans UI-002.
+
+---
+
+## Round 3 - 2026-07-31
+
+**Verdict**: CHANGES REQUESTED
+
+Base : `refonte-multipages` a `480d4d4`. Tete relue : `0fd25ad`.
+
+### Ce qui a ete verifie, et comment
+
+Revue conduite dans un worktree independant forke sur `origin/feat/surfaces-claires`
+(`0fd25ad`), en lecture seule sur les sources.
+
+- `npm ci`, puis `npm run build` : vert, 26 pages, `sitemap-0.xml` a 26 URL.
+  `npm run check` : 0 erreur, 0 avertissement, 0 indice sur 60 fichiers. Aucun
+  `any`, aucun `@ts-ignore`, aucun affaiblissement de `Dictionary` dans le diff.
+- `npm run preview` servi depuis le worktree de revue sur le port 4337, pilote
+  via `chrome-devtools-mcp`. Rendu controle en FR et en EN a 360px, 768px et
+  1440px. Le site rendu est integralement navy : la fondation est bien dormante.
+  Verifie par grep que ni `.section--light` ni aucune classe `.field-*` n'est
+  emise par un composant ou une page : le diff ne peut pas changer un rendu.
+- **Balayage de contraste automatise sur les 26 pages, FR et EN**, tous les
+  elements textuels visibles, avec composition alpha sur la pile de fonds
+  complete : **zero echec AA**. Les corrections annoncees produisent bien leur
+  effet en production.
+- **Le blocage du Round 2 est ferme.** Le fichier `docs/DECISIONS.md` a ete
+  soumis au moteur de rendu de GitHub (`POST /markdown`, mode `gfm`) : la sortie
+  contient desormais **un seul `<table>` portant les 38 lignes**, D001 a D041,
+  sans fragment en texte brut. Les deux lignes vides internes ont disparu.
+- **Les cinq points importants du Round 2 sont traites** : D039 pose la limite
+  `--gold-deep` du bouton plein, mesuree en page a `rgb(184, 121, 30) 1px`, soit
+  3.25:1 sur creme ; les huit classes mesurees au R2 sont couvertes, plus trois
+  autres ; D033 a D035 sont documentees comme reservees ; le point 3 des ecarts
+  aux prototypes recoit sa ligne D041, verifiee comme la plus haute libre sur
+  toutes les branches ; `docs/work-items/UI-001.md` cite desormais D028 a D032,
+  D036, D037, D039, D040 et D041.
+- **Fondation reveillee et remesuree**, `.section--light` injectee sur les
+  sections de contenu, en excluant le header, le pied de page et les heros qui
+  restent navy dans la maquette et sont hors perimetre de l'item. Il reste douze
+  classes porteuses de couleur sur six pages publiques, detaillees dans le
+  blocage ci-dessous. Delais de transition respectes avant chaque releve, selon
+  l'avertissement de methode du R2.
+- Les ratios annonces ont ete recalcules independamment a la formule sRGB :
+  `--gold-deeper` 5.06:1 sur creme et 5.65:1 sur blanc, `--gold-deep` 3.25:1 et
+  3.63:1, `--gold` 2.47:1 sur creme et 2.63:1 sur `--cream-header`, `--slate-body`
+  5.35:1 sur creme et 5.98:1 sur blanc, `--navy-deep` sur `--gold-light` 10.01:1,
+  `--navy-deep` sur `--gold` 6.86:1, `--gold-40` compose sur creme donnant
+  `#E4CB9C` a 1.41:1. Tous concordent avec les commentaires a 0.02 pres, sauf le
+  point de precision releve en suggestion.
+- SEO et deploiement, verifies bien qu'absents du diff : `public/og-image.png` et
+  `public/og-image-en.png` existent, `hreflang` reciproque avec `x-default`,
+  `og:locale` a `fr_CI` et `en`, canoniques exactes, `robots.txt` coherent,
+  sitemap a 26 URL, bloc D1 toujours neutralise et sans virgule parasite apres
+  `pages_build_output_dir`, pas de `CNAME`, aucun secret. La PR vise bien
+  `refonte-multipages`.
+- Garde-fous editoriaux et marque : aucun prix, aucun nom de client, aucune date
+  exacte, aucun ALTARYS ENTERPRISE, aucun violet, aucun ambre, aucun teal, aucun
+  hexadecimal en dur hors de `tokens.css`. PCS reste "Disponible T3 2026",
+  "Papillon Corporate Finance Suite" garde son "Suite", la page A propos ne nomme
+  qu'Emmanuel Blonvia, Papillon HR Suite reste presente en douze libelles metier.
+  Aucun tiret cadratin ni point median dans les lignes ajoutees. Aucune cle de
+  dictionnaire ni route touchee : la parite FR / EN est inchangee.
+- Accessibilite hors contraste : un seul `h1` par page, `lang` correct sur
+  `<html>`, `prefers-reduced-motion` couvre bien `.fade-in`, repli `.no-js`
+  present. Le retard d'apparition observe sur `/a-propos` est le comportement
+  normal de l'`IntersectionObserver`, verifie, pas un defaut.
+- **Le plugin `code-review` n'est toujours pas installe sur ce depot**, troisieme
+  ronde consecutive. La passe de correctness generique a de nouveau ete conduite
+  a l'equivalent, par un agent adversarial dedie sur le diff, dont chaque
+  candidat a ete reconfirme a la main contre le code avant promotion. Les faux
+  positifs sont ecartes et ne figurent pas ci-dessous.
+
+Le travail de cette ronde est bon : le blocage du journal de decisions est
+reellement ferme, verifie au moteur de rendu, et les corrections de contraste
+tiennent sur les 26 pages. Ce qui bloque tient a une seule chose, mais elle est
+de fond : D040 enregistre une couverture que le CSS livre n'a pas.
+
+### Blockers
+
+- [ ] **[BLOCKER]** `src/styles/global.css:536` et `docs/DECISIONS.md:56` -
+  D040 enregistre que "le peritexte clair couvre aussi les classes propres aux
+  composants", et sa justification ajoute qu'"une fondation qui n'en couvrirait
+  qu'une partie forcerait UI-002 a les redecouvrir page par page, ce qui est
+  exactement ce qu'elle doit eviter". **La fondation livree n'en couvre qu'une
+  partie.** Balayage refait en page, fondation reveillee sur les sections de
+  contenu, header, pied de page et heros exclus parce qu'ils restent navy dans la
+  maquette et sont hors perimetre :
+
+  | Fichier | Selecteur | Ratio sur clair | Pages |
+  |---|---|---|---|
+  | `LegalPage.astro:151` | `.legal-body :global(strong)` | 1.04:1 | 4 |
+  | `LegalPage.astro:93` | `.legal-body :global(h2)` | 1.70:1 | 4 |
+  | `LegalPage.astro:141` | `.legal-body :global(a)` | 1.70:1 | 4 |
+  | `LegalPage.astro:110` | `.legal-body :global(p)` | 2.17:1 | 4 |
+  | `LegalPage.astro:122` | `.legal-body :global(li)` | 2.17:1 | 4 |
+  | `LegalPage.astro:75,82` | `.legal-updated`, `.legal-prevails` | 2.17:1 | 4 et 2 |
+  | `PageScaffold.astro:84,94` | `.breadcrumb li`, `.breadcrumb a` | 1.02:1 | 2 |
+  | `PageScaffold.astro` | `.scaffold-note` | 1.56:1 | 2 |
+
+  Capture a l'appui sur `/en/legal-notice` en creme : "ALTARYS LABS",
+  "Cloudflare, Inc" et "altaryslabs.com" en `<strong>` sont **litteralement
+  invisibles**, et les titres de section "Site publisher", "Hosting",
+  "Intellectual property" sont delaves. Les quatre pages legales ont un prototype
+  clair, l'item le releve lui-meme, et D032 precise que "seul le restylage de
+  surface s'applique" : leur bascule est donc bien prevue.
+
+  S'y ajoute un trou qui n'est pas un defaut de contraste mais un defaut de
+  surface, et qui rend le resultat **pire que l'absence de couverture** :
+  `ModuleGrid.astro:63` `.module` et `FeatureGrid.astro:48` `.feature` gardent un
+  fond `--navy-card`, alors que `.module-label` juste au-dessus, lui, est
+  converti. Capture a l'appui sur `/produits/papillon-hr-suite` : douze tuiles
+  navy alignees sur une page creme, sous un intitule passe en `--slate-body`. Le
+  releve de prototypes de `docs/work-items/UI-001.md:88` dit pourtant
+  explicitement "white feature cards" et "white module cards".
+
+  Enfin, la garantie de D036 ne couvre pas ces pages :
+  `.section--light.section--light h2` vaut (0,2,1) et `.legal-body[data-astro-cid] h2`
+  vaut (0,2,1) aussi. Egalite, donc arbitrage par ordre d'emission, exactement la
+  loterie que le doublement de classe existe pour supprimer. Verifie en page :
+  sur les quatre pages legales c'est `LegalPage` qui gagne.
+
+  Ce n'est pas la meme classe de remarque qu'au R2. Au R2 le trou etait ouvert et
+  non documente ; ici il est **ferme dans le journal et ouvert dans le code**.
+  Une ligne D qui affirme une couverture inexistante fait que personne n'ira la
+  rechercher, ce qui est precisement le mode de defaillance que D031 invoque pour
+  justifier la correction de `CLAUDE.md`.
+  -> Deux sorties acceptables, l'une ou l'autre. Soit etendre le peritexte a ces
+  familles, en n'oubliant pas de remonter d'un cran la specificite face a
+  `.legal-body :global(...)`. Soit restreindre le texte de D040, inscrire la
+  liste ci-dessus dans "Out of scope" de `docs/work-items/UI-001.md` et dans le
+  perimetre de UI-002. Ce qui n'est pas acceptable est de laisser le journal
+  affirmer que la question est reglee.
+
+### Important
+
+- [ ] **[IMPORTANT]** `docs/DECISIONS.md:60` - La correction du blocage du R2 en
+  introduit un autre, plus petit, de la meme famille. La note "D033 to D035 are
+  reserved..." est suivie **immediatement**, sans ligne vide, du `---` de la
+  ligne 62. En Markdown GitHub un `---` colle sous un paragraphe est un marqueur
+  de titre setext : le paragraphe devient un `<h2>`. **Verifie au moteur de rendu
+  de GitHub** : la sortie contient
+  `<h2>D033 to D035 are reserved by <code>SITE-FIX-001</code>...</h2>`, et le
+  fichier ne rend plus qu'un seul `<hr>` la ou il en avait deux. Une note de bas
+  de tableau s'affiche donc comme un titre de section, et le separateur qui
+  isolait le tableau de la note sur les lignes retro-documentees a disparu.
+  -> Inserer une ligne vide entre la ligne 61 et le `---` de la ligne 62.
+
+- [ ] **[IMPORTANT]** `CLAUDE.md:132` - La palette des surfaces claires, dans le
+  document qui fait autorite et qui impose dans le meme paragraphe "Always a
+  token from `tokens.css`", **omet `#B8791E`**, c'est-a-dire `--gold-deep`. Or
+  c'est la valeur qui porte, dans cette PR meme, l'anneau de focus clavier, la
+  bordure du bouton secondaire, la bordure de survol des cartes et la nouvelle
+  limite du bouton plein arbitree par D039. La liste enumere `#F6F2E9`,
+  `#FFFFFF`, `#FBF9F4`, `#1A2740`, `#5B6472` et `#8B5E1B`, et la regle
+  d'accessibilite juste en dessous ne parle que de `--gold-light` et
+  `--gold-deeper`. `#3A4256`, `--slate-nav`, manque egalement. Un auteur qui
+  controle une page claire contre `CLAUDE.md` lira donc `#B8791E` comme une
+  couleur hors palette, sur un depot dont la premiere regle de marque est
+  "navy et or seulement".
+  -> Ajouter les deux valeurs a la liste des surfaces claires, avec leur role.
+
+- [ ] **[IMPORTANT]** `src/styles/global.css:565` - Le commentaire dit
+  "L'etiquette technique **garde son fond** dore tres pale... mais son texte
+  passe a l'or fonce". C'est faux : la regle ligne 567 pose
+  `background: var(--gold-12)` alors que `ApproachCard.astro:68` pose
+  `--gold-10`, et a (0,3,0) contre le (0,2,0) scope c'est la regle globale qui
+  gagne. Le fond change donc aussi. Le commentaire decrit une intention que le
+  CSS ne tient pas, dans le fichier que cette PR erige en reference
+  d'accessibilite du projet.
+  -> Corriger le commentaire, ou aligner la valeur sur `--gold-10`.
+
+- [ ] **[IMPORTANT]** `docs/work-items/UI-FIX-001.md:16` et `:20` - Le document
+  de suivi exige par le R1 decrit de travers le defaut qu'il existe pour tracer.
+  Deux erreurs, **mesurees sur `/en/legal-notice`** :
+  1. "On four public pages, the 'Derniere mise a jour' line **and the English
+     notice that the French version prevails**..." : `.legal-prevails` n'est rendu
+     que sous `locale === 'en'` (`LegalPage.astro:44`). Il existe sur 2 des 4
+     pages legales, pas sur 4.
+  2. "Colour, size, leading **and** the intended 40px separation are **all**
+     lost... They look like the first paragraph of the legal document itself" :
+     faux pour les deux elements. `.legal-body :global(p)` ne pose que
+     `font-size`, `color`, `line-height` et `margin-bottom`. Releve en page :
+     `.legal-prevails` conserve son `border-left: 2px solid rgba(200, 146, 42, 0.3)`
+     et son `padding-left: 16px`, donc son filet dore le detache toujours ; et
+     `.legal-updated` conserve sa classe `mono`, donc sa fonte a chasse fixe,
+     visible sur la capture 360px. Ce qui est perdu est la couleur, la taille,
+     l'interlignage et la separation de 40px, pas la mise en exergue.
+
+  Un item de correction qui surestime son propre defaut conduit soit a un
+  sur-dimensionnement, soit a un abandon quand l'auteur constatera que le rendu
+  n'est pas celui decrit.
+  -> Restreindre les deux phrases a ce qui est mesure.
+
+### Correctness (passe generique, equivalent `code-review`)
+
+Le plugin n'etant pas installe sur ce depot, la passe a ete conduite par un agent
+adversarial dedie sur le diff, puis chaque candidat reconfirme a la main. Les
+defauts de fond sont portes plus haut ; ce qui suit est le reste.
+
+- **[SUGGESTION]** `src/components/ModuleGrid.astro:51`,
+  `src/components/LegalPage.astro:73`, `docs/work-items/UI-001.md:43,45,46,59` et
+  `docs/DECISIONS.md:48` - Les chiffres 2.09:1, 3.61:1 et 5.90:1 sont les valeurs
+  de `--ink-25`, `--ink-40` et `--ink-60` sur `--navy-footer` `#040C16`. Elles
+  sont exactes pour les deux regles du pied de page. Elles sont reutilisees pour
+  des elements qui reposent sur `--navy-deep` `#07111E` : la section des modules
+  et `.legal-section` n'ont pas de modificateur de fond, et le fil d'Ariane est
+  dans une `section--deep`, dont `global.css:112` fixe le fond a `--navy-deep`.
+  Les valeurs exactes y sont **2.13:1, 3.63:1 et 5.87:1**. D029 annonce de meme
+  une plage "from 2.09:1 to 3.61:1" dont le vrai maximum est 3.63:1. Aucun
+  verdict ne change, tout reste sous 4.5:1 avant et au-dessus apres ; c'est une
+  question de justesse dans des commentaires que cette PR rend normatifs.
+- **[SUGGESTION]** `src/styles/global.css:441` - Le commentaire d'ouverture
+  affirme que le doublement porte "les regles de base a (0,3,0) et celles d'etat
+  a (0,4,0)". `.section--light.section--light :focus-visible` ligne 522 est une
+  regle d'etat a **(0,3,0)** : une pseudo-classe placee en descendant n'ajoute
+  pas au compte des classes du selecteur compose. Sans consequence, aucune regle
+  concurrente ne depassant (0,2,0) sur `outline-color`, mais l'affirmation est
+  fausse telle qu'ecrite.
+- **[SUGGESTION]** `src/styles/global.css:500` - `.section--light.section--light
+  .badge--solid` redeclare mot pour mot la paire de `.badge--solid` ligne 328 et
+  rien ne s'interpose : la regle est sans effet. Point deja souleve au R1 et au
+  R2, troisieme ronde. Meme remarque, plus limitee, pour le
+  `background: var(--gold-12)` de la ligne 495 qui repete la ligne 334, et le
+  `background: var(--gold-06)` de la ligne 516 qui repete la ligne 254 : seules
+  les declarations de couleur et de bordure de ces deux regles font un travail.
+- **[SUGGESTION]** `src/styles/global.css:476` - Le second membre du selecteur,
+  `.section--light.section--light .card--service`, est mort : `.card--service`
+  n'est jamais emis sans `.card` (`ServiceCard.astro:25`, `AboutContent.astro:43`)
+  et la ligne 475, a specificite identique, couvre deja ces elements. Point deja
+  souleve au R2.
+- **[SUGGESTION]** `src/styles/tokens.css:45,65,73,90,99,101,105` - Sept jetons
+  sans consommateur, verifie par grep sur `src/` et `functions/` :
+  `--cream-header`, `--slate-nav`, `--navy-10`, `--navy-15`, `--shadow-menu`,
+  plus `--gold-65` et `--ink-25` rendus orphelins par cette PR et desormais cites
+  uniquement dans des commentaires, alors que `CLAUDE.md:139` et `:142` en font
+  des regles normatives. `--navy-15` et `--slate-nav` sont par ailleurs les deux
+  seuls jetons ajoutes sans commentaire d'usage. Point deja souleve au R1 et au
+  R2, troisieme ronde.
+- **[SUGGESTION]** `src/styles/global.css:576` - Le bloc `.field-*` est
+  inconditionnellement clair : il pose `--surface`, `--navy-text`, `--slate-body`
+  et `--navy-14` sans ancetre `.section--light`, contrairement a toutes les
+  autres regles claires du fichier. Sans effet aujourd'hui, aucune page ne
+  l'utilisant. Mais si le lot FORM atterrit avant UI-002, la page Contact aura
+  des champs blancs sur fond navy, et l'architecture "le clair vit sous
+  `.section--light`" que ce meme fichier institue est rompue en un point.
+- **[SUGGESTION]** `src/styles/global.css:610` - `.field-input:focus` et ses deux
+  voisines utilisent `:focus` et non `:focus-visible`, avec `outline-offset: 1px`
+  la ou tout le site est a `3px`. A (0,2,0) elles battent le `:focus-visible`
+  global a (0,1,0) : les champs seront les seuls elements du site a afficher un
+  anneau au clic a la souris. Point deja souleve au R1 et au R2, troisieme ronde.
+- **[SUGGESTION]** `src/styles/global.css:374` - `.list-diamond` et ses trois
+  regles ne sont referencees par aucun composant. Code mort preexistant, expedie
+  a chaque page. Point deja souleve au R1 et au R2, troisieme ronde.
+- **[SUGGESTION]** `src/styles/tokens.css:42` - `--ink-60` vaut `0.55`, pas
+  `0.60`. Preexistant, mais cette PR en fait le jeton canonique du texte discret
+  sur sombre et l'inscrit comme tel dans `CLAUDE.md`. Troisieme ronde.
+- **[SUGGESTION]** Procedure - Installer le plugin `code-review` sur ce depot,
+  pour que l'etape 6 de `.claude/commands/review.md` soit executable telle
+  qu'ecrite. Troisieme ronde consecutive ou elle est remplacee par un equivalent.
+
+Verifie et propre : aucun `var(--x)` non defini sur l'ensemble de `src/` et de
+`functions/`, accolades equilibrees, aucun selecteur malforme, aucun `!important`,
+aucun import casse, aucun bloc commente laisse en place, aucun secret. Les
+commentaires ajoutes sont en francais et les documents de specification en
+anglais, conformement a la regle du depot. Le diff sur les sept composants ne
+touche que des declarations `color`. Les affirmations d'ordre d'emission du
+commentaire de `global.css` ont ete reverifiees sur les 26 pages construites et
+sont exactes, y compris le decompte de seize pages pour `CtaBanner`. La reserve
+de D033 a D035 par `SITE-FIX-001` sur `fix/outillage-reviewer` est verifiee par
+`git show`.
+
+### Summary
+
+Le blocage du Round 2 est reellement ferme : `docs/DECISIONS.md` rend de nouveau
+un tableau unique portant ses 38 lignes, verifie au moteur de rendu de GitHub, et
+les cinq points importants du R2 sont traites, dont la limite `--gold-deep` du
+bouton plein mesuree a 3.25:1 sur creme. Le balayage automatise des 26 pages, FR
+et EN, ne trouve aucun echec AA, et la fondation reste dormante sans aucune
+regression. Ce qui bloque est que D040 enregistre une couverture que le CSS livre
+n'a pas : le corps des quatre pages legales descend jusqu'a 1.04:1 une fois la
+fondation reveillee, et les tuiles de modules et de fonctionnalites restent navy
+sous un intitule deja converti, alors que le releve de prototypes de l'item dit
+"white module cards". Une ligne de decision qui affirme un trou ferme empeche
+qu'on aille le rechercher ; il faut soit etendre le peritexte, soit restreindre
+D040 et inscrire la liste dans "Out of scope".
