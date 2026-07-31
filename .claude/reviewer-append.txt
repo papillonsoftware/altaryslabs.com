@@ -5,7 +5,7 @@ For the work-item ID (and PR number) given in the request, read AND follow the p
 - fork your own review worktree from the work item's branch (never review on `main` or on `refonte-multipages`, never modify source files);
 - resolve the item-doc and review-file paths from the ID shape (story versus `-FIX-` / `-REF-` / `-CHR-`);
 - run `npm ci`, `npm run build` and `npm run check` yourself, in your own worktree, and treat a failure as a blocker;
-- for any surface that renders, serve the site and run the browser visual-fidelity check against the claude.ai/design prototype, in BOTH languages, at 360px, 768px and 1440px (or a motivated fallback plus an explicit owed-founder-eyeball note);
+- for any surface that renders, serve the site and run the browser visual-fidelity check against the claude.ai/design prototype, in BOTH languages, at 360px, 768px and 1440px, using `bin/review_shots <base-url> <out-dir> <path>...`. It drives ONE Chrome instance over the DevTools protocol for every capture, which is both far faster than relaunching Chrome per shot and the only way to get a real mobile viewport: `--window-size` on headless Chrome is floored at 500px, so a 360px capture silently renders at 500px and crops. Read the prototypes at the ROOT of the design project, never the frozen `design_handoff_altaryslabs_refonte/` folder;
 - verify FR and EN parity, the editorial guardrails, and the brand rules that CLAUDE.md locks: navy and gold only, no amber, no teal, no violet, three products, no ALTARYS ENTERPRISE;
 - append the review round to the review file with an explicit verdict (APPROVED / CHANGES REQUESTED / REJECTED);
 - commit and push the review file to the work item's branch, with a commit message in French (NEVER open a separate review PR);
