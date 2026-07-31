@@ -523,6 +523,52 @@ h3 {
   outline-color: var(--gold-deep);
 }
 
+/* Le bouton plein garde le remplissage or de la maquette, qui le pose telle
+   quelle sur le header creme, mais gagne une limite : --gold sur --cream ne
+   vaut que 2.47:1, sous le seuil de 3:1 de SC 1.4.11 pour la limite d'un
+   composant. Le libelle interieur reste a 6.86:1. Assombrir le remplissage
+   aurait respecte le seuil aussi, au prix d'un ecart visible avec le handoff
+   sur le premier appel a l'action commercial de chaque page. Voir D039. */
+.section--light.section--light .btn-primary {
+  border: 1px solid var(--gold-deep);
+}
+
+/* --- Classes propres aux composants sur surface claire ---------------------
+   Le peritexte ci-dessus ne couvre que les primitives globales. Les composants
+   de page portent leurs propres classes, restees sur les jetons de surface
+   sombre : mesurees de 1.02:1 a 2.91:1 une fois la fondation reveillee. Une
+   fondation qui n'en couvrirait qu'une partie forcerait UI-002 a les
+   redecouvrir page par page, ce qui est exactement ce qu'elle doit eviter.
+
+   Regle pour la suite : toute nouvelle classe de composant portant une couleur
+   doit etre ajoutee ici en meme temps qu'elle est ecrite. Voir D040.
+   -------------------------------------------------------------------------- */
+.section--light.section--light .about-text,
+.section--light.section--light .leadership-name {
+  color: var(--navy-text);
+}
+
+.section--light.section--light .about-team,
+.section--light.section--light .leadership-role,
+.section--light.section--light .legal-line,
+.section--light.section--light .module-label,
+.section--light.section--light .roadmap-intro,
+.section--light.section--light .approach-text {
+  color: var(--slate-body);
+}
+
+.section--light.section--light .leadership-label,
+.section--light.section--light .approach-label {
+  color: var(--gold-deeper);
+}
+
+/* L'etiquette technique garde son fond dore tres pale, lisible sur clair
+   comme sur sombre, mais son texte passe a l'or fonce : 5.05:1. */
+.section--light.section--light .approach-tag {
+  color: var(--gold-deeper);
+  background: var(--gold-12);
+}
+
 /* --- Controles de formulaire -----------------------------------------------
    Poses ici pour que le lot FORM n'ait pas a inventer son propre style au
    moment ou il ecrira la page Contact. Aucune page ne les utilise a ce jour.

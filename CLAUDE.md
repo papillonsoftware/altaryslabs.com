@@ -78,8 +78,9 @@ repository's own components; never copy the inline-styled HTML. `support.js` is
 only the prototyping runtime and is irrelevant here, as is the `localStorage`
 language switcher the prototypes use in place of our real routes.
 
-**The prototypes are wrong on six points and the repository wins.** See D017,
-D020, D029, D030, D032 and D037:
+**The prototypes are wrong on six points and the repository wins.** Each has a
+row in `docs/DECISIONS.md`: D020, D017, D041, D032, D029 with D030, and D037,
+in the order below.
 
 1. the RCCM is `CI-ABJ`, not `CI-ABI`;
 2. the product is "Papillon Corporate Finance Suite", with its "Suite";
