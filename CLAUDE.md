@@ -20,6 +20,27 @@ Every unit of work lives in its own branch or worktree and lands through a PR
 targeting `refonte-multipages`. That branch will itself be merged into `main`
 only once the rebuild is complete and validated on the Cloudflare preview URL.
 
+## Development Workflow (read first)
+
+Work on this repository follows a defined workflow. Read it before anything else:
+
+| File | Purpose |
+|------|---------|
+| `docs/AI_Development_Workflow.md` | **The workflow**: personalities, human gates, work item nomenclature, decision log, branch discipline, critical rules |
+| `.claude/personalities/TECH_LEAD.md` | Architect + product owner + developer + designer, one session, one plan gate |
+| `.claude/personalities/REVIEWER.md` | Independent review: build, FR/EN parity, brand, editorial guardrails, SEO, accessibility, performance, deployment |
+
+Non-negotiables it establishes:
+
+- **Plan before execute.** Present a plan and wait for the founder's explicit
+  approval before writing any file or running any state-changing command. A
+  question that times out is not an approval.
+- **Writer / Reviewer separation.** The REVIEWER is always a separate, fresh
+  session. Nobody reviews their own work.
+- **One work item at a time**, in its own worktree and branch, landing through a
+  PR as described under Branching above.
+- **Human gates**: plan approval, done gate, merge. None can be self-granted.
+
 ## Key Reference Documents
 
 Read these before generating or modifying the website:
