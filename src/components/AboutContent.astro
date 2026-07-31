@@ -1,0 +1,144 @@
+---
+/**
+ * Corps de la page A propos, partage par les deux langues.
+ *
+ * La maquette tient en quatre blocs : chapo, direction, ligne legale, appel a
+ * l'action. Un bloc "notre approche" a ete ajoute entre le chapo et la
+ * direction : sans lui la page etait la plus maigre du site, alors qu'elle est
+ * justement celle que consulte un decideur qui evalue le prestataire. Ses trois
+ * principes sont sources du blueprint technique, aucun n'est une promesse.
+ *
+ * La ligne legale est composee depuis `footer` : entite et RCCM ne doivent
+ * exister qu'une seule fois dans les dictionnaires.
+ */
+import PageHeader from './PageHeader.astro';
+import CtaBanner from './CtaBanner.astro';
+import type { Locale } from '../i18n/config';
+import { localizedPath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<PageHeader
+  label={t.pageName.about}
+  title={t.about.title}
+  intro={t.about.intro}
+  align="left"
+>
+  <p class="about-team">{t.about.team}</p>
+</PageHeader>
+
+<section class="section approach-section">
+  <div class="container">
+    <p class="section-label">{t.about.approachLabel}</p>
+
+    <ul class="grid-3 approach-grid fade-in">
+      {
+        t.about.approach.map((item) => (
+          <li class="card card--service">
+            <h2 class="card-title">{item.title}</h2>
+            <p class="card-text is-last">{item.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<section class="section leadership-section">
+  <div class="container">
+    <div class="card leadership fade-in">
+      <p class="leadership-label mono">{t.about.leadershipLabel}</p>
+      <p class="leadership-name">{t.about.leaderName}</p>
+      <p class="leadership-role">{t.about.leaderRole}</p>
+    </div>
+
+    <p class="legal-line mono">{`${t.footer.legalEntity}, ${t.footer.rccm}`}</p>
+  </div>
+</section>
+
+<CtaBanner
+  title={t.about.ctaTitle}
+  label={t.about.ctaLabel}
+  href={localizedPath('contact', locale)}
+/>
+
+<style>
+  /* Prolongement du chapo, meme colonne et meme registre que `.page-intro`. */
+  .about-team {
+    max-width: 820px;
+    margin-top: 18px;
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  /* L'en-tete de page a deja pose l'espace haut. */
+  .approach-section {
+    padding-top: 0;
+    padding-bottom: 72px;
+  }
+
+  .approach-section .section-label {
+    margin-bottom: 24px;
+  }
+
+  /* Meme largeur utile que `DomainGrid` et `ApproachCard` sur les fiches
+     services : ces blocs detaillent la page courante et se calent ensemble. */
+  .approach-grid {
+    max-width: 1000px;
+    list-style: none;
+  }
+
+  /* Aucun lien ne suit le texte : la marge basse ne servirait a rien. */
+  .card-text.is-last {
+    margin-bottom: 0;
+  }
+
+  .leadership-section {
+    padding-top: 0;
+    padding-bottom: 90px;
+  }
+
+  .leadership {
+    max-width: 1000px;
+    padding: 40px;
+    border-color: var(--gold-15);
+  }
+
+  .leadership-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold-65);
+    margin-bottom: 20px;
+  }
+
+  .leadership-name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--ivory);
+    margin-bottom: 6px;
+  }
+
+  .leadership-role {
+    font-size: 14px;
+    color: var(--muted-soft);
+  }
+
+  /* Mention institutionnelle discrete : elle rassure sans occuper la page.
+     Plus lisible que la meme ligne en pied de page, ou `--ink-25` passe sous
+     le seuil AA : ici c'est un contenu de page, pas une signature. */
+  .legal-line {
+    max-width: 1000px;
+    margin-top: 28px;
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    color: var(--muted-soft);
+  }
+</style>

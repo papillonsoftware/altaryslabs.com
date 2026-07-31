@@ -286,6 +286,38 @@ export const fr = {
     externalCta: 'Découvrir PCS sur papillon-collection.com',
   },
 
+  about: {
+    title: 'Pourquoi ALTARYS LABS',
+    intro:
+      "ALTARYS LABS est une SASU de droit ivoirien, active sur les zones OHADA et CIMA. Notre mission est de rendre accessibles aux entreprises de ces zones des outils SaaS et une expertise conseil habituellement réservés aux grands groupes.",
+    team:
+      "Notre équipe réunit des experts techniques et fonctionnels expérimentés en banque, en assurance et dans la mise en œuvre de systèmes métiers complexes et sécurisés, au service de la croissance des entreprises OHADA et CIMA.",
+
+    approachLabel: 'Notre approche',
+    approach: [
+      {
+        title: 'Conformité OHADA et CIMA',
+        text: "Les référentiels de la zone sont intégrés dès la conception : CNPS et ITS pour la paie ivoirienne, SYSCOHADA pour la gestion budgétaire. La conformité n'est jamais ajoutée après coup.",
+      },
+      {
+        title: 'Conception offline-first',
+        text: "Nos applications fonctionnent sans connexion permanente et se synchronisent au retour du réseau. Elles sont pensées pour les smartphones d'entrée de gamme et les réseaux 3G.",
+      },
+      {
+        title: 'Isolation des données',
+        text: "Chaque client dispose de son propre espace. Plusieurs niveaux d'isolation de la base de données répondent aux exigences des organisations, de la PME au grand compte.",
+      },
+    ],
+
+    /* Une seule personne nommée sur le site. Ni organigramme, ni effectif. */
+    leadershipLabel: 'Direction',
+    leaderName: 'Emmanuel Blonvia',
+    leaderRole: 'Fondateur et Président',
+
+    ctaTitle: 'Discutons de votre projet',
+    ctaLabel: 'Contactez notre équipe commerciale',
+  },
+
   meta: {
     home: {
       title: 'ALTARYS LABS | Solutions technologiques pour les entreprises OHADA et CIMA',
