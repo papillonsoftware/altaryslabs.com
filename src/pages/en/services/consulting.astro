@@ -1,11 +1,11 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import PageScaffold from '~/components/PageScaffold.astro';
+import ServiceConsultingContent from '~/components/ServiceConsultingContent.astro';
 
 const locale = 'en' as const;
 const pageKey = 'servicesConsulting' as const;
 ---
 
 <BaseLayout locale={locale} pageKey={pageKey}>
-  <PageScaffold locale={locale} pageKey={pageKey} parent="services" />
+  <ServiceConsultingContent locale={locale} />
 </BaseLayout>

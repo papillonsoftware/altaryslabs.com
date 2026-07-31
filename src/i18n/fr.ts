@@ -226,6 +226,60 @@ export const fr = {
     ctaTitle: 'Voir Papillon Corporate Finance Suite en action',
   },
 
+  /** Libellés partagés par les trois fiches service. */
+  service: {
+    label: 'Service',
+    ctaTitle: 'Discutons de votre besoin',
+    ctaLabel: 'Contactez notre équipe commerciale',
+  },
+
+  serviceConsulting: {
+    intro:
+      "Nous accompagnons les entreprises de la zone OHADA sur leurs systèmes d'information, leurs processus RH et leur gestion financière. Cette expertise nourrit aussi la conception de nos propres suites Papillon.",
+    domains: [
+      {
+        title: "Systèmes d'information",
+        text: "Audit, cadrage et accompagnement à la transformation digitale de vos outils métier.",
+      },
+      {
+        title: 'Ressources humaines',
+        text: 'Structuration des processus RH et accompagnement à la conformité réglementaire OHADA.',
+      },
+      {
+        title: 'Gestion financière',
+        text: 'Cadrage budgétaire, conformité SYSCOHADA et pilotage financier pour vos équipes.',
+      },
+      {
+        title: 'Conduite du changement',
+        text: 'Formation des équipes et accompagnement du déploiement de nouveaux outils.',
+      },
+    ],
+  },
+
+  serviceDev: {
+    intro:
+      "Nous concevons des applications web et mobiles, ainsi que des intégrations sur mesure, avec une architecture cloud-native pensée pour durer.",
+    approachLabel: 'Notre approche',
+    approachText:
+      "Applications web et mobiles, intégrations et connecteurs métier, portails sur mesure. Nous nous appuyons sur des technologies éprouvées, Java et Spring Boot côté serveur, React et TypeScript côté interface, avec une architecture cloud-native pour la fiabilité et la montée en charge.",
+    tags: ['Java / Spring Boot', 'React / TypeScript', 'Architecture cloud-native'],
+  },
+
+  serviceAi: {
+    intro:
+      "Notre expertise couvre la conception de solutions d'aide à la décision alimentées par une IA souveraine, hébergée et opérée en Afrique, pensée pour répondre aux enjeux de souveraineté des données des entreprises OHADA.",
+    domains: [
+      {
+        title: 'Souveraineté des données',
+        text: 'Hébergement et opération en Afrique, pour répondre aux exigences réglementaires locales.',
+      },
+      {
+        title: 'Aide à la décision',
+        text: "Des solutions conçues pour éclairer les décisions financières, RH et opérationnelles de vos équipes.",
+      },
+    ],
+  },
+
   productPcs: {
     intro:
       "Papillon Collection Solution permet aux assureurs et aux courtiers en assurance de la zone CIMA d'automatiser le renouvellement de contrats et la relance de primes, par SMS, WhatsApp et email, jusqu'à l'authentification et au paiement par leurs clients.",

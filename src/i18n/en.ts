@@ -227,6 +227,59 @@ export const en: Dictionary = {
     ctaTitle: 'See Papillon Corporate Finance Suite in action',
   },
 
+  service: {
+    label: 'Service',
+    ctaTitle: "Let's discuss what you need",
+    ctaLabel: 'Talk to our team',
+  },
+
+  serviceConsulting: {
+    intro:
+      'We help African organisations strengthen their information systems, HR processes and financial management. The same expertise shapes the design of our own Papillon suites.',
+    domains: [
+      {
+        title: 'Information systems',
+        text: 'Audit, scoping and support for the digital transformation of your business tools.',
+      },
+      {
+        title: 'Human resources',
+        text: 'Structuring HR processes and support with regulatory compliance across the region.',
+      },
+      {
+        title: 'Financial management',
+        text: 'Budget scoping, SYSCOHADA compliance and financial steering for your teams.',
+      },
+      {
+        title: 'Change management',
+        text: 'Training your teams and supporting the rollout of new tools.',
+      },
+    ],
+  },
+
+  serviceDev: {
+    intro:
+      'We design web and mobile applications, along with custom integrations, on a cloud-native architecture built to last.',
+    approachLabel: 'Our approach',
+    approachText:
+      'Web and mobile applications, integrations and business connectors, custom portals. We rely on proven technologies: Java and Spring Boot on the server, React and TypeScript on the interface, with a cloud-native architecture for reliability and scale.',
+    tags: ['Java / Spring Boot', 'React / TypeScript', 'Cloud-native architecture'],
+  },
+
+  serviceAi: {
+    intro:
+      'We design AI-powered decision support systems hosted and operated in Africa, built for organisations that cannot let their data leave the continent.',
+    domains: [
+      {
+        title: 'Data sovereignty',
+        text: 'Hosted and operated in Africa, to meet local regulatory requirements.',
+      },
+      {
+        title: 'Decision support',
+        text: 'Systems designed to inform the financial, HR and operational decisions your teams make.',
+      },
+    ],
+  },
+
   productPcs: {
     intro:
       'Papillon Collection Solution lets insurers and insurance brokers automate policy renewal and premium follow-up over SMS, WhatsApp and email, through to customer authentication and payment.',

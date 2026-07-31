@@ -1,0 +1,78 @@
+---
+/**
+ * Grille de domaines : deux colonnes de cartes titre plus texte, sans lien.
+ *
+ * Motif commun aux fiches services et a la fiche Corporate Finance. Ces cartes
+ * ne menent nulle part : elles detaillent le contenu de la page courante, elles
+ * n'invitent pas a la quitter.
+ */
+interface Domain {
+  title: string;
+  text: string;
+}
+
+interface Props {
+  domains: readonly Domain[];
+  /** Bordure doree des cartes produits, plutot que la bordure neutre. */
+  accent?: boolean;
+}
+
+const { domains, accent = false } = Astro.props;
+---
+
+<section class="section domain-section">
+  <div class="container">
+    <ul class="domain-grid fade-in">
+      {
+        domains.map((domain) => (
+          <li class:list={['card', { 'card--neutral': !accent }]}>
+            <h2 class="card-title">{domain.title}</h2>
+            <p class="card-text is-last">{domain.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* L'en-tete de page a deja pose l'espace haut. */
+  .domain-section {
+    padding-top: 0;
+    padding-bottom: 90px;
+  }
+
+  .domain-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 1000px;
+    list-style: none;
+  }
+
+  .card {
+    padding: 32px;
+  }
+
+  .card--neutral {
+    border-color: var(--ink-06);
+  }
+
+  .card-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  /* Aucun lien ne suit le texte : la marge basse ne servirait a rien. */
+  .card-text.is-last {
+    font-size: 14px;
+    line-height: 1.75;
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 780px) {
+    .domain-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
