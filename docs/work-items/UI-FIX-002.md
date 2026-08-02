@@ -3,7 +3,7 @@
 **Type** FIX | **Status** OPEN, not started | **Branch to create** `fix/semantique-grilles`
 **Base** `refonte-multipages`
 
-**Decisions** D049 in `docs/DECISIONS.md`.
+**Decisions** D050 in `docs/DECISIONS.md`.
 
 **Raised by** the R1 review of `PAGE-001`, suggestions 1, 2 and 4. Those three were reported non-blocking and never applied. The two structural ones are grouped here because they are the same class of defect: the page looks correct and announces itself incorrectly.
 

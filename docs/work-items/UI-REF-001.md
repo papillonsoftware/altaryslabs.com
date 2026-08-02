@@ -3,7 +3,7 @@
 **Type** REF | **Status** OPEN, not started | **Branch to create** `refactor/is-last-global`
 **Base** `refonte-multipages`
 
-**Decisions** D050 in `docs/DECISIONS.md`.
+**Decisions** D051 in `docs/DECISIONS.md`.
 
 **Raised by** the R1 review of `PAGE-001`, suggestion 3.
 

@@ -3,7 +3,7 @@
 **Type** CHR | **Status** OPEN, not started | **Branch to create** `chore/cloture-revue-page-001`
 **Base** `refonte-multipages`
 
-**Decisions** D052 in `docs/DECISIONS.md`.
+**Decisions** D053 in `docs/DECISIONS.md`.
 
 ## The situation
 

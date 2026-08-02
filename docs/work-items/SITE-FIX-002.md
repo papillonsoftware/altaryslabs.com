@@ -3,7 +3,7 @@
 **Type** FIX | **Status** OPEN, not started | **Branch to create** `fix/worktree-de-revue`
 **Base** `refonte-multipages`
 
-**Decisions** D051 in `docs/DECISIONS.md`.
+**Decisions** D052 in `docs/DECISIONS.md`.
 
 **Observed on** the R1 round of `PAGE-001`, 31 July 2026.
 
