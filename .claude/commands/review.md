@@ -47,11 +47,13 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
 
 1. Read the item doc if it exists, to understand the intended scope, the acceptance criteria and what was declared out of scope.
 2. Find the branch: `git branch -a | grep -i <slug>`, or `gh pr view <num> --json headRefName`.
-3. **Create a worktree FROM THE WORK ITEM'S BRANCH (MANDATORY)**, so the review commit lands on that branch and ships with the code under review:
+3. **Create a worktree on a dedicated review branch, forked from the work item's branch (MANDATORY)**, so the review commit ships to that branch without detaching:
    ```
-   git worktree add .claude/worktrees/review-<ID> <branch>
+   git fetch origin
+   git worktree add .claude/worktrees/review-<ID> -b review-<id-lowercase> origin/<branch>
+   git -C .claude/worktrees/review-<ID> symbolic-ref -q HEAD >/dev/null || { echo "detached HEAD, stop"; exit 1; }
    ```
-   **All subsequent work MUST happen inside `.claude/worktrees/review-<ID>/`.** Use absolute paths. You are **read-only on source**: never modify a source file, never fix a defect yourself. You report; the author fixes.
+   Checking out `<branch>` directly (the old form) fails silently into a detached HEAD whenever the author's own worktree still holds it, which is the common case during a review; the loss only surfaces at step 11, when the push has no branch to update. The guard above turns that into a loud failure here instead. **All subsequent work MUST happen inside `.claude/worktrees/review-<ID>/`.** Use absolute paths. You are **read-only on source**: never modify a source file, never fix a defect yourself. You report; the author fixes.
 4. `git diff origin/refonte-multipages...<branch> --stat`, then read every changed file. The base is `refonte-multipages`, the integration branch, never `main`.
 5. Read the relevant context:
    - `CLAUDE.md` - the authoritative contract
@@ -88,11 +90,11 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
     - Determine N by counting existing `## Round` headings and adding 1.
     - Use the round format from `.claude/personalities/REVIEWER.md`.
     - Delegate the write itself to the `file-writer` subagent once the content is final, per the personality's token-efficiency rule.
-11. Commit the review file on that branch, message in French:
+11. Commit the review file, message in French, and push it explicitly onto the work item's branch, since the review worktree sits on its own `review-<id-lowercase>` branch, not on `<branch>`, and a bare `git push` would have no upstream to update:
     ```
     git add docs/reviews/<ID>-review.md
     git commit -m "docs(review): ajouter la revue <ID> round <N>"
-    git push
+    git push origin HEAD:<branch>
     ```
 12. Post the verdict plus a short summary as a PR comment: `gh pr comment <PR-number> --body-file <temp-summary-file>`. **Never open a separate review PR.**
 
