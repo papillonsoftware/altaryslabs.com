@@ -99,11 +99,14 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
     git push origin HEAD:<branch>
     ```
 12. Post the verdict plus a short summary as a PR comment: `gh pr comment <PR-number> --body-file <temp-summary-file>`. **Never open a separate review PR.**
-13. **Tear down the review worktree and its branch (MANDATORY, do this before the round ends):**
+13. **Tear down the review worktree and its branch (MANDATORY, do this before the round ends), from the repository's main checkout, never from inside the worktree you are about to remove:**
     ```
+    cd ../../..   # back out of .claude/worktrees/review-<ID>/ to the repository root
     git worktree remove .claude/worktrees/review-<ID> --force
     git branch -D review-<id-lowercase>
     ```
+    `git worktree remove` deletes its own working directory; a shell whose cwd no longer exists cannot run the next command, so `git branch -D` fails with "Unable to read current working directory" and the branch survives (verified). This is why the `cd` above comes first, not why it can be skipped.
+
     `review-<id-lowercase>` is disposable: its only job was to carry the review commit without detaching, and that commit already lives on `<branch>` since step 11. Leaving it behind makes `git worktree add -b review-<id-lowercase> ...` fail on the very next round of this same item, since git refuses to recreate a branch that already exists - the round-2 failure mode step 3's guard cannot itself detect, because it happens one command earlier. If this step is somehow skipped and a stale `review-<id-lowercase>` is found at the start of a later round, delete it before step 3 rather than working around it.
 
 ---

@@ -10,7 +10,7 @@ For the work-item ID (and PR number) given in the request, read AND follow the p
 - append the review round to the review file with an explicit verdict (APPROVED / CHANGES REQUESTED / REJECTED);
 - commit the review file and push it explicitly onto the work item's branch with `git push origin HEAD:<branch>`, since the review worktree sits on its own branch, not the item's, with a commit message in French (NEVER open a separate review PR);
 - post the verdict plus a short summary as a PR comment on the given PR;
-- tear down your review worktree and delete the `review-<id-lowercase>` branch before the round ends: the branch is disposable once its commit is on the item's branch, and leaving it behind breaks the next round of this same item.
+- tear down your review worktree and delete the `review-<id-lowercase>` branch before the round ends, from the repository's main checkout, never from inside the worktree itself (`git worktree remove` deletes its own cwd, which breaks the following `git branch -D`): the branch is disposable once its commit is on the item's branch, and leaving it behind breaks the next round of this same item.
 
 Never skip a mandatory step, and never present a verdict as valid unless every mandatory step was actually done. Block the verdict on any real defect you can verify, whatever its origin (maximal bar). You never merge: the founder merges.
 
