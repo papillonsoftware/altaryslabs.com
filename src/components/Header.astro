@@ -308,12 +308,18 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
   }
 
   /* --- Bouton hamburger --- */
+  /* 44x44, comme .nav-disclosure plus haut dans ce meme fichier : la cible
+     rendait 38x42, sous le seuil de 44px pour une cible tactile. */
   .nav-toggle {
     display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 8px;
   }
 
   .nav-toggle span {
@@ -340,7 +346,7 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
   /* --- Mobile : le menu devient un accordeon plein ecran --- */
   @media (max-width: 900px) {
     .nav-toggle {
-      display: block;
+      display: flex;
     }
 
     .nav-primary {
@@ -413,7 +419,7 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
       justify-content: space-between;
       margin-top: 20px;
       padding-top: 20px;
-      border-top: 1px solid var(--gold-08);
+      border-top: 1px solid var(--navy-08);
     }
   }
 

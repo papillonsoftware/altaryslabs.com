@@ -27,7 +27,7 @@ html {
    bande de deploiement HR, les bandeaux d'appel a l'action) portent desormais
    leur propre couleur de texte explicite : elles ne peuvent plus compter sur
    celle du body. Voir les regles `color` ajoutees ci-dessous a `.section--deep`,
-   `.section--navy`, `.section--alt` et `.section--cta`. */
+   `.section--navy` et `.section--cta`. */
 body {
   font-family: var(--font-body);
   background: var(--cream);
@@ -56,22 +56,31 @@ a {
   border-radius: 2px;
 }
 
+/* Le remplissage or seul ne vaut que 2.47:1 sur le corps de page devenu creme
+   (UI-002) : meme correctif que .nav-cta et .btn-primary, D039. Le lien est
+   hors de .nav et de toute .section--light, donc son propre focus-visible
+   doit reprendre --gold-deep plutot que le --gold global. */
 .skip-link {
   position: absolute;
   left: -9999px;
   top: 0;
   z-index: 200;
   background: var(--gold);
+  border: 1px solid var(--gold-deep);
   color: var(--navy-deep);
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
-  padding: 12px 20px;
+  padding: 11px 19px;
   border-radius: 0 0 var(--radius-sm) 0;
 }
 
 .skip-link:focus {
   left: 0;
+}
+
+.skip-link:focus-visible {
+  outline-color: var(--gold-deep);
 }
 
 .visually-hidden {
@@ -121,12 +130,6 @@ a {
 
 .section--navy {
   background: var(--navy);
-  color: var(--ivory);
-}
-
-/* Fond des sections alternees, un cran plus clair que le fond principal. */
-.section--alt {
-  background: var(--navy-alt);
   color: var(--ivory);
 }
 
@@ -436,8 +439,9 @@ h3 {
    redefinit ses couleurs sous `.section--light` : le balisage et les classes
    des composants ne changent pas, seule la surface qui les porte change.
 
-   Aucune page n'utilise encore cette classe. La bascule du fond par defaut et
-   la conversion des pages appartiennent a UI-002. Voir D028.
+   UI-002 bascule le fond par defaut du body sur creme et applique cette
+   classe a chaque section qui doit rester claire, page par page. Voir D028
+   et D055.
 
    POURQUOI `.section--light.section--light` PARTOUT. La classe est repetee
    volontairement, ce qui ajoute un cran de specificite sans changer ce que le
@@ -447,8 +451,8 @@ h3 {
    place les styles scopes tantot avant tantot apres le bundle global selon la
    route : `ProductCard` passe avant global sur /produits et apres sur /,
    `CtaBanner` avant sur /a-propos et apres sur seize autres pages. Le peritexte
-   gagnait donc par chance. Il doit gagner par construction, puisque UI-002 va
-   etendre tout le site sur cette fondation. Le doublement porte les regles de
+   gagnait donc par chance. Il doit gagner par construction, puisque UI-002
+   etend tout le site sur cette fondation. Le doublement porte les regles de
    base a (0,3,0) et celles d'etat a (0,4,0), au-dessus des `.card:hover` scopes
    de `ProductCard` et `ServiceCard` qui valent (0,3,0). Voir D036.
    -------------------------------------------------------------------------- */
