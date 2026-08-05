@@ -71,6 +71,7 @@
      elle gagne une seconde famille de surfaces. Voir D028. */
   --cream: #f6f2e9; /* fond des sections claires */
   --cream-header: #fbf9f4; /* fond du header, pose a 94% avec flou */
+  --cream-header-94: rgba(251, 249, 244, 0.94); /* --cream-header pose a son opacite reelle */
   --surface: #ffffff; /* cartes et champs de formulaire sur clair */
 
   /* --- Or sur fond clair -------------------------------------------------

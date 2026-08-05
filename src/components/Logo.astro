@@ -13,9 +13,24 @@ interface Props {
   /** Titre accessible. Vide si le logo est purement decoratif ou deja libelle. */
   title?: string;
   class?: string;
+  /** Surface qui porte le logo : pilote la couleur du mot "ALTARYS" et du mot
+   * "LABS", jamais du diamant, qui reste dore dans les deux cas (marque
+   * graphique, hors exigence de contraste). `dark` par defaut, pour le pied
+   * de page qui reste sombre. */
+  surface?: 'dark' | 'light';
 }
 
-const { variant = 'full', width = 160, title = '', class: className } = Astro.props;
+const {
+  variant = 'full',
+  width = 160,
+  title = '',
+  class: className,
+  surface = 'dark',
+} = Astro.props;
+const wordmarkColor = surface === 'light' ? 'var(--navy-text)' : 'var(--ivory)';
+/* --gold ne passe pas 4.5:1 sur une surface claire (D029, D030) : "LABS" y
+   passe a --gold-deeper, comme tout texte dore sur clair. */
+const labsColor = surface === 'light' ? 'var(--gold-deeper)' : 'var(--gold)';
 
 const viewBox = variant === 'full' ? '0 0 300 72' : '0 0 72 72';
 const height = variant === 'full' ? Math.round((width * 72) / 300) : width;
@@ -52,14 +67,14 @@ const height = variant === 'full' ? Math.round((width * 72) / 300) : width;
           font-weight="300"
           font-size="27"
           letter-spacing="7"
-          fill="var(--ivory)">ALTARYS</text>
+          fill={wordmarkColor}>ALTARYS</text>
         <text
           x="87"
           y="54"
           font-family="'Space Mono', monospace"
           font-size="9.5"
           letter-spacing="6.5"
-          fill="var(--gold)">LABS</text>
+          fill={labsColor}>LABS</text>
       </>
     )
   }

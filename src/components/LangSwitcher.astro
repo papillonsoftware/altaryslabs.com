@@ -28,6 +28,8 @@ const href = localizedPath(pageKey, target);
 </a>
 
 <style>
+  /* Toujours posee sur le header clair (UI-002, D055) : couleurs fixees ici,
+     independantes de toute section defilee derriere. */
   .lang-switcher {
     display: inline-flex;
     align-items: center;
@@ -38,16 +40,16 @@ const href = localizedPath(pageKey, target);
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.08em;
-    color: var(--ink-60);
+    color: var(--slate-nav);
     text-decoration: none;
-    border: 1px solid var(--gold-12);
+    border: 1px solid var(--navy-10);
     border-radius: var(--radius-sm);
     transition: color var(--ease), border-color var(--ease), background var(--ease);
   }
 
   .lang-switcher:hover {
-    color: var(--gold);
-    border-color: var(--gold-30);
+    color: var(--gold-deeper);
+    border-color: var(--gold-deep);
     background: var(--gold-06);
   }
 </style>

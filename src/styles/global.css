@@ -22,10 +22,16 @@ html {
   scroll-padding-top: calc(var(--nav-h) + 16px);
 }
 
+/* UI-002 bascule le fond par defaut du document vers le clair (D028, D055).
+   Les sections qui restent sombres (Hero, la bande services de l'accueil, la
+   bande de deploiement HR, les bandeaux d'appel a l'action) portent desormais
+   leur propre couleur de texte explicite : elles ne peuvent plus compter sur
+   celle du body. Voir les regles `color` ajoutees ci-dessous a `.section--deep`,
+   `.section--navy`, `.section--alt` et `.section--cta`. */
 body {
   font-family: var(--font-body);
-  background: var(--navy-deep);
-  color: var(--ivory);
+  background: var(--cream);
+  color: var(--slate-body);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -110,20 +116,24 @@ a {
 
 .section--deep {
   background: var(--navy-deep);
+  color: var(--ivory);
 }
 
 .section--navy {
   background: var(--navy);
+  color: var(--ivory);
 }
 
 /* Fond des sections alternees, un cran plus clair que le fond principal. */
 .section--alt {
   background: var(--navy-alt);
+  color: var(--ivory);
 }
 
 /* Bandeau d'appel a l'action de fin de page. */
 .section--cta {
   background: linear-gradient(135deg, var(--navy-mid), var(--navy));
+  color: var(--ivory);
   padding: 80px 0;
   text-align: center;
 }
@@ -479,6 +489,16 @@ h3 {
   box-shadow: var(--shadow-card);
 }
 
+/* `ServiceCard` en variante `large` (les hubs) fixe son propre fond navy-mid
+   pour reprendre celui des cartes produits sur fond sombre. UI-002 est la
+   premiere fois qu'elle rend dans une section claire : sans cette regle, elle
+   resterait sombre au milieu d'un hub devenu clair. */
+.section--light.section--light .card--prominent {
+  background: var(--surface);
+  border-color: var(--navy-08);
+  box-shadow: var(--shadow-card);
+}
+
 /* `ProductCard` et `ServiceCard` posent chacun leur propre `.card:hover`, en
    or a 30% ou en ivoire a 15%. Sur une carte blanche, l'ivoire a 15% est
    pratiquement du blanc : l'affordance de survol disparaitrait. */
@@ -578,7 +598,10 @@ h3 {
   box-shadow: var(--shadow-card);
 }
 
-.section--light.section--light .module p,
+/* `.module` porte son libelle en texte direct, sans `<p>` : la regle ne peut
+   pas viser `.module p`, qui ne correspond a rien et laissait le texte sur
+   --ink-80, presque blanc sur la carte blanche. */
+.section--light.section--light .module,
 .section--light.section--light .feature-title {
   color: var(--navy-text);
 }

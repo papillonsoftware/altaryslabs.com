@@ -53,10 +53,15 @@ const { badge, title, emphasis, subtitle, primary, secondary } = Astro.props;
 </section>
 
 <style>
+  /* Seule section de l'accueil qui reste sombre a chaque bascule : depuis que
+     le body est passe clair par defaut (UI-002, D055), elle porte son propre
+     fond et sa propre couleur au lieu de compter sur l'ambiance du body. */
   .hero {
     position: relative;
     overflow: hidden;
     text-align: center;
+    background: var(--navy-deep);
+    color: var(--ivory);
   }
 
   /* Trame de 80px, a peine visible : elle structure le vide sans le remplir. */

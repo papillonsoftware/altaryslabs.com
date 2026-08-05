@@ -17,7 +17,8 @@ const year = new Date().getFullYear();
 const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
   { title: t.footer.columnProducts, keys: PRODUCT_KEYS },
   { title: t.footer.columnServices, keys: SERVICE_KEYS },
-  { title: t.footer.columnCompany, keys: ['about', 'contact'] },
+  { title: t.footer.columnCompany, keys: ['about'] },
+  { title: t.footer.columnLegal, keys: [...LEGAL_KEYS, 'contact'] },
 ];
 ---
 
@@ -47,23 +48,8 @@ const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
   </div>
 
   <div class="container footer-legal">
-    <p class="mono">
-      {t.footer.legalEntity} | {t.footer.rccm} | {t.footer.location}
-    </p>
-
-    <nav class="footer-legal-links" aria-label={t.pageName.legalNotice}>
-      <ul>
-        {
-          LEGAL_KEYS.map((key) => (
-            <li>
-              <a href={localizedPath(key, locale)}>{t.pageName[key]}</a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-
-    <p>&copy; {year} ALTARYS LABS. {t.footer.rights}</p>
+    <p class="mono">{t.footer.legalEntity}, {t.footer.rccm}</p>
+    <p class="mono">{t.footer.location}, {year}</p>
   </div>
 </footer>
 
