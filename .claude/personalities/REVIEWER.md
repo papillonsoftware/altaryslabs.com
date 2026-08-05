@@ -10,23 +10,17 @@ Before reviewing, read `CLAUDE.md`, `docs/AI_Development_Workflow.md`, the work 
 
 ## Generic-correctness sweep (mandatory first pass)
 
-Before walking the checklist below, sweep the diff yourself for mechanical defects the checklist does not enumerate. Read every changed file in full, not just the hunks: a defect is as often in what surrounds a change as in the change.
+Before walking the checklist below, run the `code-review` skill on the pull request under review (`/code-review <PR-number>`), to catch mechanical defects the checklist does not enumerate: broken or unused imports, unhandled promise rejections, CSS rules that never apply, values hardcoded where a token exists, copy-paste between the two language variants that left a stale string behind, and anything else its own analysis surfaces.
 
-Look for, at minimum:
-
-- broken or unused imports, unused bindings, dead branches;
-- unhandled promise rejections in client scripts, missing `await`;
-- CSS rules that never apply, usually a specificity collision or a selector that no longer matches any markup;
-- values hardcoded where a token exists, and tokens used outside the surface they were defined for;
-- copy-paste between the two language variants that left a stale string behind.
+At its own final step, the skill posts its own comment directly on the pull request. That is separate from, and in addition to, the single consolidated Round-N comment this procedure posts at the end (`review.md` step 12): the PR ends up carrying two comments for the same round, the skill's and this round's. That duplication is accepted as the cost of using the skill as installed, not a defect to fix.
 
 Rules for this pass:
 
-- **Treat every finding as a candidate.** Confirm it against the code before promoting it. Discard false positives rather than hedging them.
-- Surface kept findings under a dedicated `### Correctness` subsection, each classified `[BLOCKER]` / `[IMPORTANT]` / `[SUGGESTION]`.
+- **Treat every finding the skill reports as a candidate.** Confirm it against the code before promoting it. Discard false positives rather than hedging them.
+- Surface kept findings under a dedicated `### Correctness (code-review skill)` subsection, each classified `[BLOCKER]` / `[IMPORTANT]` / `[SUGGESTION]`, in this round's file: the skill's own PR comment is not the durable record, this file is.
 - This pass is **not a substitute** for the checklist below. Bilingual parity, palette compliance, editorial guardrails, SEO surfaces and Cloudflare constraints are covered there.
 
-This used to delegate to a `code-review` skill. That skill is not installed in this repository and cannot be invoked from an unattended session, so the step was mandating something impossible; the sweep is now spelled out instead. See D033.
+D033 removed this delegation: the skill was not installed and could not be invoked from an unattended session, so the step mandated something impossible. The founder installed it via `/plugin` on 2026-08-05, and the delegation is restored. See D056 and D057.
 
 ---
 
