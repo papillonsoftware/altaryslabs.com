@@ -9,7 +9,6 @@
   /* --- Fonds ------------------------------------------------------------ */
   --navy-deep: #07111e; /* fond principal du site */
   --navy: #0f1724; /* fond de section secondaire */
-  --navy-alt: #0b1626; /* fond des sections alternees */
   --navy-mid: #1a2740; /* cartes produits */
   --navy-card: #101d30; /* cartes services, plus discretes */
   --navy-soft: #253550;
@@ -38,20 +37,16 @@
   /* --- Voiles d'ivoire (opacites recurrentes du design) ------------------ */
   --ink-100: rgba(250, 247, 242, 0.9);
   --ink-80: rgba(250, 247, 242, 0.75);
-  --ink-72: rgba(250, 247, 242, 0.72); /* liens de navigation au repos */
   --ink-60: rgba(250, 247, 242, 0.55);
   --ink-50: rgba(250, 247, 242, 0.5);
-  --ink-40: rgba(250, 247, 242, 0.4);
   --ink-25: rgba(250, 247, 242, 0.25);
   --ink-15: rgba(250, 247, 242, 0.15);
-  --ink-08: rgba(255, 255, 255, 0.08); /* bordures de panneaux */
   --ink-06: rgba(255, 255, 255, 0.06); /* bordures de cartes services */
   --ink-05: rgba(255, 255, 255, 0.05); /* filet du bandeau legal */
 
   /* --- Voiles d'or (bordures, fonds subtils) ---------------------------- */
   --gold-03: rgba(200, 146, 42, 0.03); /* trame decorative du hero */
   --gold-06: rgba(200, 146, 42, 0.06);
-  --gold-08: rgba(200, 146, 42, 0.08);
   --gold-10: rgba(200, 146, 42, 0.1);
   --gold-12: rgba(200, 146, 42, 0.12);
   --gold-15: rgba(200, 146, 42, 0.15); /* bordure des cartes produits */
@@ -71,7 +66,10 @@
      elle gagne une seconde famille de surfaces. Voir D028. */
   --cream: #f6f2e9; /* fond des sections claires */
   --cream-header: #fbf9f4; /* fond du header, pose a 94% avec flou */
-  --cream-header-94: rgba(251, 249, 244, 0.94); /* --cream-header pose a son opacite reelle */
+  /* Derivee de --cream-header plutot que retapee en rgba : les deux valeurs
+     restaient sans lien, un changement de l'une pouvait desynchroniser
+     l'autre en silence. */
+  --cream-header-94: color-mix(in srgb, var(--cream-header) 94%, transparent);
   --surface: #ffffff; /* cartes et champs de formulaire sur clair */
 
   /* --- Or sur fond clair -------------------------------------------------

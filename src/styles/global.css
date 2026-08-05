@@ -23,11 +23,12 @@ html {
 }
 
 /* UI-002 bascule le fond par defaut du document vers le clair (D028, D055).
-   Les sections qui restent sombres (Hero, la bande services de l'accueil, la
-   bande de deploiement HR, les bandeaux d'appel a l'action) portent desormais
-   leur propre couleur de texte explicite : elles ne peuvent plus compter sur
-   celle du body. Voir les regles `color` ajoutees ci-dessous a `.section--deep`,
-   `.section--navy` et `.section--cta`. */
+   Les sections qui restent sombres portent desormais leur propre couleur de
+   texte explicite : elles ne peuvent plus compter sur celle du body. Pour
+   `.section--deep`, `.section--navy` et `.section--cta`, la regle `color`
+   est ci-dessous, a cote de leur `background`. Le Hero de l'accueil est
+   l'exception : sa couleur vit dans son propre style scope, Hero.astro,
+   puisqu'il n'utilise aucun de ces modificateurs. */
 body {
   font-family: var(--font-body);
   background: var(--cream);
@@ -493,16 +494,6 @@ h3 {
   box-shadow: var(--shadow-card);
 }
 
-/* `ServiceCard` en variante `large` (les hubs) fixe son propre fond navy-mid
-   pour reprendre celui des cartes produits sur fond sombre. UI-002 est la
-   premiere fois qu'elle rend dans une section claire : sans cette regle, elle
-   resterait sombre au milieu d'un hub devenu clair. */
-.section--light.section--light .card--prominent {
-  background: var(--surface);
-  border-color: var(--navy-08);
-  box-shadow: var(--shadow-card);
-}
-
 /* `ProductCard` et `ServiceCard` posent chacun leur propre `.card:hover`, en
    or a 30% ou en ivoire a 15%. Sur une carte blanche, l'ivoire a 15% est
    pratiquement du blanc : l'affordance de survol disparaitrait. */
@@ -559,13 +550,13 @@ h3 {
 
 /* --- Classes propres aux composants sur surface claire ---------------------
    Le peritexte ci-dessus ne couvre que les primitives globales. Les composants
-   de page portent leurs propres classes, restees sur les jetons de surface
-   sombre : mesurees de 1.02:1 a 2.91:1 une fois la fondation reveillee. Une
-   fondation qui n'en couvrirait qu'une partie forcerait UI-002 a les
-   redecouvrir page par page, ce qui est exactement ce qu'elle doit eviter.
+   de page portent leurs propres classes : chacune ci-dessous a ete mesuree
+   entre 1.02:1 et 2.91:1 avant sa correction, restee sur les jetons de
+   surface sombre alors que la page qui la porte est desormais claire.
 
    Regle pour la suite : toute nouvelle classe de composant portant une couleur
-   doit etre ajoutee ici en meme temps qu'elle est ecrite. Voir D040.
+   doit etre ajoutee ici en meme temps qu'elle est ecrite, pour ne pas avoir a
+   la redecouvrir page par page. Voir D040.
    -------------------------------------------------------------------------- */
 .section--light.section--light .about-text,
 .section--light.section--light .leadership-name {

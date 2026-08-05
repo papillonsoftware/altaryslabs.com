@@ -53,9 +53,11 @@ const { badge, title, emphasis, subtitle, primary, secondary } = Astro.props;
 </section>
 
 <style>
-  /* Seule section de l'accueil qui reste sombre a chaque bascule : depuis que
-     le body est passe clair par defaut (UI-002, D055), elle porte son propre
-     fond et sa propre couleur au lieu de compter sur l'ambiance du body. */
+  /* Seule section sombre du site a porter son fond et sa couleur dans son
+     propre style scope plutot que via un modificateur .section--* : depuis
+     que le body est passe clair par defaut (UI-002, D055), elle ne peut plus
+     compter sur son ambiance. Les deux autres bandes sombres de l'accueil
+     (services, CTA) restent des modificateurs globaux, voir global.css. */
   .hero {
     position: relative;
     overflow: hidden;

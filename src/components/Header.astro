@@ -308,13 +308,15 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
   }
 
   /* --- Bouton hamburger --- */
-  /* 44x44, comme .nav-disclosure plus haut dans ce meme fichier : la cible
-     rendait 38x42, sous le seuil de 44px pour une cible tactile. */
+  /* 44x44, comme .nav-disclosure au meme point de rupture, plus bas dans ce
+     fichier : la cible rendait 38x42, sous le seuil de 44px pour une cible
+     tactile. */
   .nav-toggle {
     display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 5px;
     width: 44px;
     height: 44px;
     background: none;
@@ -322,12 +324,16 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
     cursor: pointer;
   }
 
+  /* Pas de marge ici : en layout bloc les marges de 5px se fusionnaient entre
+     barres (centres a 7px d'ecart), mais flex ne fusionne jamais les marges
+     entre ses enfants, ce qui les ecartait a 12px et desalignait le X ouvert
+     (rotate(45deg) translate(5px, 5px), calibre pour 5*racine(2) = 7.07px).
+     Le gap: 5px du conteneur reproduit exactement l'ecart d'origine. */
   .nav-toggle span {
     display: block;
     width: 22px;
     height: 2px;
     background: var(--navy-text);
-    margin: 5px 0;
     transition: transform var(--ease), opacity var(--ease);
   }
 
