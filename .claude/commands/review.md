@@ -63,10 +63,9 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
    - `docs/vitrine/altarys-brand-identity-v3.1.html` - brand identity
    - `docs/DECISIONS.md` - the D-rows relevant to this item
    - `src/i18n/routes.ts`, `src/i18n/fr.ts`, `src/i18n/en.ts` for anything touching routing or copy
-6. **Generic correctness sweep via the `code-review` skill.** Run it on the diff at `--effort high` to catch what the domain checklist does not enumerate.
-   - Do **NOT** pass `--comment`. Every finding is consolidated into the single Round-N file. Inline PR comments would bypass that contract.
+6. **Generic correctness sweep via the `code-review` skill.** Run `/code-review <PR-number>` to catch what the domain checklist does not enumerate. The skill takes no `--effort` or `--comment` flag: it reviews the whole PR and, at its own final step, posts its own comment on it. Accept that as a second, separate comment alongside the single consolidated Round-N comment this procedure posts at step 12 - do not try to suppress it.
    - Treat findings as candidates: confirm each against the code before promoting it. Discard false positives.
-   - Surface kept findings under a `### Correctness (code-review skill)` subsection, classified `[BLOCKER]` / `[IMPORTANT]` / `[SUGGESTION]`.
+   - Surface kept findings under a `### Correctness (code-review skill)` subsection **in this round's file**, classified `[BLOCKER]` / `[IMPORTANT]` / `[SUGGESTION]`. The skill's own PR comment is not the durable record, this file is.
 7. **Run the build yourself**, in the review worktree:
    ```
    npm ci
