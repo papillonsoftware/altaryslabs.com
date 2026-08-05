@@ -39,6 +39,12 @@ Entry points:
 | `bin/reviewer "<ID> (PR #<num>)"` or `/review <ID>` | Attended review round, in a fresh session. |
 | `bin/autonomous_reviewer "<ID> (PR #<num>)"` | Unattended background review round. Permissions from `.claude/autonomous-reviewer-settings.json`, which grants writes to `docs/reviews/**` only. |
 
+Invoke `bin/reviewer` and `bin/autonomous_reviewer` **via the item's own worktree**
+(`.claude/worktrees/<slug>/bin/reviewer "..."`), never via the main checkout: both
+scripts seed the round from whatever `.claude/personalities/REVIEWER.md` says in
+the directory they are run from, and the main checkout drifts the moment nobody
+pulls it.
+
 Non-negotiables it establishes:
 
 - **Plan before execute.** Present a plan and wait for the founder's explicit
