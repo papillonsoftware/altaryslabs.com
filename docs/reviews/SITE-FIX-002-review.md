@@ -366,3 +366,268 @@ supprime, le cwd disparait, `git branch -D` echoue et la branche `review-<id-low
 ronde, ce qui reconduit a l'identique l'echec de `git worktree add -b` a la ronde suivante. Un `cd` vers
 la racine du checkout principal en tete de l'etape 13 ferme le blocker ; reste a decider du sort de
 l'etape 6, dont la skill obligatoire n'est invocable par aucune ronde.
+
+---
+
+## Round 3 - 2026-08-04
+**Verdict**: CHANGES REQUESTED
+
+### Perimetre de la revue
+
+Diff `origin/refonte-multipages...origin/fix/worktree-de-revue` : 5 fichiers, 392 insertions, 8
+suppressions. `.claude/commands/review.md`, `.claude/reviewer-append.txt`,
+`docs/AI_Development_Workflow.md`, `docs/DECISIONS.md`, `docs/reviews/SITE-FIX-002-review.md`.
+Aucun fichier sous `src/`, `public/`, `astro.config.mjs`, `wrangler.jsonc` ou `package*.json`.
+
+Ronde conduite dans un worktree dedie `review-site-fix-002`, forke depuis
+`origin/fix/worktree-de-revue`, la branche de l'item etant deja checkoutee dans le worktree de l'auteur.
+Le scenario du defaut D052 etait donc reuni une troisieme fois ; `git symbolic-ref -q HEAD` a retourne
+`refs/heads/review-site-fix-002`. Le cas nominal de l'etape 3 est confirme une troisieme fois.
+
+### Verifications executees
+
+| Etape | Resultat |
+|---|---|
+| `npm ci` | OK |
+| `npm run build` | OK, 26 pages, `dist` produit |
+| `npm run check` | OK, 60 fichiers, 0 erreur, 0 avertissement, 0 indication |
+| `npm run preview` + `bin/review_shots` | OK, FR `/` et EN `/en` a 360, 768 et 1440 px |
+| Etape 13 rejouee de bout en bout | **OK, la branche est bien supprimee cette fois** |
+| Collision de branche a l'etape 3 | Rejouee, `git worktree add -b` sort en 255, le premier garde-fou se declenche |
+| Em-dash et interpunct dans le diff | Aucun |
+| Numerotation des D-rows | D054 unique, aucun doublon |
+
+**Controle visuel.** La PR ne touche aucune surface rendue ; la sortie de build est identique a celle de
+`refonte-multipages` par construction. Les six captures FR et EN ont ete prises en non-regression et
+inspectees : marine et or uniquement, aucun violet, aucun ambre, aucun sarcelle, trois produits,
+"Papillon Corporate Finance Suite" avec son "Suite", PCS en "Disponible T3 2026" et "available Q3 2026",
+RCCM `CI-ABJ-03-2026-B17-00070`, aucun prix affiche, appel a l'action commercial dans les deux langues,
+un seul nom sur aucune page publique de cette PR. Aucun oeil du fondateur n'est du sur cette PR.
+
+### Suites donnees a la ronde 2
+
+| Constatation R2 | Etat |
+|---|---|
+| BLOCKER, etape 13 inoperante depuis le worktree | **Corrigee, et verifiee reellement.** `cd ../../..` puis `git worktree remove --force` puis `git branch -D` : `Deleted branch review-test-r3`. Etat final controle, ni worktree ni branche residuels |
+| IMPORTANT, skill `code-review` non invocable | **Non traitee**, renvoyee hors perimetre par le message de commit. Elle revient ci-dessous en blocker, avec un diagnostic que R1 et R2 avaient manque : D033 a deja tranche le sujet et `REVIEWER.md` a deja ete corrige ; seul `review.md` ne l'a pas ete |
+| SUGGESTION, `--force` sur `worktree remove` | Non traitee |
+| SUGGESTION, reprise en non-fast-forward | Non traitee |
+| SUGGESTION, etape 4 sur la ref locale | Non traitee |
+| SUGGESTION, `Write(docs/reviews/**)` absent de l'allowlist | **Sans objet, close.** `docs/work-items/SITE-FIX-001.md` point 4 documente que l'entree a ete retiree deliberement comme morte, `Edit(docs/reviews/**)` etant ce qui accorde reellement l'ecriture. La suggestion de R1 et R2 est repondue par le depot |
+
+### Blockers
+
+- [ ] **[BLOCKER]** `.claude/commands/review.md:66` - L'etape 6 impose toujours la skill `code-review`,
+  alors que **D033 a explicitement retire ce mandat** et que la correction correspondante est deja
+  appliquee dans l'autre document de la paire. Etat verifie sur `origin/refonte-multipages` :
+  `REVIEWER.md:29` porte "This used to delegate to a `code-review` skill. That skill is not installed in
+  this repository and cannot be invoked from an unattended session, so the step was mandating something
+  impossible; the sweep is now spelled out instead. See D033.", et la section 11 a 30 detaille le
+  balayage inline qui la remplace. `review.md:66-69` en est reste au mandat d'origine, `--effort high`
+  et sous-section `### Correctness (code-review skill)` comprises. Les deux fichiers qui pilotent une
+  ronde se contredisent frontalement sur une etape declaree obligatoire dans les deux.
+  Non-invocabilite reconfirmee une troisieme fois dans cette ronde, appel direct :
+  `Skill code-review cannot be used with Skill tool due to disable-model-invocation`.
+  Consequence de gravite : `.claude/reviewer-append.txt:16` pose que le relecteur ne doit "never present
+  a verdict as valid unless every mandatory step was actually done". Une etape obligatoire qu'aucune
+  ronde ne peut executer rend donc, par la regle du depot elle-meme, **tout verdict rendu sous ce fichier
+  formellement invalide** ; y compris les rondes 1 et 2 de cet item, et celle-ci.
+  Le defaut n'est plus tracke nulle part : `SITE-FIX-001`, qui portait D033, est marque **Done** dans
+  `docs/BACKLOG.md:26` et son diff contre `refonte-multipages` est vide, donc la branche est fusionnee et
+  l'item clos en laissant `review.md` en arriere. Le renvoi "hors perimetre" du commit `b695c65` ne peut
+  donc pas s'appuyer sur un item existant. C'est de surcroit exactement le motif que l'item SITE-FIX-002
+  se donne, section "Why a FIX and not a chore" : "The document mandates a step that does not do what it
+  says", applique cette fois au fichier meme que cette PR modifie.
+  -> Remplacer l'etape 6 de `review.md` par le balayage inline que `REVIEWER.md:11-30` epelle deja,
+  renommer la sous-section attendue en `### Correctness` pour s'aligner sur `REVIEWER.md:26`, et citer
+  D033. Si le fondateur prefere un item dedie, il faut alors reellement l'ouvrir
+  (`docs/work-items/SITE-FIX-003.md` plus une D-row D055), le referencer ici, et le blocage reste : le
+  tracking s'ajoute au blocage, il ne le remplace pas.
+
+### Important
+
+- [ ] **[IMPORTANT]** `.claude/commands/review.md:110` - Le dernier paragraphe de l'etape 13 est faux, et
+  faux en contredisant l'etape 3 du meme fichier, sur le mecanisme meme que cette PR installe. Il
+  affirme que la branche residuelle est "the round-2 failure mode step 3's guard cannot itself detect,
+  because it happens one command earlier". La ligne 58 affirme l'inverse, et c'est elle qui a raison :
+  "the first catches `git worktree add` itself failing (for instance because `review-<id-lowercase>`
+  already exists from a prior round that was not torn down, see step 13)". Verifie reellement dans cette
+  ronde : `git worktree add /tmp/wt-r3-test -b collide-r3-test origin/refonte-multipages` sur une branche
+  preexistante -> `fatal: a branch named 'collide-r3-test' already exists`, `EXIT=255`. Le premier
+  garde-fou, chaine en `||` sur cette commande exacte, se declenche donc bien. Les deux phrases ne
+  peuvent pas etre vraies ensemble, et c'est la fausse qui est en position de conclusion.
+  Un futur mainteneur qui lit l'etape 13 en conclut qu'une branche residuelle passe sous les garde-fous
+  et pourrait vouloir ajouter une detection qui existe deja, ou pire, en deduire que le chainage `||`
+  de l'etape 3 est decoratif et le simplifier. C'est precisement le mode "le document ment" que l'item
+  combat.
+  -> Reecrire la phrase : la branche residuelle **est** detectee par le premier garde-fou de l'etape 3,
+  qui s'arrete sur "worktree add failed, stop" ; ce que le teardown evite, c'est de faire echouer la
+  ronde suivante d'entree de jeu, pas un angle mort de detection.
+
+- [ ] **[IMPORTANT]** `.claude/commands/review.md:118` - "Follow steps 5 to 12 above." n'a pas ete mis a
+  jour alors que la PR ajoute une etape 13 declaree MANDATORY. La procedure compte desormais treize
+  etapes et la section "If no ID was provided", qui est la voie d'entree documentee de `/review` sans
+  argument, en designe une plage qui s'arrete a douze. La plage est objectivement perimee depuis le
+  commit `9ff9b45`, et elle exclut nommement la seule etape que les rondes 1 et 2 ont passe deux rondes a
+  faire exister. Verifie : `grep -n "5 to 12" .claude/commands/review.md` -> ligne 118, unique occurrence,
+  jamais touchee par le diff.
+  -> Passer la plage a "steps 5 to 13", ou, si le fondateur juge que la voie sans ID n'ouvre pas de
+  worktree de revue et n'a donc rien a demonter, le dire explicitement plutot que de le laisser deduire
+  d'un numero.
+
+- [ ] **[IMPORTANT]** `.claude/commands/review.md:90` et `.claude/personalities/REVIEWER.md:157` - Trois
+  documents decrivent maintenant ou vit le fichier de revue, et deux d'entre eux disent encore l'ancienne
+  chose. L'etape 11, reecrite par cette PR, pose noir sur blanc que "the review worktree sits on its own
+  `review-<id-lowercase>` branch, not on `<branch>`". Mais l'etape 10, deux lignes plus haut et non
+  touchee, ordonne toujours d'ecrire la revue "**on the work item's branch**", et `REVIEWER.md:157`
+  ouvre sa section "File convention" par "Write to `docs/reviews/<ID>-review.md` on the **feature
+  branch**", puis `REVIEWER.md:166` demande "Push so the author can see it" sans refspec, ce qui est
+  exactement le `git push` nu que l'etape 11 vient de declarer inoperant. Le critere d'acceptation 3 de
+  l'item interdit que deux documents decrivant la meme procedure divergent ; R1 a fait ce raisonnement
+  pour `AI_Development_Workflow.md` et l'auteur l'a accepte et corrige. `REVIEWER.md` est le troisieme
+  document, et il est le system prompt du relecteur, donc celui qui pese le plus.
+  -> Aligner l'etape 10 ("write the review in the review worktree, on `review-<id-lowercase>` ; l'etape
+  11 la pousse sur la branche de l'item") et les lignes 157 et 166 de `REVIEWER.md` sur `git push origin
+  HEAD:<branche>`.
+
+- [ ] **[IMPORTANT]** `.claude/autonomous-reviewer-settings.json:3-25` - L'etape 13 s'ouvre desormais sur
+  `cd ../../..`, et `cd` ne figure pas dans l'allowlist, qui est la **seule** source de permissions de
+  `bin/autonomous_reviewer` (`--settings .claude/autonomous-reviewer-settings.json`, sans
+  `--dangerously-skip-permissions`). L'allowlist enumere vingt-trois entrees, dont `Bash(git worktree:*)`
+  et `Bash(git branch:*)` que la ronde 2 avait verifiees comme couvrant l'etape 13 telle qu'elle etait
+  alors ecrite ; cette verification est perimee, la PR ayant ajoute une troisieme commande d'un autre
+  binaire. Une ronde autonome tourne en `-p`, donc headless : une demande de permission n'y est pas
+  arbitrable, elle se solde par un echec. Ce qui est verifie ici est l'absence de l'entree dans le
+  fichier ; l'echec effectif en session autonome ne l'est pas, mais le risque porte precisement sur
+  l'unique geste operationnel que cette PR livre.
+  -> Formuler l'etape 13 sans `cd`, en indiquant simplement de l'executer depuis la racine du checkout
+  principal (qui est le repertoire de travail par defaut d'une session lancee par `bin/autonomous_reviewer`,
+  lequel fait deja `cd "$(dirname "$0")/.."`), avec des chemins absolus comme l'etape 3 l'exige par
+  ailleurs. A defaut, ajouter `"Bash(cd:*)"` a l'allowlist.
+
+- [ ] **[IMPORTANT]** `bin/reviewer:17-19` et `bin/autonomous_reviewer:22-26` (pre-existant, confirme,
+  non tracke) - Les deux lanceurs passent `--system-prompt-file .claude/personalities/REVIEWER.md` en
+  lisant l'**arbre de travail du checkout principal**, sans aucun controle de fraicheur. Ce checkout peut
+  etre a n'importe quel commit. Verifie a l'instant :
+  `git rev-list --left-right --count refonte-multipages...origin/refonte-multipages` -> `0 20`. Le
+  checkout principal est **vingt commits en retard**, et la session de cette ronde a donc ete amorcee
+  avec un `REVIEWER.md` anterieur a SITE-FIX-001. Consequences concretes et constatees sur le prompt de
+  cette session : elle a recu l'ordre d'executer la skill `code-review` a `--effort high`, mandat retire
+  par D033 ; et l'ordre de comparer les rendus au dossier fige `design_handoff_altaryslabs_refonte`, que
+  D037 et `CLAUDE.md` interdisent explicitement parce qu'il a deja fait livrer une page A propos obsolete
+  le jour de son merge. Sur une PR qui touchait des pages, cette seule derive aurait produit des
+  constatations visuelles fausses, et la ronde n'aurait eu aucun moyen de s'en apercevoir.
+  C'est le meme genre de defaut que D052 : une procedure qui fait silencieusement autre chose que ce
+  qu'elle annonce. D052 nomme d'ailleurs "Treating it as a reviewer skill issue" comme l'alternative
+  rejetee ; l'oubli d'un `git pull` par l'operateur releve de la meme categorie et ne peut pas etre la
+  reponse.
+  -> Ajouter aux deux lanceurs un garde-fou de fraicheur avant l'appel a `claude` : `git fetch origin`
+  puis un arret bruyant si `git rev-list --count HEAD..origin/refonte-multipages` n'est pas nul. Traitable
+  ici, ou dans un item dedie, au choix du fondateur ; dans les deux cas le suivi s'ajoute au blocage.
+
+### Suggestions
+
+- **[SUGGESTION]** `.claude/commands/review.md:104` - `cd ../../..` est un chemin relatif, dans un bloc
+  dont l'etape 3 exige par ailleurs des chemins absolus, et qui suppose que le repertoire courant est
+  exactement `.claude/worktrees/review-<ID>` et non un sous-repertoire. Preference de robustesse, la
+  forme livree fonctionne : rejouee integralement dans cette ronde, elle supprime bien le worktree puis
+  la branche.
+  -> Preferer un chemin absolu vers la racine du depot, ce qui supprime aussi l'hypothese sur la
+  profondeur du worktree.
+
+- **[SUGGESTION]** `.claude/commands/review.md:105` (report de R2, non traitee) - `git worktree remove
+  --force` supprime sans broncher un worktree porteur de modifications non commitees, ce qui masquerait
+  la seule situation ou le relecteur voudrait etre arrete : un fichier de revue ecrit et non commite.
+  -> Tenter sans `--force` d'abord, forcer seulement en cas d'echec constate.
+
+- **[SUGGESTION]** `.claude/commands/review.md:95-100` (report de R1 et R2, non traitee) - Aucune porte de
+  sortie documentee si `git push origin HEAD:<branche>` est rejete en non-fast-forward, ce qui arrive des
+  que l'auteur pousse pendant la ronde. L'echec tombe au dernier geste d'une ronde couteuse.
+  -> Documenter la reprise : `git fetch origin && git rebase origin/<branche>` puis repousser.
+
+- **[SUGGESTION]** `.claude/commands/review.md:59` (report de R1 et R2, non traitee) - L'etape 3 forke
+  depuis `origin/<branche>` alors que l'etape 4 diffe contre la ref locale `<branche>`. Les deux
+  coincident presque toujours, mais l'incoherence permet en principe de reviser un contenu et d'en diffe
+  un autre, et le defaut du point important ci-dessus montre que "presque toujours" n'est pas une
+  garantie dans ce depot.
+  -> Aligner l'etape 4 sur `git diff origin/refonte-multipages...origin/<branche>`.
+
+- **[SUGGESTION]** `.claude/commands/review.md:58` (report de R1 et R2, non traitee) - Le rationnel et
+  l'instruction "All subsequent work MUST happen inside ..." restent fondus dans un seul paragraphe de
+  six lignes. L'etape 13 souffre du meme travers : deux paragraphes de justification pour trois lignes
+  de commandes.
+  -> Separer rationnel et instruction, l'instruction en dernier.
+
+- **[SUGGESTION]** `CLAUDE.md:90-93` (hors perimetre, deja tracke, report de R2) - Le point 6 affirme que
+  la ligne anglaise validee est "Your technology partner for businesses across Africa." avec "OHADA and
+  CIMA regions". Les captures de cette ronde montrent que le depot sert toujours "Enterprise software
+  built for African companies." / "West and Central Africa" en anglais, et "Des solutions technologiques
+  pour les entreprises d'Afrique." en francais. Non bloquant : `docs/work-items/I18N-001.md` porte
+  precisement l'application de D042 a D045 et est encore OPEN.
+  -> A la livraison de I18N-001, verifier que les deux heros passent aux lignes validees.
+
+### Correctness (balayage generique)
+
+La skill `code-review` n'est pas invocable, voir le blocker. Conformement a `REVIEWER.md:11-30` sur
+`origin/refonte-multipages`, qui epelle le balayage inline en remplacement, il a ete conduit a la main
+sur le seul contenu executable du diff, ses fragments shell.
+
+- Ordre des arguments de `git worktree add <chemin> -b <branche> <commit-ish>` : valide, rejoue.
+- Chainage `|| { echo ...; exit 1; }` sur `git worktree add` puis sur `git symbolic-ref` : correct, et le
+  premier se declenche reellement sur une collision de branche (`EXIT=255`).
+- Sequence complete de l'etape 13 : rejouee de bout en bout, elle supprime bien le worktree **et** la
+  branche. Le blocker de la ronde 2 est ferme.
+- Refspec `git push origin HEAD:<branche>` : correcte ; un `git push` nu depuis une branche
+  `review-<id-lowercase>` suivie sur `origin/<branche>` serait refuse par `push.default=simple`, ce qui
+  confirme la necessite du refspec.
+- Aucun import, aucune promesse, aucun binding, aucune suppression de type dans le diff. Aucune
+  dependance ajoutee. Aucun secret.
+
+### Ce qui est correct
+
+- **Le blocker de la ronde 2 est reellement ferme, et verifie en conditions reelles** et non par lecture :
+  `cd ../../..` puis `git worktree remove --force` puis `git branch -D` sur un worktree jetable donne
+  `Deleted branch review-test-r3`, et l'etat final ne montre ni worktree ni branche residuels. Le
+  critere d'acceptation 5 est tenu pour cette correction.
+- Le cas nominal de l'etape 3 est confirme une troisieme fois, dans le scenario exact de D052.
+- `.claude/reviewer-append.txt` decrit bien la meme procedure que `review.md`, teardown compris, avec le
+  meme avertissement sur le cwd. Le critere d'acceptation 3 est tenu entre ces deux fichiers ; il ne l'est
+  pas vis-a-vis de `REVIEWER.md`, voir le point important correspondant.
+- La puce ajoutee a `docs/AI_Development_Workflow.md:200` documente la classe `review-<id-lowercase>`,
+  le push par refspec et le teardown, et renvoie a l'item et a D054.
+- D054 est bien formee, datee, rattachee a SITE-FIX-002, nomme l'Option B comme rejetee avec son motif,
+  et n'entre en collision avec aucun numero. Sa reecriture par `674986f` est legitime : la D-row est nee
+  sur cette branche et n'a jamais ete fusionnee, ce n'est donc pas la reecriture d'un journal publie que
+  `AI_Development_Workflow.md` interdit.
+- Aucune branche `review-*` orpheline dans le depot au moment de cette ronde.
+- `npm run build` et `npm run check` verts, executes independamment dans le worktree de revue.
+- Aucun em-dash, aucun interpunct dans les fichiers modifies.
+- Sortie statique, `pages_build_output_dir` et binding D1 commente inchanges. PR ciblant bien
+  `refonte-multipages`. Aucune surface publique touchee, donc aucune regle de marque, editoriale, SEO ou
+  d'accessibilite en cause dans le diff.
+
+### Suivi
+
+Deux constatations demandent un suivi materialise, en plus du blocage :
+
+1. **Etape 6 de `review.md` et skill `code-review`** (blocker). `SITE-FIX-001`, qui portait D033, est clos
+   et fusionne, donc rien ne tracke plus ce reliquat. Soit la correction se fait dans cette PR, soit un
+   item dedie est ouvert (`docs/work-items/SITE-FIX-003.md` plus une D-row D055) et reference ici.
+2. **Garde-fou de fraicheur des lanceurs** (important). Meme choix : ici, ou un item dedie.
+
+L'allowlist du relecteur autonome n'accorde d'ecriture que sous `docs/reviews/**` ; cette ronde ne peut
+donc pas creer elle-meme les fichiers de suivi. Ils sont dus, et leur contenu est specifie ci-dessus.
+La derniere suggestion reste tracke par `docs/work-items/I18N-001.md`.
+
+### Summary
+
+Le blocker de la ronde 2 est reellement corrige et verifie en conditions reelles : l'etape 13 demonte
+desormais le worktree et supprime la branche, et le cas nominal de l'etape 3 tient une troisieme fois.
+Restent une contradiction interne au fichier livre (l'etape 13 affirme que les garde-fous de l'etape 3 ne
+detectent pas la branche residuelle, alors que le premier la detecte, verifie), une plage d'etapes
+perimee qui exclut le teardown de la voie sans ID, deux documents qui decrivent encore l'ancien lieu de
+vie du fichier de revue, et surtout l'etape 6 qui mandate toujours une skill que D033 a retiree et que
+`REVIEWER.md` a deja cesse de mandater, ce qui invalide formellement tout verdict rendu sous ce fichier.
+S'y ajoute un defaut pre-existant confirme dans cette ronde meme : les lanceurs amorcent le relecteur
+depuis un checkout principal vingt commits en retard, ce qui a seede cette session avec des instructions
+que D033 et D037 ont annulees.
