@@ -10,9 +10,11 @@ Before reviewing, read `CLAUDE.md`, `docs/AI_Development_Workflow.md`, the work 
 
 ## Generic-correctness sweep (mandatory first pass)
 
-Before walking the checklist below, run the `code-review` skill on the pull request under review (`/code-review <PR-number>`), to catch mechanical defects the checklist does not enumerate: broken or unused imports, unhandled promise rejections, CSS rules that never apply, values hardcoded where a token exists, copy-paste between the two language variants that left a stale string behind, and anything else its own analysis surfaces.
+Before walking the checklist below, run the `code-review` skill on the pull request under review, invoking it by its **fully qualified name**, `code-review:code-review`, with the PR number, to catch mechanical defects the checklist does not enumerate: broken or unused imports, unhandled promise rejections, CSS rules that never apply, values hardcoded where a token exists, copy-paste between the two language variants that left a stale string behind, and anything else its own analysis surfaces.
 
-Run it at `high` effort, and **without `--comment`**. The skill only posts to the pull request when that option is passed; left off, it returns its findings to you and stays silent, so the PR carries exactly one comment per round, the consolidated one `review.md` step 12 posts. D056 described the opposite and accepted two comments per round as a cost, on the premise that the skill always posts and takes no options. Round 6 of `SITE-FIX-002` ran the skill and established that the premise was false. See D080.
+**Never the bare `/code-review`.** Two skills answer to that name and only one is yours to call. The bare name resolves to Claude Code's own **built-in** `code-review`, marked `disable-model-invocation`: it refuses every model invocation and forbids reproducing its analysis otherwise. Only the founder can run it, by typing it. The skill meant here is the **plugin** `code-review@claude-plugins-official`, which carries `disable-model-invocation: false` and is invocable, unattended rounds included.
+
+**The plugin takes no options**, and posts its own comment at its own final step. Accept that second comment alongside this round's consolidated one; do not engineer around it. The `high` effort level and the `--comment` flag belong to the built-in skill: D080 measured them on the skill the reviewer cannot invoke, repeating on the option surface the same confusion between the two skills that D056 and D057 made on the installation surface. D080 is annotated, not rewritten. See D082.
 
 Rules for this pass:
 
