@@ -64,7 +64,7 @@ Read these before generating or modifying the website:
 |------|---------|
 | `docs/vitrine/refonte/PROMPT_altaryslabs-com-refonte.md` | **Primary spec** for the rebuild: sitemap, editorial tone, constraints |
 | `docs/vitrine/refonte/BRIEF_claude-design_altaryslabs-com.md` | Brief handed to claude.ai/design |
-| `docs/vitrine/altarys-brand-identity-v3.1.html` | **Brand identity**: CSS variables, Google Fonts. **No longer authoritative on the logomark** since D086, see below |
+| `docs/vitrine/altarys-brand-identity-v3.1.html` | **OBSOLETE, kept for history only** (D101). Its colour section still carries the abandoned amber and teal palette and ALTARYS ENTERPRISE. Do not read it for values |
 | `docs/vitrine/platform-vision-prd.md` | Product PRD: module descriptions, personas, differentiators |
 | `docs/vitrine/platform-saas-blueprint.md` | Architecture blueprint: multi-tenancy, Spring Modulith, technical credibility content |
 | `docs/vitrine/prompt-vitrine-altaryslabs-v2.md` | Legacy one-page spec, kept for history only |
@@ -75,10 +75,20 @@ The visual reference for the rebuild is the claude.ai/design project
 **It is also authoritative on the logomark since D086.** The web logomark is
 defined by `Header.dc.html` and `Footer.dc.html` and implemented in
 `src/components/Logo.astro`: a thicker diamond, and a wordmark in real HTML text
-rather than SVG `<text>`. The v3.1 brand identity file keeps the colour and type
-scales but its own lockups still carry the thin v3.1 diamond and are print and
-institutional assets that have not been re-cut. Do not rebuild the site logo
-from that file.
+rather than SVG `<text>`.
+
+**The v3.1 brand identity file is obsolete in full since D101**, not merely on
+the logomark. Its colour section still lists the amber and teal palette
+(`#D4810A`, `#F5A623`, `#1A8FA0`, `#4DB8CC`) that D015 removed, and presents
+ALTARYS ENTERPRISE as a live product line. It is kept for history. The operative
+references are this file for the rules, `src/styles/tokens.css` for the values,
+and the design project for the form.
+
+**The two share images are generated, not hand-drawn.** `bin/og_images` renders
+`public/og-image.png` and `og-image-en.png` through headless Chrome from the
+real fonts and the D086 logomark, and reads its copy from `fr.ts` and `en.ts` so
+a share preview cannot contradict the home page. Re-run it after any change to
+the logomark or to the home hero. See D100.
 
 **A dated snapshot of its 15 root prototypes lives in
 `docs/vitrine/refonte/prototypes/`** (13 pages plus `Header` and `Footer`, taken

@@ -1,0 +1,290 @@
+#!/usr/bin/env node
+// ALTARYS LABS - altaryslabs.com
+// Regenere les deux vignettes de partage, public/og-image.png et og-image-en.png.
+//
+// Ces images sont ce que LinkedIn et WhatsApp affichent quand quelqu'un partage
+// une page. Elles etaient jusqu'ici des rasters opaques que personne ne savait
+// refaire : le logomark y est reste six mois en retard sur le site, et la copie
+// anglaise y portait encore un positionnement abandonne. Ce script les rend
+// reproductibles.
+//
+// Le rendu passe par le meme moteur que le site : Chrome sans tete, les vraies
+// polices Google, les vrais tokens. Ce n'est pas une approximation dessinee a la
+// main, c'est la page telle que Chrome la peint. Le logomark est donc toujours
+// celui de src/components/Logo.astro, a la geometrie de D086.
+//
+// La copie n'est pas ecrite ici : elle est lue dans src/i18n/fr.ts et en.ts, de
+// sorte qu'une vignette ne puisse pas contredire le hero de la page d'accueil.
+// C'est exactement le defaut que la ronde 2 d'UI-004 a trouve. Voir D100.
+//
+// Usage : bin/og_images            (depuis la racine du depot)
+//         bin/og_images --check    (rend dans /tmp et compare, n'ecrit rien)
+
+import { spawn } from 'node:child_process';
+import { existsSync, mkdtempSync, writeFileSync, rmSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
+const CHROME =
+  process.env.CHROME ||
+  [
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/usr/bin/google-chrome',
+    '/usr/bin/chromium',
+  ].find((p) => existsSync(p));
+
+if (!CHROME) {
+  console.error('Chrome introuvable. Definir CHROME=<chemin>.');
+  process.exit(2);
+}
+
+const verifierSeulement = process.argv.includes('--check');
+
+/* --- La copie, extraite des dictionnaires -------------------------------- */
+/* Lecture textuelle plutot qu'import : les dictionnaires sont du TypeScript,
+   que node ne sait pas charger sans etape de compilation. Le motif cible une
+   cle nommee sur une seule ligne, ou sur la ligne suivante quand Prettier l'a
+   repliee. Si une cle change de nom, le script s'arrete au lieu de rendre une
+   vignette muette. */
+function cle(source, nom) {
+  const re = new RegExp(`^\\s*${nom}:\\s*(?:\\n\\s*)?(['"\`])([\\s\\S]*?)\\1,`, 'm');
+  const m = source.match(re);
+  if (!m) {
+    console.error(`Cle "${nom}" introuvable dans le dictionnaire. Vignettes non regenerees.`);
+    process.exit(1);
+  }
+  return m[2].replace(/\\'/g, "'").replace(/\\"/g, '"');
+}
+
+const fr = readFileSync('src/i18n/fr.ts', 'utf8');
+const en = readFileSync('src/i18n/en.ts', 'utf8');
+
+const VIGNETTES = [
+  {
+    fichier: 'public/og-image.png',
+    lang: 'fr',
+    titre: cle(fr, 'heroTitle'),
+    accent: cle(fr, 'heroEmphasis'),
+    // Liste d'offre, sans portee de positionnement : conservee telle quelle
+    // depuis la vignette d'origine, sur arbitrage du fondateur. Seul l'accent
+    // manquant de "developpement" est retabli, coquille de l'image d'origine.
+    sous: 'Suites SaaS, conseil IT, RH et Finance, développement sur mesure.',
+  },
+  {
+    fichier: 'public/og-image-en.png',
+    lang: 'en',
+    titre: cle(en, 'heroTitle'),
+    accent: cle(en, 'heroEmphasis'),
+    sous: 'SaaS platforms, IT, HR and finance consulting, custom development.',
+  },
+];
+
+/* --- Le gabarit ----------------------------------------------------------- */
+/* Reprend la composition de la vignette d'origine sans la rejouer : logo en
+   haut a gauche, titre Cormorant, ligne d'accent en italique doree, sous-titre
+   discret, liseré doré en pied, trame de fond. Seuls le logomark et la copie
+   changent. Les couleurs sont les valeurs de tokens.css, ecrites en clair ici
+   parce que ce fichier est rendu hors du pipeline Astro et n'a pas acces aux
+   variables CSS du site. */
+const echapper = (s) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+const gabarit = ({ titre, accent, sous }) => `<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=block" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px; height: 630px; overflow: hidden; position: relative;
+    background: #07111E;
+    font-family: 'DM Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Trame de fond, reprise de la vignette d'origine. */
+  .trame {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(200,146,42,.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(200,146,42,.055) 1px, transparent 1px);
+    background-size: 120px 120px;
+  }
+  .contenu { position: absolute; left: 88px; top: 108px; right: 88px; }
+
+  /* --- Logomark, geometrie D086, verrou empile --- */
+  .logo { display: flex; align-items: center; gap: 20px; }
+  .logo svg { display: block; overflow: visible; }
+  .mot { display: flex; flex-direction: column; line-height: 1; }
+  .altarys {
+    font-family: 'DM Sans', sans-serif; font-weight: 600;
+    font-size: 31px; letter-spacing: 6.2px; color: #FAF7F2;
+  }
+  .labs {
+    font-family: 'Space Mono', monospace; font-weight: 700;
+    font-size: 12px; letter-spacing: 8.3px; color: #C8922A; margin-top: 7px;
+  }
+
+  /* --- Titre --- */
+  .titre {
+    margin-top: 74px;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300; font-size: 63px; line-height: 1.16;
+    color: #FAF7F2; letter-spacing: .002em;
+    max-width: 830px;
+  }
+  .accent {
+    display: block; font-style: italic; color: #C8922A;
+  }
+  .sous {
+    margin-top: 40px;
+    font-size: 19px; font-weight: 400; color: #7C8AA3; letter-spacing: .005em;
+  }
+
+  /* Liseré doré en pied, degrade comme sur la vignette d'origine. */
+  .liseré {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 6px;
+    background: linear-gradient(to right, #C8922A, #E5B55A 45%, #8B5E1B);
+  }
+</style></head>
+<body>
+  <div class="trame"></div>
+  <div class="contenu">
+    <div class="logo">
+      <svg width="72" height="66" viewBox="0 0 76 70" fill="none">
+        <polygon points="38,4 74,37 38,68 2,37" fill="none" stroke="#C8922A" stroke-width="2"/>
+        <polygon points="38,15 59,37 38,57 17,37" fill="#C8922A" opacity="0.15"/>
+        <line x1="26" y1="57" x2="38" y2="17" stroke="#C8922A" stroke-width="3" stroke-linecap="round"/>
+        <line x1="50" y1="57" x2="38" y2="17" stroke="#C8922A" stroke-width="3" stroke-linecap="round"/>
+        <line x1="29" y1="46" x2="47" y2="46" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="38" cy="4" r="3" fill="#C8922A"/>
+        <circle cx="74" cy="37" r="3" fill="#C8922A"/>
+        <circle cx="38" cy="68" r="3" fill="#C8922A"/>
+        <circle cx="2" cy="37" r="3" fill="#C8922A"/>
+      </svg>
+      <span class="mot">
+        <span class="altarys">ALTARYS</span>
+        <span class="labs">LABS</span>
+      </span>
+    </div>
+    <p class="titre">${echapper(titre)} <span class="accent">${echapper(accent)}</span></p>
+    <p class="sous">${echapper(sous)}</p>
+  </div>
+  <div class="liseré"></div>
+</body></html>`;
+
+/* --- Rendu ---------------------------------------------------------------- */
+const profil = mkdtempSync(join(tmpdir(), 'og-'));
+const port = 9500 + Math.floor(process.pid % 400);
+
+const chrome = spawn(
+  CHROME,
+  [
+    '--headless=new',
+    '--disable-gpu',
+    '--hide-scrollbars',
+    `--remote-debugging-port=${port}`,
+    `--user-data-dir=${profil}`,
+  ],
+  { stdio: 'ignore' },
+);
+
+const dormir = (ms) => new Promise((r) => setTimeout(r, ms));
+
+let pret = false;
+for (let i = 0; i < 60; i++) {
+  try {
+    await fetch(`http://127.0.0.1:${port}/json/version`);
+    pret = true;
+    break;
+  } catch {
+    await dormir(250);
+  }
+}
+if (!pret) {
+  chrome.kill();
+  // `maxRetries` : Chrome relache son profil de facon asynchrone apres kill, et
+// une suppression immediate echouait sur ENOTEMPTY apres avoir pourtant ecrit
+// les deux vignettes.
+rmSync(profil, { recursive: true, force: true, maxRetries: 20, retryDelay: 100 });
+  console.error('Chrome n\'a pas ouvert son port de debogage.');
+  process.exit(1);
+}
+
+const cible = (await (await fetch(`http://127.0.0.1:${port}/json/new?about:blank`, { method: 'PUT' })).json());
+const ws = new WebSocket(cible.webSocketDebuggerUrl);
+await new Promise((r) => (ws.onopen = r));
+
+let id = 0;
+const attentes = new Map();
+ws.onmessage = (e) => {
+  const m = JSON.parse(e.data);
+  if (m.id && attentes.has(m.id)) {
+    attentes.get(m.id)(m.result);
+    attentes.delete(m.id);
+  }
+};
+const envoyer = (method, params = {}) =>
+  new Promise((r) => {
+    const n = ++id;
+    attentes.set(n, r);
+    ws.send(JSON.stringify({ id: n, method, params }));
+  });
+
+await envoyer('Page.enable');
+await envoyer('Runtime.enable');
+await envoyer('Emulation.setDeviceMetricsOverride', {
+  width: 1200,
+  height: 630,
+  deviceScaleFactor: 1,
+  mobile: false,
+});
+
+let ecart = false;
+
+for (const v of VIGNETTES) {
+  const html = join(profil, `${v.lang}.html`);
+  writeFileSync(html, gabarit(v));
+  await envoyer('Page.navigate', { url: `file://${html}` });
+
+  // Attente reelle du chargement des polices, et non un delai au juge : avec un
+  // simple `sleep`, deux rendus successifs de la meme page ne donnaient pas le
+  // meme fichier, la vignette francaise partant parfois en police de repli sur
+  // un glyphe accentue. Un generateur non deterministe rend son mode --check
+  // inutilisable, puisqu'il signale une derive a chaque appel.
+  const pretes = await envoyer('Runtime.evaluate', {
+    expression: 'document.fonts.ready.then(() => document.fonts.status)',
+    awaitPromise: true,
+    returnByValue: true,
+  });
+  if (pretes?.result?.value !== 'loaded') {
+    console.error(`Polices non chargees pour ${v.lang} : rendu abandonne.`);
+    ws.close();
+    chrome.kill();
+    process.exit(1);
+  }
+  // Une frame de plus pour que le premier rendu avec les vraies polices soit
+  // effectivement peint avant la capture.
+  await dormir(250);
+
+  const { data } = await envoyer('Page.captureScreenshot', { format: 'png' });
+  const rendu = Buffer.from(data, 'base64');
+
+  if (verifierSeulement) {
+    const actuel = existsSync(v.fichier) ? readFileSync(v.fichier) : Buffer.alloc(0);
+    const identique = actuel.equals(rendu);
+    if (!identique) ecart = true;
+    console.log(`${identique ? 'inchangee' : 'DIFFERENTE'} : ${v.fichier}`);
+  } else {
+    writeFileSync(v.fichier, rendu);
+    console.log(`${v.fichier} : ${(rendu.length / 1024).toFixed(1)} Ko`);
+  }
+}
+
+ws.close();
+chrome.kill();
+// `maxRetries` : Chrome relache son profil de facon asynchrone apres kill, et
+// une suppression immediate echouait sur ENOTEMPTY apres avoir pourtant ecrit
+// les deux vignettes.
+rmSync(profil, { recursive: true, force: true, maxRetries: 20, retryDelay: 100 });
+process.exit(verifierSeulement && ecart ? 1 : 0);
