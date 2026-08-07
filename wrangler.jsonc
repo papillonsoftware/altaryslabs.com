@@ -2,7 +2,14 @@
   // Configuration Cloudflare Pages pour altaryslabs.com
   // Le build Astro produit ./dist ; les Pages Functions vivent dans ./functions
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "altaryslabs-com",
+  // Doit correspondre EXACTEMENT au nom du projet Cloudflare Pages, verifie le
+  // 2026-08-07 par l'API : `altaryslabscom`, sous-domaine altaryslabscom.pages.dev,
+  // branche de production `refonte-multipages`. Le build depuis Git ne lit pas ce
+  // champ, mais toute commande wrangler lancee a la main le suit : desynchronise,
+  // un `wrangler pages deploy` cree un second projet au lieu de viser celui-ci.
+  // C'est l'incident du 31 juillet 2026, dont le doublon a ete supprime sans que
+  // personne ait note ce qu'il contenait. Voir D099.
+  "name": "altaryslabscom",
   "compatibility_date": "2026-07-30",
   "pages_build_output_dir": "./dist",
 

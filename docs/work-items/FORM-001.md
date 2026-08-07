@@ -87,22 +87,49 @@ parameter expansions, so curl received neither the fields nor the token and all
 eight cases exercised the same "token absent" path. Recorded because a green
 harness that tests one branch eight times looks exactly like a green harness.
 
+## Done before the merge
+
+- **Migration applied to the real database**, from the worktree, before the
+  deployment goes live, so the very first submission does not fail on a missing
+  table. Verified independently against the remote database: `contact_requests`
+  and `idx_contact_requests_submitted_at` both present, served from `WEUR`.
+  The first attempt failed from the main checkout with "No migrations present",
+  because `migrations/` only exists on this branch until the merge.
+- **Turnstile widget hostnames** now list `altaryslabscom.pages.dev` alongside
+  `altaryslabs.com` and `localhost`, which is what allows the widget to render on
+  the deployed URL at all.
+- **Pages project name corrected** in `wrangler.jsonc`. See D099.
+
 ## Still to verify after the merge
 
 1. The Cloudflare Pages build green with the D1 binding active, which a local
-   green does not prove about platform secret resolution.
-2. `npx wrangler d1 migrations apply altaryslabs-contact --remote`, which writes
-   to the real database and needs its own founder go-ahead.
-3. A real submission from `altaryslabscom.pages.dev` writing a row and producing
-   an email at `contact@altaryslabs.com`. Requires the Turnstile widget to list
-   that `pages.dev` subdomain among its domains.
-4. The Resend sender constant matching the domain actually verified in Resend.
+   green does not prove about platform secret resolution. The build now **fails**
+   without `PUBLIC_TURNSTILE_SITE_KEY`, so a missing Production value stops the
+   deployment instead of shipping a broken form.
+2. A real submission on **`altaryslabscom.pages.dev`** writing a row and
+   producing an email at `contact@altaryslabs.com`. That is a stable URL rather
+   than a per-commit hash, because the project's production branch is
+   `refonte-multipages` and not `main`.
+3. The Resend sender constant matching the domain actually verified in Resend.
    A mismatch surfaces as an HTTP 403 in the function log, so the failure is
    loud rather than silent.
+4. Rendering at 360, 768 and 1440 px, which this session could not re-check
+   because both browser drivers were unavailable. No CSS rule changed and
+   `.turnstile-slot` already reserved the widget's exact height by construction.
+
+## Candidate for the review rounds, deliberately not done here
+
+Turnstile's `siteverify` response carries a `hostname` field, and Cloudflare
+documents that a backend should validate it against its own domains. The
+function does not, so a token minted on one allowed hostname is accepted from
+another. With three hostnames on the widget, two of which are `localhost` and a
+`pages.dev` subdomain, the exposure is small but real. Left out because it
+widens the scope past the acceptance criteria and because the allowlist has to
+be settled first, not because it is unnecessary.
 
 ## Decisions recorded
 
-D090 to D098. D064 and D065 are closed by D095 and D094.
+D090 to D099. D064 and D065 are closed by D095 and D094.
 
 ## Out of scope
 
