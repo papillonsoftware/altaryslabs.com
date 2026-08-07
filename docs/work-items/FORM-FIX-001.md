@@ -54,7 +54,7 @@ never written to a file.
 
 **A finding worth carrying forward:** Cloudflare's Turnstile **test** secret always
 reports `hostname: "example.com"`, whatever host the page was served from. Under
-D106 that means the success path can no longer be exercised locally with the test
+D107 that means the success path can no longer be exercised locally with the test
 keys unless the request presents `Host: example.com`, which is how it was
 exercised above. This is a property of the test keys, not a weakness of the check;
 the same check passes trivially in production, where the values genuinely match.
@@ -75,14 +75,14 @@ the same check passes trivially in production, where the values genuinely match.
 
 ## Founder action, outside the code
 
-Remove `localhost` from the Turnstile widget's hostname list. D106 defends
+Remove `localhost` from the Turnstile widget's hostname list. D107 defends
 against the class of attack, so this is defence in depth rather than the fix, but
 the entry serves no purpose: local development uses the public test keys, not this
 widget.
 
 ## Decisions recorded
 
-D102 to D106.
+D103 to D107.
 
 ## Out of scope
 

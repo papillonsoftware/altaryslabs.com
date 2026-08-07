@@ -188,7 +188,7 @@ export const onRequestPost = async ({ request, env }: PagesContext): Promise<Res
      legitime. Aucune configuration a maintenir, rien a mettre a jour a la
      bascule DNS, et rien qui casse en silence sur une URL de preview par
      branche : une liste blanche aurait du enumerer altaryslabs.com, son `www`,
-     le sous-domaine pages.dev et tous ses sous-domaines de preview. Voir D106. */
+     le sous-domaine pages.dev et tous ses sous-domaines de preview. Voir D107. */
   const expectedHostname = new URL(request.url).hostname;
 
   if (verdict.hostname !== expectedHostname) {

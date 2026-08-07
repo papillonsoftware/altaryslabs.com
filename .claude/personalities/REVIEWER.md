@@ -67,7 +67,7 @@ D033 removed this delegation: the skill was not installed and could not be invok
 - [ ] **No violet anywhere.** It is reserved for altarys.ai.
 - [ ] Colors come from `tokens.css`. No hardcoded hex in a component or a page.
 - [ ] Typography respected: Cormorant Garamond for marketing headings, DM Sans for body and buttons, Space Mono for eyebrows, badges and technical labels
-- [ ] Logomarks reused from `docs/vitrine/altarys-brand-identity-v3.1.html` as-is, never redrawn
+- [ ] Logomark reused from `src/components/Logo.astro` as-is, never redrawn. Its geometry is defined by the design project since D086; `docs/vitrine/altarys-brand-identity-v3.1.html` is obsolete in full since D102 and still shows the thin pre-D086 diamond, the abandoned amber and teal palette and ALTARYS ENTERPRISE. Do not check anything against it
 - [ ] Visual hierarchy holds: Services first, Products second. The page speaks to an executive evaluating a contractor, not to a SaaS early adopter.
 - [ ] No stock photography. Visuals are typographic and geometric compositions derived from the diamond.
 

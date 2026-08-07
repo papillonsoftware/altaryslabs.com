@@ -96,7 +96,7 @@ export async function sendContactNotification(
      meme ligne de journal, "RESEND_API_KEY ou CONTACT_NOTIFY_EMAIL absente", et
      ce "ou" a envoye l'enquete du cote de la cle Resend alors que le probleme
      etait le destinataire. Un journal qui laisse choisir entre deux causes ne
-     fait que la moitie du travail. Voir D105. */
+     fait que la moitie du travail. Voir D106. */
   if (!apiKey) {
     console.error("[contact] notification non envoyee : RESEND_API_KEY absente de l'environnement");
     return false;
@@ -114,7 +114,7 @@ export async function sendContactNotification(
      en clair ne passe pas par le dashboard sur un projet configure par
      `wrangler.jsonc`. Meme classe d'erreur que la cle de site : une valeur non
      secrete, deja connue du depot, transformee en dependance de plateforme qui
-     peut disparaitre en silence. Voir D105. */
+     peut disparaitre en silence. Voir D106. */
   const recipient = notifyEmail?.trim() || CONTACT_EMAIL;
 
   if (recipient !== notifyEmail?.trim()) {

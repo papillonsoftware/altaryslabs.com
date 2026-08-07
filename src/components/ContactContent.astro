@@ -70,7 +70,7 @@ const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
     {/* `tabindex="-1"` sur les deux panneaux : sans lui, aucun appel a `focus()`
         n'a d'effet sur un div. C'est ce que le garde-fou supprime par FORM-001
         faisait deja correctement sur son propre panneau, et que ce lot remet.
-        Voir D104. */}
+        Voir D105. */}
     <div class="panel panel--success" id="form-sent" tabindex="-1" hidden>
       <p class="panel-title">{t.contact.successTitle}</p>
       <p class="panel-text">{t.contact.successText}</p>
@@ -189,7 +189,7 @@ const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
           mais le cas courant, et la page anglaise montrait un controle francais
           a la majorite du public pour lequel elle existe. Double defaut : une
           chaine francaise dans une page anglaise, et un fragment francais sans
-          `lang`, soit un echec WCAG 3.1.2. Voir D102. */}
+          `lang`, soit un echec WCAG 3.1.2. Voir D103. */}
       <div
         class="cf-turnstile turnstile-slot"
         data-sitekey={TURNSTILE_SITE_KEY}
@@ -221,7 +221,7 @@ const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
         // "reessayez". Un directeur qui vient d'ecrire trois paragraphes sur un
         // appel d'offres ne les retape pas : un jeton refuse coutait la demande
         // entiere. D092 raisonnait sur le double envoi cote succes et n'avait
-        // jamais examine le cout symetrique cote erreur. Voir D103.
+        // jamais examine le cout symetrique cote erreur. Voir D104.
         //
         // `sessionStorage` et non l'URL : renvoyer les valeurs dans l'adresse
         // ferait voyager le message du visiteur dans une chaine de requete,
@@ -309,7 +309,7 @@ const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
         // rendu fait partie de l'etat initial de la page, pas d'un changement.
         // Deplacer le focus sur le panneau, en revanche, le fait lire. Le geste
         // est differe a `DOMContentLoaded` parce qu'un `focus()` pose en pleine
-        // analyse n'est pas fiable. Voir D104.
+        // analyse n'est pas fiable. Voir D105.
         document.addEventListener('DOMContentLoaded', function () {
           if (!panneau) return;
 

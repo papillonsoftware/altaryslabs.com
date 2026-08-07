@@ -29,7 +29,7 @@ export interface TurnstileVerdict {
    * l'ignorer rend la verification contournable : la cle de site est publique
    * et figure dans le HTML servi, donc n'importe qui peut servir une page sur un
    * hote autorise par le widget, resoudre le defi, et poster le jeton ailleurs.
-   * `null` quand Cloudflare ne le fournit pas. Voir D106.
+   * `null` quand Cloudflare ne le fournit pas. Voir D107.
    */
   hostname: string | null;
   /**
