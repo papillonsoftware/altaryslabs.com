@@ -47,8 +47,16 @@ const t = useTranslations(locale);
 /* Les six premieres options sont derivees de `pageName`, dans l'ordre de
    navigation du site. Un intitule ne peut donc pas diverger entre le menu et
    le formulaire, et le renommage du conseil (D044) est arrive ici sans que
-   personne ait a y penser. Voir D068. */
-const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => t.pageName[key]);
+   personne ait a y penser. Voir D068.
+
+   La valeur envoyee est la PageKey, pas le libelle traduit : sans cela le
+   meme interet arrive a FORM-001 sous deux chaines differentes selon la
+   langue de la page, et rederive a chaque fois qu'un `pageName` change. Voir
+   D070. */
+const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
+  value: key,
+  label: t.pageName[key],
+}));
 
 /* Cle publique par nature : Turnstile l'expose dans le HTML rendu. Elle n'est
    pas encore posee sur le projet Cloudflare, d'ou le repli sur un emplacement
@@ -70,12 +78,19 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       <p class="panel-text">{t.contact.errorText}</p>
     </div>
 
-    <div class="panel panel--error" id="form-pending" role="alert" hidden>
+    <div class="panel panel--error" id="form-pending" role="alert" tabindex="-1" hidden>
       <p class="panel-title">{t.contact.pendingTitle}</p>
       <p class="panel-text">{t.contact.pendingText}</p>
     </div>
 
     <form id="contact-form" class="contact-form" method="POST" action="/api/contact">
+      {/* En tete de formulaire, et non en pied : le but est d'epargner au
+          visiteur six champs remplis pour rien, ce qu'un message place apres
+          le dernier champ ne fait pas. */}
+      <noscript>
+        <p class="noscript-note">{t.contact.noScriptText}</p>
+      </noscript>
+
       <div class="field-row">
         <p class="field">
           <label class="field-label" for="contact-name">{t.contact.nameLabel}</label>
@@ -137,8 +152,9 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       <p class="field">
         <label class="field-label" for="contact-interest">{t.contact.interestLabel}</label>
         <select class="field-select" id="contact-interest" name="interest" required>
-          {interests.map((name) => <option value={name}>{name}</option>)}
-          <option value={t.contact.interestOther}>{t.contact.interestOther}</option>
+          <option value="" disabled selected>{t.contact.interestPrompt}</option>
+          {interests.map((item) => <option value={item.value}>{item.label}</option>)}
+          <option value="other">{t.contact.interestOther}</option>
         </select>
       </p>
 
@@ -152,10 +168,6 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           placeholder={t.contact.messagePlaceholder}
           required></textarea>
       </p>
-
-      <noscript>
-        <p class="noscript-note">{t.contact.noScriptText}</p>
-      </noscript>
 
       {
         turnstileSiteKey ? (
@@ -222,7 +234,17 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     event.preventDefault();
     if (!pending) return;
     pending.hidden = false;
-    pending.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // `behavior: 'smooth'` en dur passerait au travers du garde-fou que le
+    // depot pose lui-meme dans global.css : l'option explicite d'un
+    // scrollIntoView bat la valeur calculee de `scroll-behavior`. On lit donc
+    // la preference plutot que de l'imposer.
+    const sansAnimation = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    pending.scrollIntoView({ behavior: sansAnimation ? 'auto' : 'smooth', block: 'center' });
+
+    // Le role="alert" annonce le panneau aux lecteurs d'ecran, mais le focus
+    // reste sur le bouton : un utilisateur de loupe ne verrait rien bouger.
+    pending.focus();
   });
 </script>
 
@@ -314,10 +336,6 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     }
   }
 
-  .field-optional {
-    color: var(--slate-body);
-  }
-
   /* Hauteur du widget Turnstile standard, reservee que la cle soit posee ou
      non, pour que le bouton d'envoi ne remonte pas entre les deux etats. */
   .turnstile-slot {
@@ -347,7 +365,8 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
   }
 
   /* Sans JavaScript, Turnstile ne produit aucun jeton et l'envoi est
-     impossible : le message le dit avant les six champs remplis pour rien. */
+     impossible. Le message est place en tete de formulaire, pas ici : voir le
+     commentaire du <noscript> dans le balisage. */
   .noscript-note {
     border-left: 3px solid var(--gold-deep);
     padding-left: 14px;

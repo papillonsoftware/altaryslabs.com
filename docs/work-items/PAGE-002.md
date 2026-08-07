@@ -40,10 +40,15 @@ Finance product. That spelling is the correct one (D017).
    navy title, sitting above a still-usable form so the visitor can retry
    immediately. It differs from the success card by shape, never by colour
    alone.
-3. **No JavaScript-disabled case drawn.** A `noscript` note says the send needs
-   JavaScript, rather than letting the visitor fill six fields for nothing:
-   Turnstile cannot mint a token without it, so the send would be rejected
-   server side whatever they type.
+3. **No JavaScript-disabled case drawn.** A `noscript` note **at the head of the
+   form** says the send needs JavaScript, rather than letting the visitor fill
+   six fields for nothing: Turnstile cannot mint a token without it, so the send
+   would be rejected server side whatever they type.
+
+   Round 1 caught that the note shipped *after* the six fields, which is the
+   opposite of what this paragraph and the component's own comment both claimed.
+   Both were describing an intention rather than the markup. Moved, and both
+   texts corrected.
 
 ## Still open, tracked by D069
 

@@ -332,6 +332,7 @@ export const en: Dictionary = {
     phoneLabel: 'Phone',
     phonePlaceholder: '+225 ...',
     interestLabel: 'I am interested in',
+    interestPrompt: 'Select an option',
     interestOther: 'Other',
     messageLabel: 'Message',
     messagePlaceholder: 'Describe what you need',

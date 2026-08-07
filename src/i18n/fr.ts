@@ -344,6 +344,11 @@ export const fr = {
     phoneLabel: 'Téléphone',
     phonePlaceholder: '+225 ...',
     interestLabel: 'Je suis intéressé par',
+    /* Première option, vide et désactivée, pour que `required` ait un sens :
+       sans elle le select est valide dès le premier rendu et toute demande
+       envoyée sans ouvrir la liste est enregistrée comme une piste PCS, le
+       seul produit qui n'est pas encore commercialisé. */
+    interestPrompt: 'Choisissez une option',
     interestOther: 'Autre',
     messageLabel: 'Message',
     messagePlaceholder: 'Décrivez votre besoin',

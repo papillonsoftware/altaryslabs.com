@@ -673,9 +673,13 @@ h3 {
   color: var(--slate-body);
 }
 
+/* Meme decalage que partout ailleurs sur le site. UI-001 avait pose 1px alors
+   qu'aucune page ne rendait encore ces regles ; la page Contact est la
+   premiere a les afficher, et six controles cernes a 1px au milieu d'un site
+   cerne a 3px se voyaient. */
 .field-input:focus,
 .field-select:focus,
 .field-textarea:focus {
   outline: 2px solid var(--gold-deep);
-  outline-offset: 1px;
+  outline-offset: 3px;
 }
