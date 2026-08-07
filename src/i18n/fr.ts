@@ -390,9 +390,9 @@ export const fr = {
 
   meta: {
     home: {
-      title: 'ALTARYS LABS | Solutions technologiques pour les entreprises OHADA et CIMA',
+      title: 'ALTARYS LABS | Partenaire technologique des entreprises OHADA et CIMA',
       description:
-        "Éditeur de suites SaaS et prestataire de conseil et de développement pour les entreprises d'Afrique de l'Ouest et Centrale. Ressources humaines, finance d'entreprise, recouvrement et assurance.",
+        "Éditeur de solutions logicielles SaaS en Assurance, Finance d'entreprise et Ressources Humaines. Prestataire conseil et ingénierie logicielle pour les entreprises d'Afrique de l'Ouest et Centrale.",
     },
     products: {
       title: 'Nos produits | ALTARYS LABS',
@@ -458,7 +458,7 @@ export const fr = {
 
   footer: {
     tagline:
-      "Solutions technologiques pour les entreprises d'Afrique, zones OHADA et CIMA.",
+      'Éditeur de logiciels et expertise conseil, zones OHADA et CIMA.',
     columnProducts: 'Produits',
     columnServices: 'Services',
     columnCompany: 'Entreprise',
