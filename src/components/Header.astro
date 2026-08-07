@@ -139,7 +139,10 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
 
   /* Seul point du header ou le gold standard (2.47:1 sur creme) ne suffit pas :
      --gold-deep est le meme correctif que celui applique par le peritexte
-     .section--light, D030, mais le header n'est jamais dans cette classe. */
+     .section--light, D039, mais le header n'est jamais dans cette classe.
+     (D030 porte sur des substitutions de petit texte, aucune a 2.47:1 ; c'est
+     D039 qui vise nommement le bouton secondaire et l'anneau de focus, et que
+     cite deja le commentaire jumeau de .nav-cta. Corrige en R1.) */
   .nav :focus-visible {
     outline-color: var(--gold-deep);
   }
@@ -157,10 +160,24 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
 
   /* `flex` et non `inline-flex` : une ancre en ligne reserve la descendante de
      sa ligne de texte sous le logo, ce qui le decalait de deux pixels vers le
-     haut dans un header centre verticalement. */
+     haut dans un header centre verticalement.
+
+     `text-decoration: none` doit etre pose ici, sur l'ancre, et non sur le
+     mot-marque : `global.css` ne fixe que `a { color: inherit }`, donc le
+     soulignement par defaut du navigateur s'applique, et une decoration se
+     propage depuis l'ancetre sans qu'un descendant puisse l'annuler. Le logo
+     etait un SVG pur jusqu'ici, sans texte a souligner : le trait n'est apparu
+     qu'en passant le mot-marque en vrai texte.
+
+     `min-height: 44px` restaure la cible tactile : l'ancien verrou rendait un
+     SVG de 38px de haut, le nouveau n'en fait que 28. Le header mesurant 72px,
+     la contrainte ne deplace rien a l'ecran. */
   .nav-logo {
     display: flex;
+    align-items: center;
+    min-height: 44px;
     flex-shrink: 0;
+    text-decoration: none;
   }
 
   .nav-primary {

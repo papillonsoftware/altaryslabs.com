@@ -116,10 +116,20 @@ const legalColumn = { title: t.footer.columnLegal, keys: [...LEGAL_KEYS, 'about'
     padding-bottom: 48px;
   }
 
-  /* Meme raison qu'au header : sans cela l'ancre reserve la descendante de sa
-     ligne de texte sous le logo et creuse l'ecart avec la signature. */
+  /* Memes deux raisons qu'au header : sans `inline-flex` l'ancre reserve la
+     descendante de sa ligne de texte sous le logo et creuse l'ecart avec la
+     signature ; et `text-decoration` doit etre annule sur l'ancre elle-meme,
+     un descendant ne pouvant pas retirer la decoration d'un ancetre.
+
+     Le couple `padding` / `margin` negatif porte la cible tactile de 26px a
+     44px sans rien deplacer : l'ancien verrou rendait 36px de haut, le nouveau
+     26. Une `min-height` aurait pousse la signature de 18px vers le bas. */
   .footer-logo {
     display: inline-flex;
+    align-items: center;
+    padding: 9px 0;
+    margin: -9px 0;
+    text-decoration: none;
   }
 
   .footer-tagline {

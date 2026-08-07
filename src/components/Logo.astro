@@ -4,7 +4,7 @@
  *
  * Le diamant vient du projet claude.ai/design, `Header.dc.html` et
  * `Footer.dc.html`, qui fait desormais foi sur la marque graphique devant la
- * charte v3.1 : traits epaissis pour tenir aux petites tailles. Voir D084.
+ * charte v3.1 : traits epaissis pour tenir aux petites tailles. Voir D086.
  *
  * Le mot-marque n'est plus du <text> SVG mais du vrai texte HTML. L'ancien
  * verrou tenait dans un viewBox de 300x72 affiche a 160px, donc toute valeur
@@ -17,7 +17,7 @@
 interface Props {
   /** `stacked` empile ALTARYS sur LABS, verrou du header. `inline` les pose sur
    * une seule ligne, verrou du pied de page. Les deux viennent chacun de leur
-   * maquette et ne sont pas interchangeables. Voir D085. */
+   * maquette et ne sont pas interchangeables. Voir D087. */
   lockup?: 'stacked' | 'inline';
   /** `full` porte les pastilles de sommet et le diamant interieur. `simple`
    * s'en passe : le pied de page depouille la marque. */
@@ -74,10 +74,20 @@ const {
 </span>
 
 <style>
+  /* `text-decoration: none` est ici en defense, pas en correctif : une
+     decoration se propage depuis l'ancetre et un descendant ne peut pas la
+     retirer. Elle n'agit donc que tant que `.logo` reste un inline atomique,
+     dans lequel la decoration ne se propage pas. Des que l'ancre appelante
+     passe en `flex`, ce que font nos deux appelants pour caler la ligne de
+     base, `.logo` devient un element flex, perd ce statut, et seule la regle
+     posee sur l'ancre elle-meme tient. C'est pourquoi les deux appelants la
+     portent aussi, et pourquoi la revue R1 avait raison sur le piege mais pas
+     sur l'endroit ou le desamorcer. */
   .logo {
     display: inline-flex;
     align-items: center;
     gap: 10px;
+    text-decoration: none;
   }
 
   .logo-mark {
@@ -105,9 +115,17 @@ const {
     flex-direction: column;
   }
 
+  /* 600 et non 700, bien que les deux maquettes ecrivent 700 : le `<link>`
+     Google Fonts de `BaseLayout` ne charge DM Sans qu'en 300, 400, 500 et 600,
+     et les maquettes portent exactement le meme `<link>`. Un 700 y peint donc
+     deja avec la fonte 600, sans meme de graissage synthetique. Ecrire 600 ne
+     change pas un pixel du rendu valide par le fondateur ; ecrire 700 laissait
+     une declaration inatteignable, qui aurait change la graisse du logo sur
+     tout le site le jour ou quelqu'un ajoute `;700` au `<link>` sans toucher a
+     ce fichier. Voir D089. "LABS" garde son 700 : Space Mono, lui, le charge. */
   .logo-altarys {
     font-family: var(--font-body);
-    font-weight: 700;
+    font-weight: 600;
   }
 
   .logo-labs {
