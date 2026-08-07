@@ -1,6 +1,6 @@
 # Backlog - altaryslabs.com rebuild
 
-State of play at the close of 31 July 2026. This index exists so a session that
+State of play at the close of 7 August 2026. This index exists so a session that
 resumes the work does not have to reconstruct it from a conversation it cannot
 read. Item details live in `docs/work-items/`; decisions in `docs/DECISIONS.md`.
 
@@ -9,10 +9,11 @@ read. Item details live in `docs/work-items/`; decisions in `docs/DECISIONS.md`.
 26 pages built, bilingual, `npm run check` clean. Every page is final except the
 two Contact pages, which are still `PageScaffold` placeholders.
 
-**The site is still entirely navy.** The July 2026 handoff turns it into an
-alternation of cream and navy, and `UI-001` installed that foundation **dormant**:
-the tokens and the `.section--light` peritext exist, no page uses them yet, and
-the default background has not been flipped. `UI-002` is the switch.
+**The site is light.** The July 2026 handoff turns it into an alternation of
+cream and navy. `UI-001` installed that foundation dormant and `UI-002` threw
+the switch on 2026-08-07: the default background is cream, every section
+declares its surface explicitly rather than inheriting, and the footer is five
+columns. Nothing about the palette is pending any more.
 
 `main` still serves the legacy one-page site through GitHub Pages. Nothing has
 been merged into it. The rebuild lives on `refonte-multipages`.
@@ -25,6 +26,8 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | `UI-001` | Two-surface token system, `.section--light` peritext, twenty-three contrast corrections, `bin/contrast_sweep` |
 | `SITE-FIX-001` | Reviewer tooling: `bin/review_shots`, correctness sweep spelled out, allowlist cleaned |
 | `OPS-001` | Duplicate Cloudflare Pages project deleted, step 1 of 1 |
+| `UI-002` | Light-surface switch across the whole site, five-column footer |
+| `I18N-001` | The handoff copy deltas: both heroes, the consulting service name, the English leadership role |
 
 ## Open, in dependency order
 
@@ -32,19 +35,23 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 |---|---|---|---|
 | 0 | `SITE-FIX-002` | nothing, and see below | `docs/work-items/SITE-FIX-002.md` |
 | 0 | `SITE-CHR-002` | nothing | `docs/work-items/SITE-CHR-002.md` |
-| 1 | `I18N-001` | nothing | `docs/work-items/I18N-001.md` |
+| 1 | `I18N-FIX-001` | `I18N-001` | `docs/work-items/I18N-FIX-001.md` |
 | 1 | `UI-FIX-001` | nothing | `docs/work-items/UI-FIX-001.md` |
-| 2 | `UI-002` | nothing, but see below | `docs/work-items/UI-002.md` |
-| 3 | `PAGE-002` | `UI-002` | `docs/work-items/PAGE-002.md` |
-| 3 | `UI-FIX-002` | `UI-002` | `docs/work-items/UI-FIX-002.md` |
-| 3 | `UI-REF-001` | `UI-002` | `docs/work-items/UI-REF-001.md` |
+| 3 | `PAGE-002` | nothing, `UI-002` has merged | `docs/work-items/PAGE-002.md` |
+| 3 | `UI-FIX-002` | nothing, `UI-002` has merged | `docs/work-items/UI-FIX-002.md` |
+| 3 | `UI-REF-001` | nothing, `UI-002` has merged | `docs/work-items/UI-REF-001.md` |
 | 4 | `FORM-001` | `PAGE-002` | `docs/work-items/FORM-001.md` |
 | 5 | `OPS-002` | everything above | `docs/work-items/OPS-002.md` |
 
-`I18N-001` and `UI-FIX-001` touch dictionaries and `LegalPage.astro`
-respectively; `UI-002` touches `global.css`, the header, the footer and every
-page. **Running `I18N-001` alongside `UI-002` is safe. Running `UI-FIX-001`
-alongside it is not**, since both edit `LegalPage.astro`.
+`I18N-FIX-001` and `UI-FIX-001` touch dictionaries and `LegalPage.astro`
+respectively. `UI-002` has merged, so its collision warning no longer applies;
+what remains is that **`I18N-FIX-001` and `PAGE-002` both edit `fr.ts` and
+`en.ts`**. Their hunks are far apart, the footer keys against the Contact keys,
+so the merge stays automatic, but the second of the two to land should rebase
+rather than assume.
+
+`I18N-FIX-001` cannot start until its replacement wording is approved by the
+founder. It is blocked on a decision, not on code.
 
 **Order 0 touches no page and no token.** `SITE-FIX-002` edits the review
 procedure, `SITE-CHR-002` edits a review file. Both are safe at any moment and
@@ -53,12 +60,13 @@ worktree step that silently detaches and loses the review at its last step, so
 every round run before it is one more round relying on the reviewer improvising
 a rescue. Run it before the next review, not after.
 
-**`UI-FIX-002` and `UI-REF-001` wait for `UI-002`**, and the reason is not
-priority. `UI-002` rewrites `global.css` and every page; `UI-REF-001` promotes a
-modifier into `global.css` and `UI-FIX-002` edits four grid components. Running
-either alongside `UI-002` means resolving the same file twice, and `UI-REF-001`
-in particular turns on a specificity tie that `UI-002` is actively moving. Both
-are small once `UI-002` has landed.
+**`UI-FIX-002` and `UI-REF-001` waited for `UI-002`**, and the reason was not
+priority: `UI-002` rewrote `global.css` and every page, `UI-REF-001` promotes a
+modifier into `global.css`, and `UI-FIX-002` edits four grid components. Running
+either alongside `UI-002` would have meant resolving the same file twice, and
+`UI-REF-001` in particular turns on a specificity tie that `UI-002` was actively
+moving. **`UI-002` merged on 2026-08-07, so the wait is over** and both are
+small. Order 3 is now a statement of size, not of dependency.
 
 `OPS-002` is the DNS cutover and is a founder decision taken once, deliberately.
 
@@ -70,13 +78,16 @@ None of these blocks the items above, but each one will be asked eventually.
    papillon-collection.com and published pending a lawyer's review (D022). Their
    wording is locked against the handoff (D032), but not against a lawyer.
 2. **Social accounts** for the footer. The handoff's five-column footer has no
-   social column; if accounts are to appear, say so before `UI-002` builds it.
+   social column, and `UI-002` built it that way. Adding accounts now means
+   editing a shipped footer rather than shaping one being written, so it is a
+   small item rather than a free choice.
 3. **Naming the technical stack** on the custom development page. Java, Spring
    Boot, React and TypeScript appear there today, and the handoff keeps them.
    Confirm or remove.
-4. **`en.ts:349`**, the Services hub meta description, opens with "IT, HR and
-   finance consulting" in lower case. `I18N-001` asks whether it follows the
-   renamed service or stays a descriptive phrase.
+4. ~~**`en.ts:349`**, the Services hub meta description, opens with "IT, HR and
+   finance consulting" in lower case.~~ **Closed on 2026-08-07 by D061**: it is
+   the service name, it is capitalised, and the rule extends to all three
+   services named in that sentence, in both languages.
 5. **The legal line is set at 10.5px**, on the About page and in the footer. The
    contrast passes since `UI-001`, so this is a readability call, not an
    accessibility failure. It is the line carrying the RCCM number, which is
@@ -93,8 +104,12 @@ findings whose current state nobody has checked.
 `SITE-CHR-002` closes the same staleness on `PAGE-001`, where the four findings
 were verified resolved. It deliberately does **not** cover `UI-001`: auditing
 three rounds of another session and guessing which findings survived would be
-invented work. Sizing that needs someone holding the `UI-001` context, and it
-should happen before `UI-002` builds on the same foundation.
+invented work. Sizing that needs someone holding the `UI-001` context.
+
+**That window has closed.** The note above wanted this done before `UI-002` built
+on the same foundation; `UI-002` merged on 2026-08-07 with three review rounds of
+its own, so the `UI-001` findings are now buried under a rewrite of the same
+files. Whoever picks this up is auditing history, not protecting the next item.
 
 ## Working rules that cost time when forgotten
 
