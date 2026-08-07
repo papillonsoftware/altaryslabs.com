@@ -128,7 +128,7 @@ export const en: Dictionary = {
 
   productsPage: {
     label: 'Products',
-    title: 'Three SaaS suites for African markets',
+    title: 'Three SaaS suites for the OHADA and CIMA regions',
     intro:
       'Each one answers the regulatory and operational realities of the region. Compliance, limited connectivity and multi-country operations are designed in from the start, not bolted on afterwards.',
     ctaTitle: 'A question about our products?',
@@ -363,14 +363,14 @@ export const en: Dictionary = {
 
   meta: {
     home: {
-      title: 'ALTARYS LABS | Enterprise software for African markets',
+      title: 'ALTARYS LABS | Technology partner in the OHADA and CIMA regions',
       description:
-        'We build SaaS platforms and deliver consulting and custom development for companies across West and Central Africa. Human resources, corporate finance, insurance premium collection.',
+        'SaaS software publisher for insurance, corporate finance and human resources. Consulting and software engineering for companies across West and Central Africa.',
     },
     products: {
       title: 'Products | ALTARYS LABS',
       description:
-        'Three SaaS suites designed for the regulatory and operational realities of companies in West and Central Africa.',
+        'Three SaaS suites designed for the regulatory and operational realities of companies in the OHADA and CIMA regions.',
     },
     productsHr: {
       title: 'Papillon HR Suite | Payroll and HR software for African SMEs',
@@ -385,7 +385,7 @@ export const en: Dictionary = {
     productsPcs: {
       title: 'Papillon Collection Solution | Insurance premium collection',
       description:
-        'Automated policy renewal and premium collection over SMS, WhatsApp and email, for insurers and brokers operating in the CIMA insurance zone of West and Central Africa.',
+        'Automated policy renewal and premium collection over SMS, WhatsApp and email, for insurers and brokers operating in the CIMA insurance zone.',
     },
     services: {
       title: 'Services | ALTARYS LABS',
@@ -431,7 +431,7 @@ export const en: Dictionary = {
 
   footer: {
     tagline:
-      'Enterprise software for African companies, across West and Central Africa.',
+      'Software publisher and consulting practice, OHADA and CIMA regions.',
     columnProducts: 'Products',
     columnServices: 'Services',
     columnContact: 'Contact',

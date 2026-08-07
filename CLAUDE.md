@@ -79,7 +79,7 @@ cited in review. **The design project remains authoritative**: when the two
 disagree, the project wins and the snapshot is stale. Never rebuild a page from
 the snapshot without checking it against the project first. Building from a
 frozen copy is precisely what produced an obsolete About page once already. See
-D077.
+D083.
 
 **Read the prototypes at the project ROOT, not the ones in
 `design_handoff_altaryslabs_refonte/`.** That folder is a frozen export of the

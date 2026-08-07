@@ -2,6 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(git worktree:*)",
+      "Bash(git -C:*)",
+      "Bash(git rebase:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
@@ -22,6 +24,9 @@
       "Bash(npm run check:*)",
       "Bash(npm run preview:*)",
       "Bash(npx astro:*)",
+      "Bash(bin/review_shots:*)",
+      "Bash(lsof:*)",
+      "Write(docs/reviews/**)",
       "Edit(docs/reviews/**)"
     ]
   }

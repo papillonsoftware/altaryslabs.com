@@ -6,7 +6,7 @@ The 15 prototypes at the **ROOT** of the claude.ai/design project
 13 pages plus the shared `Header` and `Footer`. `support.js` is deliberately
 absent: it is only the prototyping runtime and nothing in this repository
 depends on it. The frozen `design_handoff_altaryslabs_refonte/` folder inside
-the design project is also absent, on purpose. See D077.
+the design project is also absent, on purpose. See D083.
 
 ## The design project remains authoritative
 
@@ -39,7 +39,7 @@ Two more, specific to `Footer.dc.html` as snapshotted:
 - both taglines carry the pre-handoff positioning. They are corrected by
   `I18N-FIX-001`, not by the item that reorganised the footer. See D063.
 - the phone link breaks its label with `<br></br>`, which is not valid HTML. The
-  repository uses a block-level label instead. See D075.
+  repository uses a block-level label instead. See D077.
 
 ## How to refresh this snapshot
 

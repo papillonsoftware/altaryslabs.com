@@ -372,7 +372,7 @@ export const fr = {
     /* Repli commun à l'état d'erreur et au cas sans JavaScript, suivi du lien
        `mailto:`. Une seule formulation pour les deux, et une adresse lue dans
        `config.ts`. Ferme D069 : la page cesse d'être un cul-de-sac pour le
-       visiteur dont l'envoi échoue ou qui n'a pas JavaScript. Voir D076. */
+       visiteur dont l'envoi échoue ou qui n'a pas JavaScript. Voir D082. */
     fallbackText: 'Vous pouvez aussi nous écrire directement à',
 
     /* Turnstile a besoin de JavaScript pour produire son jeton : sans lui, le
@@ -392,9 +392,9 @@ export const fr = {
 
   meta: {
     home: {
-      title: 'ALTARYS LABS | Solutions technologiques pour les entreprises OHADA et CIMA',
+      title: 'ALTARYS LABS | Partenaire technologique des entreprises OHADA et CIMA',
       description:
-        "Éditeur de suites SaaS et prestataire de conseil et de développement pour les entreprises d'Afrique de l'Ouest et Centrale. Ressources humaines, finance d'entreprise, recouvrement et assurance.",
+        "Éditeur de solutions logicielles SaaS en Assurance, Finance d'entreprise et Ressources Humaines. Prestataire conseil et ingénierie logicielle pour les entreprises d'Afrique de l'Ouest et Centrale.",
     },
     products: {
       title: 'Nos produits | ALTARYS LABS',
@@ -460,11 +460,11 @@ export const fr = {
 
   footer: {
     tagline:
-      "Solutions technologiques pour les entreprises d'Afrique, zones OHADA et CIMA.",
+      'Éditeur de logiciels et expertise conseil, zones OHADA et CIMA.',
     columnProducts: 'Produits',
     columnServices: 'Services',
     /* La colonne 4 passe de "Entreprise" a "Contact" et "À propos" descend
-       dans la colonne Légal, comme la maquette de juillet. Voir D075. */
+       dans la colonne Légal, comme la maquette de juillet. Voir D077. */
     columnContact: 'Contact',
     columnLegal: 'Légal',
     emailLabel: 'E-mail :',

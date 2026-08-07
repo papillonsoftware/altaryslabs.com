@@ -30,7 +30,7 @@ export const SITE_URL = 'https://altaryslabs.com';
  * dupliques d'une langue a l'autre finissent par diverger, exactement le
  * raisonnement que D027 a applique au RCCM. Seuls les libelles qui les
  * introduisent sont traduits. Le pied de page et la page Contact lisent cette
- * meme source. Voir D074.
+ * meme source. Voir D076.
  */
 export const CONTACT_EMAIL = 'contact@altaryslabs.com';
 export const CONTACT_PHONE = '+225 07 20 52 22 69';
