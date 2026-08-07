@@ -1,0 +1,355 @@
+---
+/**
+ * Corps de la page Contact, partage par les deux langues.
+ *
+ * Les deux pages `/contact` et `/en/contact` appellent ce meme composant : la
+ * structure ne peut pas diverger d'une langue a l'autre, seul le dictionnaire
+ * change. Voir D019.
+ *
+ * TROIS ETATS, PILOTES PAR L'URL. Les panneaux succes et erreur sont dans le
+ * document des le rendu, masques par `hidden`, et reveles par `?statut=`. Le
+ * succes est donc porte par une redirection du serveur et non par la reponse
+ * d'un `fetch` : si la connexion lache apres que le POST est parti, le
+ * visiteur ne revoit pas son formulaire intact et ne renvoie pas. Un
+ * rechargement reaffiche l'etat au lieu de ressusciter le formulaire. Ce
+ * balisage laisse FORM-001 libre de choisir entre POST-redirection et envoi
+ * en `fetch`. Voir D066.
+ *
+ * POURQUOI LA LECTURE EST CLIENTE. Le site est en sortie statique : la page
+ * est prerendue une fois, et `Astro.url` n'a aucune chaine de requete au
+ * moment du build. Le parametre ne peut donc etre lu que dans le navigateur.
+ * Le script est `is:inline` et place juste apres le formulaire pour s'executer
+ * pendant l'analyse du document, avant le premier rendu : le formulaire
+ * n'apparait pas une fraction de seconde avant d'etre masque.
+ *
+ * FORMULAIRE INERTE. Le balisage d'envoi est definitif, mais la fonction
+ * serveur appartient a FORM-001. Le script en fin de fichier bloque l'envoi et
+ * revele le panneau d'attente ; FORM-001 le supprime, et rien d'autre. Cet
+ * etat n'est jamais public : FORM-001 precede la bascule DNS. Voir D064.
+ *
+ * COORDONNEES ABSENTES. La maquette ne dessine pas encore de bloc de
+ * coordonnees. L'etat d'erreur et le repli sans JavaScript se limitent donc a
+ * ce qu'on peut promettre sans canal publie. Second commit de PAGE-002, une
+ * fois `contact.dc.html` mis a jour. Voir D069.
+ */
+import PageHeader from './PageHeader.astro';
+import type { Locale } from '../i18n/config';
+import { localizedPath, useTranslations } from '../i18n/utils';
+import { PRODUCT_KEYS, SERVICE_KEYS } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+/* Les six premieres options sont derivees de `pageName`, dans l'ordre de
+   navigation du site. Un intitule ne peut donc pas diverger entre le menu et
+   le formulaire, et le renommage du conseil (D044) est arrive ici sans que
+   personne ait a y penser. Voir D068. */
+const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => t.pageName[key]);
+
+/* Cle publique par nature : Turnstile l'expose dans le HTML rendu. Elle n'est
+   pas encore posee sur le projet Cloudflare, d'ou le repli sur un emplacement
+   vide qui reserve la hauteur du widget. Voir D065. */
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+<PageHeader label={t.pageName.contact} title={t.contact.title} intro={t.contact.intro} />
+
+<section class="section section--light contact-section">
+  <div class="container contact-inner">
+    <div class="panel panel--success" id="form-sent" hidden>
+      <p class="panel-title">{t.contact.successTitle}</p>
+      <p class="panel-text">{t.contact.successText}</p>
+    </div>
+
+    <div class="panel panel--error" id="form-error" role="alert" hidden>
+      <p class="panel-title">{t.contact.errorTitle}</p>
+      <p class="panel-text">{t.contact.errorText}</p>
+    </div>
+
+    <div class="panel panel--error" id="form-pending" role="alert" hidden>
+      <p class="panel-title">{t.contact.pendingTitle}</p>
+      <p class="panel-text">{t.contact.pendingText}</p>
+    </div>
+
+    <form id="contact-form" class="contact-form" method="POST" action="/api/contact">
+      <div class="field-row">
+        <p class="field">
+          <label class="field-label" for="contact-name">{t.contact.nameLabel}</label>
+          <input
+            class="field-input"
+            id="contact-name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            placeholder={t.contact.namePlaceholder}
+            required
+          />
+        </p>
+
+        <p class="field">
+          <label class="field-label" for="contact-company">
+            {t.contact.companyLabel} <span class="field-optional">{t.contact.optional}</span>
+          </label>
+          <input
+            class="field-input"
+            id="contact-company"
+            name="company"
+            type="text"
+            autocomplete="organization"
+            placeholder={t.contact.companyPlaceholder}
+          />
+        </p>
+      </div>
+
+      <div class="field-row">
+        <p class="field">
+          <label class="field-label" for="contact-email">{t.contact.emailLabel}</label>
+          <input
+            class="field-input"
+            id="contact-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder={t.contact.emailPlaceholder}
+            required
+          />
+        </p>
+
+        <p class="field">
+          <label class="field-label" for="contact-phone">
+            {t.contact.phoneLabel} <span class="field-optional">{t.contact.optional}</span>
+          </label>
+          <input
+            class="field-input"
+            id="contact-phone"
+            name="phone"
+            type="tel"
+            autocomplete="tel"
+            placeholder={t.contact.phonePlaceholder}
+          />
+        </p>
+      </div>
+
+      <p class="field">
+        <label class="field-label" for="contact-interest">{t.contact.interestLabel}</label>
+        <select class="field-select" id="contact-interest" name="interest" required>
+          {interests.map((name) => <option value={name}>{name}</option>)}
+          <option value={t.contact.interestOther}>{t.contact.interestOther}</option>
+        </select>
+      </p>
+
+      <p class="field">
+        <label class="field-label" for="contact-message">{t.contact.messageLabel}</label>
+        <textarea
+          class="field-textarea"
+          id="contact-message"
+          name="message"
+          rows="5"
+          placeholder={t.contact.messagePlaceholder}
+          required></textarea>
+      </p>
+
+      <noscript>
+        <p class="noscript-note">{t.contact.noScriptText}</p>
+      </noscript>
+
+      {
+        turnstileSiteKey ? (
+          <div class="cf-turnstile turnstile-slot" data-sitekey={turnstileSiteKey} />
+        ) : (
+          /* Emplacement vide a la hauteur exacte du widget standard, pour que
+             la mise en page soit verifiee des maintenant telle qu'elle sera
+             une fois la cle posee. Voir D065. */
+          <div class="turnstile-slot" aria-hidden="true" />
+        )
+      }
+
+      <button class="btn btn-primary contact-submit" type="submit">{t.contact.submit}</button>
+
+      <p class="privacy-notice">
+        {t.contact.privacyNotice}{' '}
+        <a href={localizedPath('privacy', locale)}>{t.contact.privacyLink}</a>
+      </p>
+    </form>
+
+    <script is:inline>
+      // Revele l'etat porte par l'URL. Volontairement `is:inline` et place ici,
+      // juste apres le formulaire : il s'execute pendant l'analyse du document,
+      // donc avant le premier rendu, et le formulaire ne clignote pas quand il
+      // doit ceder la place au panneau de succes.
+      //
+      // La comparaison porte sur deux valeurs figees, jamais reinjectees dans
+      // la page : le parametre ne peut rien ecrire dans le document.
+      (function () {
+        var statut = new URLSearchParams(window.location.search).get('statut');
+        if (statut !== 'envoye' && statut !== 'erreur') return;
+
+        var panneau = document.getElementById(statut === 'envoye' ? 'form-sent' : 'form-error');
+        if (panneau) panneau.hidden = false;
+
+        if (statut === 'envoye') {
+          var formulaire = document.getElementById('contact-form');
+          if (formulaire) formulaire.hidden = true;
+        }
+      })();
+    </script>
+  </div>
+</section>
+
+{
+  turnstileSiteKey && (
+    <script
+      is:inline
+      async
+      defer
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    />
+  )
+}
+
+<script>
+  // Garde-fou de l'intervalle : la fonction serveur `/api/contact` n'existe pas
+  // encore, un envoi reel finirait donc sur une 404. On bloque et on explique.
+  // FORM-001 supprime ce bloc en entier. Voir D064.
+  const form = document.querySelector<HTMLFormElement>('#contact-form');
+  const pending = document.querySelector<HTMLElement>('#form-pending');
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!pending) return;
+    pending.hidden = false;
+    pending.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+</script>
+
+<style>
+  /* Colonne unique de 640px, comme la maquette. Le conteneur garde sa
+     gouttiere : c'est elle qui protege le formulaire des bords en mobile. */
+  .contact-inner {
+    max-width: calc(640px + 2 * var(--gutter));
+  }
+
+  .contact-section {
+    padding-top: 0;
+  }
+
+  /* --- Panneaux d'etat ------------------------------------------------------
+     Ces classes ne figurent pas dans le peritexte clair de `global.css` : elles
+     naissent sur les jetons de surface claire, alors que le peritexte existe
+     pour rattraper les classes nees sur les jetons sombres. Voir D040. */
+  .panel {
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    margin-bottom: 32px;
+  }
+
+  /* Le succes est une carte centree, l'erreur une banniere a filet lateral :
+     les deux etats se distinguent par la forme et par leur texte, jamais par
+     la seule couleur. */
+  .panel--success {
+    border: 1px solid var(--gold-30);
+    padding: 48px 32px;
+    text-align: center;
+  }
+
+  .panel--error {
+    border: 1px solid var(--navy-08);
+    border-left: 3px solid var(--gold-deep);
+    padding: 24px 28px;
+  }
+
+  .panel-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 24px;
+    color: var(--gold-deeper);
+    margin-bottom: 12px;
+  }
+
+  .panel--error .panel-title {
+    font-size: 20px;
+    color: var(--navy-text);
+  }
+
+  .panel-text {
+    font-size: 14px;
+    color: var(--slate-body);
+    line-height: 1.7;
+  }
+
+  /* --- Formulaire ----------------------------------------------------------
+     Les controles eux-memes viennent de `global.css` (`.field`, `.field-label`,
+     `.field-input`, `.field-select`, `.field-textarea`), livres par UI-001. */
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* `display: flex` bat le `display: none` que la feuille de l'agent
+     utilisateur attache a [hidden] : sans cette regle, le formulaire reste
+     affiche sous le panneau de succes et invite a renvoyer le message qui
+     vient justement de partir. Les panneaux, eux, ne declarent aucun
+     `display` et se masquent donc tout seuls. */
+  .contact-form[hidden] {
+    display: none;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* Deux champs cote a cote deviennent illisibles des que la colonne se
+     resserre : la maquette ne descend pas sous le desktop. */
+  @media (max-width: 640px) {
+    .field-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .field-optional {
+    color: var(--slate-body);
+  }
+
+  /* Hauteur du widget Turnstile standard, reservee que la cle soit posee ou
+     non, pour que le bouton d'envoi ne remonte pas entre les deux etats. */
+  .turnstile-slot {
+    min-height: 65px;
+  }
+
+  .contact-submit {
+    align-self: flex-start;
+  }
+
+  @media (max-width: 640px) {
+    .contact-submit {
+      align-self: stretch;
+      text-align: center;
+    }
+  }
+
+  .privacy-notice,
+  .noscript-note {
+    font-size: 12.5px;
+    color: var(--slate-body);
+    line-height: 1.65;
+  }
+
+  .privacy-notice a {
+    color: var(--gold-deeper);
+  }
+
+  /* Sans JavaScript, Turnstile ne produit aucun jeton et l'envoi est
+     impossible : le message le dit avant les six champs remplis pour rien. */
+  .noscript-note {
+    border-left: 3px solid var(--gold-deep);
+    padding-left: 14px;
+  }
+</style>

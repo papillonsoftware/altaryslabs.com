@@ -317,6 +317,47 @@ export const en: Dictionary = {
     ctaLabel: 'Talk to our team',
   },
 
+  contact: {
+    title: 'Talk to our sales team',
+    intro: 'Tell us about your needs and we will get back to you quickly.',
+
+    optional: '(optional)',
+
+    nameLabel: 'Full name',
+    namePlaceholder: 'Your name',
+    companyLabel: 'Company',
+    companyPlaceholder: 'Your company name',
+    emailLabel: 'Email',
+    emailPlaceholder: 'you@company.com',
+    phoneLabel: 'Phone',
+    phonePlaceholder: '+225 ...',
+    interestLabel: 'I am interested in',
+    interestOther: 'Other',
+    messageLabel: 'Message',
+    messagePlaceholder: 'Describe what you need',
+
+    submit: 'Send',
+
+    privacyNotice:
+      'By sending this form, you agree that your details may be used to respond to your enquiry.',
+    privacyLink: 'Read our privacy policy',
+
+    successTitle: 'Message sent',
+    successText:
+      'Thank you for your message. Our sales team will get back to you shortly.',
+
+    errorTitle: 'Message not sent',
+    errorText:
+      'Your message could not be delivered. Check your connection and try again in a few moments.',
+
+    noScriptText:
+      'Sending this form requires JavaScript, which is turned off in your browser. Turn it on to write to us.',
+
+    pendingTitle: 'Form opening soon',
+    pendingText:
+      'Sending messages from this form will be enabled when the site goes live.',
+  },
+
   meta: {
     home: {
       title: 'ALTARYS LABS | Enterprise software for African markets',
