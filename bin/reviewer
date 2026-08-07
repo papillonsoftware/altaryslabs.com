@@ -12,7 +12,7 @@
 #
 # Le reviewer ne fusionne jamais et ne modifie jamais la source.
 set -euo pipefail
-# Racine resolue en absolu AVANT le cd : apres, un $0 relatif ne resout plus.
+# Racine du checkout, resolue en absolu pour pouvoir sourcer bin/lib apres le cd.
 RACINE="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$RACINE"
 

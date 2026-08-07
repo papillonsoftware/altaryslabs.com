@@ -30,6 +30,16 @@
 # d'une meme procedure divergent, c'est precisement ce que le critere
 # d'acceptation 3 de SITE-FIX-002 interdit.
 
+# Les trois seuls fichiers dont la peremption fausse une ronde. Le controle porte
+# sur eux et sur rien d'autre : une branche d'item est en retard sur l'integration
+# par construction, et arreter sur un ecart quelconque reviendrait a interdire la
+# revue de toute PR ouverte du depot, y compris celle qui livre ce garde-fou.
+FICHIERS_AMORCAGE=(
+  ".claude/personalities/REVIEWER.md"
+  ".claude/reviewer-append.txt"
+  ".claude/commands/review.md"
+)
+
 verifier_fraicheur() {
   local base="origin/refonte-multipages"
 
@@ -45,14 +55,21 @@ verifier_fraicheur() {
   fi
 
   local retard
-  retard=$(git rev-list --count "HEAD..$base")
+  if ! retard=$(git rev-list --count "HEAD..$base" -- "${FICHIERS_AMORCAGE[@]}" 2>/dev/null); then
+    echo "ERREUR : impossible de comparer cet arbre a $base." >&2
+    echo "La ref existe-t-elle ? Verifier 'git rev-parse --verify $base' puis relancer ;" >&2
+    echo "ne pas contourner ce controle." >&2
+    exit 1
+  fi
 
   if [ "$retard" -ne 0 ]; then
-    echo "ERREUR : cet arbre de travail est $retard commit(s) en retard sur $base." >&2
+    echo "ERREUR : les instructions du relecteur sont en retard de $retard commit(s) sur $base." >&2
     echo "" >&2
-    echo "Les deux fichiers qui amorcent le relecteur seraient perimes :" >&2
-    echo "  .claude/personalities/REVIEWER.md" >&2
-    echo "  .claude/reviewer-append.txt" >&2
+    echo "Fichiers surveilles :" >&2
+    printf '  %s\n' "${FICHIERS_AMORCAGE[@]}" >&2
+    echo "" >&2
+    echo "Commits en cause :" >&2
+    git log --oneline "HEAD..$base" -- "${FICHIERS_AMORCAGE[@]}" | sed 's/^/  /' >&2
     echo "" >&2
     echo "Une ronde amorcee ainsi applique des regles annulees sans le savoir, et son" >&2
     echo "verdict n'est pas recevable. Mettre a jour puis relancer :" >&2
