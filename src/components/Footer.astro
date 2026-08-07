@@ -17,7 +17,8 @@ const year = new Date().getFullYear();
 const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
   { title: t.footer.columnProducts, keys: PRODUCT_KEYS },
   { title: t.footer.columnServices, keys: SERVICE_KEYS },
-  { title: t.footer.columnCompany, keys: ['about', 'contact'] },
+  { title: t.footer.columnCompany, keys: ['about'] },
+  { title: t.footer.columnLegal, keys: [...LEGAL_KEYS, 'contact'] },
 ];
 ---
 
@@ -47,23 +48,8 @@ const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
   </div>
 
   <div class="container footer-legal">
-    <p class="mono">
-      {t.footer.legalEntity} | {t.footer.rccm} | {t.footer.location}
-    </p>
-
-    <nav class="footer-legal-links" aria-label={t.pageName.legalNotice}>
-      <ul>
-        {
-          LEGAL_KEYS.map((key) => (
-            <li>
-              <a href={localizedPath(key, locale)}>{t.pageName[key]}</a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-
-    <p>&copy; {year} ALTARYS LABS. {t.footer.rights}</p>
+    <p class="mono">{t.footer.legalEntity}, {t.footer.rccm}</p>
+    <p class="mono">{t.footer.location}, {year}</p>
   </div>
 </footer>
 
@@ -76,7 +62,7 @@ const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
 
   .footer-grid {
     display: grid;
-    grid-template-columns: 1.4fr repeat(3, 1fr);
+    grid-template-columns: 1.3fr 0.9fr 0.9fr 0.7fr 0.9fr;
     gap: 48px;
     padding-bottom: 48px;
   }
@@ -138,25 +124,6 @@ const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
 
   .footer-legal .mono {
     letter-spacing: 0.03em;
-  }
-
-  .footer-legal-links ul {
-    display: flex;
-    gap: 18px;
-    list-style: none;
-  }
-
-  /* Meme correction : --ink-40 donnait 3.61:1. D029. */
-  .footer-legal-links a {
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    color: var(--ink-60);
-    text-decoration: none;
-    transition: color var(--ease);
-  }
-
-  .footer-legal-links a:hover {
-    color: var(--gold-light);
   }
 
   @media (max-width: 900px) {

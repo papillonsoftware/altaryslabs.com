@@ -31,7 +31,7 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
 <header class="nav" id="site-header">
   <div class="nav-inner">
     <a class="nav-logo" href={localizedPath('home', locale)}>
-      <Logo variant="full" width={160} title={`ALTARYS LABS, ${t.nav.home}`} />
+      <Logo variant="full" width={160} title={`ALTARYS LABS, ${t.nav.home}`} surface="light" />
     </a>
 
     <nav class="nav-primary" id="nav-primary" aria-label={t.nav.products + ' / ' + t.nav.services}>
@@ -118,16 +118,26 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
 </header>
 
 <style>
+  /* Header toujours clair, quelle que soit la section defilee derriere lui
+     (UI-002, D055) : il ne depend d'aucun `.section--light`, ses couleurs sont
+     fixees ici une bonne fois. */
   .nav {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 100;
-    background: rgba(7, 17, 30, 0.92);
+    background: var(--cream-header-94);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--ink-06);
+    border-bottom: 1px solid var(--navy-08);
+  }
+
+  /* Seul point du header ou le gold standard (2.47:1 sur creme) ne suffit pas :
+     --gold-deep est le meme correctif que celui applique par le peritexte
+     .section--light, D030, mais le header n'est jamais dans cette classe. */
+  .nav :focus-visible {
+    outline-color: var(--gold-deep);
   }
 
   .nav-inner {
@@ -171,7 +181,7 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
   .nav-link {
     font-size: 14.5px;
     font-weight: 400;
-    color: var(--ink-72);
+    color: var(--slate-nav);
     text-decoration: none;
     letter-spacing: 0.02em;
     transition: color var(--ease);
@@ -179,7 +189,7 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
 
   .nav-link:hover,
   .nav-link[data-active='true'] {
-    color: var(--gold-light);
+    color: var(--gold-deeper);
   }
 
   .nav-disclosure {
@@ -190,18 +200,18 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
     height: 22px;
     background: none;
     border: none;
-    color: var(--ink-40);
+    color: var(--slate-nav);
     cursor: pointer;
     transition: color var(--ease), transform var(--ease);
   }
 
   .nav-disclosure:hover {
-    color: var(--gold);
+    color: var(--gold-deep);
   }
 
   .nav-disclosure[aria-expanded='true'] {
     transform: rotate(180deg);
-    color: var(--gold);
+    color: var(--gold-deep);
   }
 
   /* --- Menu deroulant, desktop --- */
@@ -212,11 +222,11 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
     left: -16px;
     min-width: 288px;
     list-style: none;
-    background: var(--navy-mid);
-    border: 1px solid var(--ink-08);
+    background: var(--surface);
+    border: 1px solid var(--navy-10);
     border-radius: var(--radius);
     padding: 8px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-menu);
   }
 
   /* Zone tampon invisible : evite que le menu se ferme en traversant le vide
@@ -251,21 +261,22 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
   .nav-menu-name {
     display: block;
     font-size: 13.5px;
-    color: var(--ivory);
+    color: var(--navy-text);
   }
 
   .nav-menu a:hover .nav-menu-name,
   .nav-menu a[aria-current='page'] .nav-menu-name {
-    color: var(--gold-light);
+    color: var(--gold-deeper);
   }
 
-  /* --ink-40 donnait 3.46:1 sur le panneau. --ink-60 : 5.22:1. D029. */
+  /* Panneau blanc : --slate-body, deja la couleur de corps de texte standard
+     sur clair (5.33:1 sur creme, davantage sur blanc). */
   .nav-menu-tagline {
     display: block;
     margin-top: 2px;
     font-size: 11.5px;
     font-weight: 300;
-    color: var(--ink-60);
+    color: var(--slate-body);
     line-height: 1.5;
   }
 
@@ -275,12 +286,16 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
     gap: 14px;
   }
 
+  /* Le remplissage or seul ne vaut que 2.47:1 sur le fond creme du header,
+     sous le seuil de 3:1 de SC 1.4.11 pour la limite d'un composant : meme
+     correctif que .btn-primary sous .section--light, D039. */
   .nav-cta {
     font-size: 13.5px;
     font-weight: 600;
     color: var(--navy-deep);
     background: var(--gold);
-    padding: 11px 22px;
+    border: 1px solid var(--gold-deep);
+    padding: 10px 21px;
     border-radius: var(--radius-sm);
     text-decoration: none;
     white-space: nowrap;
@@ -293,20 +308,32 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
   }
 
   /* --- Bouton hamburger --- */
+  /* 44x44, comme .nav-disclosure au meme point de rupture, plus bas dans ce
+     fichier : la cible rendait 38x42, sous le seuil de 44px pour une cible
+     tactile. */
   .nav-toggle {
     display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 8px;
   }
 
+  /* Pas de marge ici : en layout bloc les marges de 5px se fusionnaient entre
+     barres (centres a 7px d'ecart), mais flex ne fusionne jamais les marges
+     entre ses enfants, ce qui les ecartait a 12px et desalignait le X ouvert
+     (rotate(45deg) translate(5px, 5px), calibre pour 5*racine(2) = 7.07px).
+     Le gap: 5px du conteneur reproduit exactement l'ecart d'origine. */
   .nav-toggle span {
     display: block;
     width: 22px;
     height: 2px;
-    background: var(--ivory);
-    margin: 5px 0;
+    background: var(--navy-text);
     transition: transform var(--ease), opacity var(--ease);
   }
 
@@ -325,7 +352,7 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
   /* --- Mobile : le menu devient un accordeon plein ecran --- */
   @media (max-width: 900px) {
     .nav-toggle {
-      display: block;
+      display: flex;
     }
 
     .nav-primary {
@@ -340,8 +367,8 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
       max-height: calc(100dvh - var(--nav-h));
       overflow-y: auto;
       padding: 20px var(--gutter) 28px;
-      background: rgba(7, 17, 30, 0.98);
-      border-bottom: 1px solid var(--gold-12);
+      background: var(--cream-header);
+      border-bottom: 1px solid var(--navy-08);
     }
 
     .nav-primary[data-open='true'] {
@@ -377,7 +404,7 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
       margin: 0 0 8px;
       padding: 4px;
       box-shadow: none;
-      background: rgba(250, 247, 242, 0.02);
+      background: var(--navy-04);
     }
 
     /* Sur mobile le survol n'existe pas : seul le bouton ouvre le panneau. */
@@ -398,7 +425,7 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
       justify-content: space-between;
       margin-top: 20px;
       padding-top: 20px;
-      border-top: 1px solid var(--gold-08);
+      border-top: 1px solid var(--navy-08);
     }
   }
 
