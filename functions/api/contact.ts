@@ -174,6 +174,30 @@ export const onRequestPost = async ({ request, env }: PagesContext): Promise<Res
     return redirectToStatus(request, locale, 'erreur');
   }
 
+  /* LE JETON DOIT AVOIR ETE PRODUIT SUR CET HOTE.
+     Un jeton valide ne suffit pas : la cle de site est publique et figure dans
+     le HTML servi, donc n'importe qui peut servir une page sur un hote autorise
+     par le widget, resoudre le defi, et poster le jeton ici. Tant que
+     `localhost` figurait dans la liste du widget, c'etait faisable depuis une
+     machine de bureau, ce qui vidait de son sens la verification sur laquelle
+     repose tout le critere 2.
+
+     La comparaison porte sur l'hote de la requete et non sur une liste blanche.
+     Le formulaire poste vers `/api/contact`, une URL relative, donc l'hote de la
+     page et celui du POST sont toujours identiques pour une soumission
+     legitime. Aucune configuration a maintenir, rien a mettre a jour a la
+     bascule DNS, et rien qui casse en silence sur une URL de preview par
+     branche : une liste blanche aurait du enumerer altaryslabs.com, son `www`,
+     le sous-domaine pages.dev et tous ses sous-domaines de preview. Voir D106. */
+  const expectedHostname = new URL(request.url).hostname;
+
+  if (verdict.hostname !== expectedHostname) {
+    console.error(
+      `[contact] jeton produit sur un autre hote, rejete : ${verdict.hostname ?? '(absent)'} au lieu de ${expectedHostname}`,
+    );
+    return redirectToStatus(request, locale, 'erreur');
+  }
+
   const name = readField(form, 'name', MAX_LENGTHS.name);
   const email = readField(form, 'email', MAX_LENGTHS.email);
   const interest = readField(form, 'interest', 64);

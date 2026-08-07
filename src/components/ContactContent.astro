@@ -67,12 +67,16 @@ const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
 
 <section class="section section--light contact-section">
   <div class="container contact-inner">
-    <div class="panel panel--success" id="form-sent" hidden>
+    {/* `tabindex="-1"` sur les deux panneaux : sans lui, aucun appel a `focus()`
+        n'a d'effet sur un div. C'est ce que le garde-fou supprime par FORM-001
+        faisait deja correctement sur son propre panneau, et que ce lot remet.
+        Voir D104. */}
+    <div class="panel panel--success" id="form-sent" tabindex="-1" hidden>
       <p class="panel-title">{t.contact.successTitle}</p>
       <p class="panel-text">{t.contact.successText}</p>
     </div>
 
-    <div class="panel panel--error" id="form-error" role="alert" hidden>
+    <div class="panel panel--error" id="form-error" role="alert" tabindex="-1" hidden>
       <p class="panel-title">{t.contact.errorTitle}</p>
       <p class="panel-text">
         {t.contact.errorText} {t.contact.fallbackText}{' '}
@@ -177,7 +181,20 @@ const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
           required></textarea>
       </p>
 
-      <div class="cf-turnstile turnstile-slot" data-sitekey={TURNSTILE_SITE_KEY} />
+      {/* `data-language` est obligatoire, pas cosmetique. Sans lui l'attribut
+          vaut `auto` et le widget suit l'en-tete `Accept-Language` du
+          navigateur, pas la langue de la page : `/en/contact` affichait
+          "Verification..." en francais. Sur ce marche les navigateurs sont
+          massivement configures en francais, donc ce n'etait pas un cas limite
+          mais le cas courant, et la page anglaise montrait un controle francais
+          a la majorite du public pour lequel elle existe. Double defaut : une
+          chaine francaise dans une page anglaise, et un fragment francais sans
+          `lang`, soit un echec WCAG 3.1.2. Voir D102. */}
+      <div
+        class="cf-turnstile turnstile-slot"
+        data-sitekey={TURNSTILE_SITE_KEY}
+        data-language={locale}
+      />
 
       <button class="btn btn-primary contact-submit" type="submit">{t.contact.submit}</button>
 
@@ -188,14 +205,64 @@ const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
     </form>
 
     <script is:inline>
-      // Revele l'etat porte par l'URL. Volontairement `is:inline` et place ici,
-      // juste apres le formulaire : il s'execute pendant l'analyse du document,
-      // donc avant le premier rendu, et le formulaire ne clignote pas quand il
-      // doit ceder la place au panneau de succes.
+      // Revele l'etat porte par l'URL, conserve la saisie a travers la
+      // redirection, et donne le focus au panneau revele.
+      //
+      // Volontairement `is:inline` et place ici, juste apres le formulaire : il
+      // s'execute pendant l'analyse du document, donc avant le premier rendu.
+      // Ni le formulaire ne clignote avant de ceder la place au panneau de
+      // succes, ni les champs ne s'affichent vides avant d'etre repeuples.
       //
       // La comparaison porte sur deux valeurs figees, jamais reinjectees dans
       // la page : le parametre ne peut rien ecrire dans le document.
       (function () {
+        // POURQUOI LA SAISIE EST CONSERVEE. La redirection 303 mene a une page
+        // statique, donc le formulaire y arrive vide, sous un panneau qui dit
+        // "reessayez". Un directeur qui vient d'ecrire trois paragraphes sur un
+        // appel d'offres ne les retape pas : un jeton refuse coutait la demande
+        // entiere. D092 raisonnait sur le double envoi cote succes et n'avait
+        // jamais examine le cout symetrique cote erreur. Voir D103.
+        //
+        // `sessionStorage` et non l'URL : renvoyer les valeurs dans l'adresse
+        // ferait voyager le message du visiteur dans une chaine de requete,
+        // journalisee partout sur le chemin. Le stockage meurt avec l'onglet, et
+        // seuls les six champs nommes sont conserves. Le jeton Turnstile en est
+        // exclu par construction, ce qui est necessaire : il est a usage unique
+        // et le restaurer produirait un refus garanti.
+        var CLE = 'altarys.contact.brouillon';
+        var CHAMPS = ['name', 'company', 'email', 'phone', 'interest', 'message'];
+
+        var formulaire = document.getElementById('contact-form');
+
+        function champ(nom) {
+          return formulaire ? formulaire.querySelector('[name="' + nom + '"]') : null;
+        }
+
+        function oublier() {
+          try {
+            sessionStorage.removeItem(CLE);
+          } catch (e) {
+            /* Stockage refuse ou plein : sans consequence, la conservation de la
+               saisie est un confort et jamais une condition de l'envoi. */
+          }
+        }
+
+        if (formulaire) {
+          formulaire.addEventListener('submit', function () {
+            var brouillon = {};
+            CHAMPS.forEach(function (nom) {
+              var element = champ(nom);
+              if (element) brouillon[nom] = element.value;
+            });
+
+            try {
+              sessionStorage.setItem(CLE, JSON.stringify(brouillon));
+            } catch (e) {
+              /* Voir ci-dessus : on n'empeche jamais l'envoi pour autant. */
+            }
+          });
+        }
+
         var statut = new URLSearchParams(window.location.search).get('statut');
         if (statut !== 'envoye' && statut !== 'erreur') return;
 
@@ -203,9 +270,62 @@ const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
         if (panneau) panneau.hidden = false;
 
         if (statut === 'envoye') {
-          var formulaire = document.getElementById('contact-form');
           if (formulaire) formulaire.hidden = true;
+          // La demande est partie : le brouillon n'a plus de raison d'exister.
+          oublier();
+        } else {
+          // Le brouillon est conserve apres relecture, et non efface : un
+          // rechargement de la page d'erreur doit retrouver la saisie. Il ne
+          // survit de toute facon pas a la fermeture de l'onglet, et le succes
+          // l'efface.
+          var brut = null;
+          try {
+            brut = sessionStorage.getItem(CLE);
+          } catch (e) {
+            brut = null;
+          }
+
+          if (brut) {
+            try {
+              var brouillon = JSON.parse(brut);
+              CHAMPS.forEach(function (nom) {
+                var element = champ(nom);
+                // `typeof` et non une simple verite : une chaine vide est une
+                // valeur legitime pour les deux champs facultatifs.
+                if (element && typeof brouillon[nom] === 'string') {
+                  element.value = brouillon[nom];
+                }
+              });
+            } catch (e) {
+              // Contenu illisible : on repart d'un formulaire vide plutot que
+              // de laisser une exception interrompre le reste du script.
+              oublier();
+            }
+          }
         }
+
+        // POURQUOI LE FOCUS EST DIFFERE. Reveler un `role="alert"` pendant
+        // l'analyse ne l'annonce pas : une region live presente des le premier
+        // rendu fait partie de l'etat initial de la page, pas d'un changement.
+        // Deplacer le focus sur le panneau, en revanche, le fait lire. Le geste
+        // est differe a `DOMContentLoaded` parce qu'un `focus()` pose en pleine
+        // analyse n'est pas fiable. Voir D104.
+        document.addEventListener('DOMContentLoaded', function () {
+          if (!panneau) return;
+
+          // L'option explicite d'un scrollIntoView bat la valeur calculee de
+          // `scroll-behavior`, y compris le garde-fou que `global.css` pose
+          // lui-meme. On lit donc la preference plutot que de l'imposer.
+          var sansAnimation = matchMedia('(prefers-reduced-motion: reduce)').matches;
+          panneau.scrollIntoView({
+            behavior: sansAnimation ? 'auto' : 'smooth',
+            block: 'center',
+          });
+
+          // Le focus sert aussi l'utilisateur de loupe, qui ne verrait rien
+          // bouger si l'annonce restait sonore.
+          panneau.focus();
+        });
       })();
     </script>
   </div>
