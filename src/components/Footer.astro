@@ -1,6 +1,11 @@
 ---
 import Logo from './Logo.astro';
-import type { Locale } from '../i18n/config';
+import {
+  CONTACT_EMAIL,
+  CONTACT_PHONE,
+  CONTACT_PHONE_HREF,
+  type Locale,
+} from '../i18n/config';
 import { localizedPath, useTranslations } from '../i18n/utils';
 import { LEGAL_KEYS, PRODUCT_KEYS, SERVICE_KEYS, type PageKey } from '../i18n/routes';
 
@@ -14,12 +19,18 @@ const t = useTranslations(locale);
 // Genere au build, pas au runtime : le site est entierement statique.
 const year = new Date().getFullYear();
 
-const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
+/* Les colonnes de liens internes seules. La colonne Contact ne figure pas ici :
+   elle mele deux protocoles externes, `mailto:` et `tel:`, a une route, et ne
+   rentre donc pas dans une liste de PageKey. Elle est rendue a part.
+
+   "À propos" a quitte sa colonne pour rejoindre Légal, et "Contact" l'a quittee
+   pour devenir le lien de formulaire de la colonne Contact. Voir D077. */
+const linkColumns: Array<{ title: string; keys: readonly PageKey[] }> = [
   { title: t.footer.columnProducts, keys: PRODUCT_KEYS },
   { title: t.footer.columnServices, keys: SERVICE_KEYS },
-  { title: t.footer.columnCompany, keys: ['about'] },
-  { title: t.footer.columnLegal, keys: [...LEGAL_KEYS, 'contact'] },
 ];
+
+const legalColumn = { title: t.footer.columnLegal, keys: [...LEGAL_KEYS, 'about'] as const };
 ---
 
 <footer class="footer">
@@ -32,7 +43,7 @@ const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
     </div>
 
     {
-      columns.map((column) => (
+      linkColumns.map((column) => (
         <nav class="footer-column" aria-label={column.title}>
           <h2 class="footer-column-title">{column.title}</h2>
           <ul>
@@ -45,6 +56,40 @@ const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
         </nav>
       ))
     }
+
+    <div class="footer-column">
+      <h2 class="footer-column-title">{t.footer.columnContact}</h2>
+      <ul>
+        <li>
+          <a href={`mailto:${CONTACT_EMAIL}`}>
+            <span class="footer-contact-label">{t.footer.emailLabel}</span>
+            {CONTACT_EMAIL}
+          </a>
+        </li>
+        <li>
+          <a href={CONTACT_PHONE_HREF}>
+            <span class="footer-contact-label">{t.footer.phoneLabel}</span>
+            <span class="footer-phone">{CONTACT_PHONE}</span>
+          </a>
+        </li>
+        <li>
+          <a href={localizedPath('contact', locale)}>{t.footer.contactForm}</a>
+        </li>
+      </ul>
+    </div>
+
+    <nav class="footer-column" aria-label={legalColumn.title}>
+      <h2 class="footer-column-title">{legalColumn.title}</h2>
+      <ul>
+        {
+          legalColumn.keys.map((key) => (
+            <li>
+              <a href={localizedPath(key, locale)}>{t.pageName[key]}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
   </div>
 
   <div class="container footer-legal">
@@ -103,6 +148,24 @@ const columns: Array<{ title: string; keys: readonly PageKey[] }> = [
 
   .footer-column a:hover {
     color: var(--gold-light);
+  }
+
+  /* Libelle au-dessus de la valeur plutot qu'a cote : la colonne est etroite et
+     l'adresse est longue. La maquette mettait le libelle e-mail en ligne et
+     coupait celui du telephone avec un `<br></br>`, qui n'est pas du HTML
+     valide ; un bloc donne le meme rendu sans balisage invente. */
+  .footer-contact-label {
+    display: block;
+  }
+
+  /* L'adresse ne doit pas deborder de sa colonne sur les largeurs
+     intermediaires, ou la grille est la plus serree. */
+  .footer-column a {
+    overflow-wrap: anywhere;
+  }
+
+  .footer-phone {
+    white-space: nowrap;
   }
 
   .footer-legal {

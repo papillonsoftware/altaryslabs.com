@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0; background:#F6F2E9;}
+  a{color:#B8791E;}
+  a:hover{color:#8B5E1B;}
+</style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif;">
+  <dc-import name="Header" active="produits" lang="{{ lang }}" onSetLang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+  <section style="padding:96px 64px 64px; background:#F6F2E9;">
+    <div style="max-width:820px; margin:0 auto;">
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.35em; color:#B8791E; text-transform:uppercase; margin-bottom:16px;">{{ t.label }}</p>
+      <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(32px,4vw,48px); color:#1A2740; margin:0 0 22px;">Papillon Corporate Finance</h1>
+      <p style="font-size:17px; color:#5B6472; line-height:1.75;">{{ t.intro }}</p>
+      <div style="display:flex; gap:14px; margin-top:36px; flex-wrap:wrap;">
+        <a href="contact.dc.html" style="background:#C8922A; color:#07111E; padding:14px 26px; border-radius:5px; text-decoration:none; font-weight:600; font-size:14.5px;">{{ t.demo }}</a>
+        <a href="contact.dc.html" style="border:1px solid rgba(184,121,30,.4); color:#B8791E; padding:14px 26px; border-radius:5px; text-decoration:none; font-weight:500; font-size:14.5px;">{{ t.ctaContact }}</a>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:0 64px 90px; background:#F6F2E9;">
+    <div style="max-width:1000px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+      <div style="background:#FFFFFF; border-radius:8px; padding:36px; border:1px solid rgba(26,39,64,.08); box-shadow:0 1px 3px rgba(26,39,64,.04);">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:22px; color:#1A2740; margin:0 0 14px;">{{ t.expTitle }}</h3>
+        <p style="font-size:14px; color:#5B6472; line-height:1.75; margin:0;">{{ t.expDesc }}</p>
+      </div>
+      <div style="background:#FFFFFF; border-radius:8px; padding:36px; border:1px solid rgba(26,39,64,.08); box-shadow:0 1px 3px rgba(26,39,64,.04);">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:22px; color:#1A2740; margin:0 0 14px;">{{ t.budTitle }}</h3>
+        <p style="font-size:14px; color:#5B6472; line-height:1.75; margin:0;">{{ t.budDesc }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:80px 64px; background:linear-gradient(135deg, #1A2740, #0F1724); text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(24px,2.8vw,34px); color:#FAF7F2; margin:0 0 28px;">{{ t.ctaTitle }}</h2>
+    <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+      <a href="contact.dc.html" style="background:#C8922A; color:#07111E; padding:16px 32px; border-radius:5px; text-decoration:none; font-weight:600; font-size:15px;">{{ t.demo }}</a>
+      <a href="contact.dc.html" style="border:1px solid rgba(200,146,42,.4); color:#E5B55A; padding:16px 32px; border-radius:5px; text-decoration:none; font-weight:500; font-size:15px;">{{ t.ctaContact }}</a>
+    </div>
+  </section>
+
+  <dc-import name="Footer" lang="{{ lang }}" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const T = {
+  fr: {
+    label: 'Produit', intro: "Solution SaaS de budgétisation conforme SYSCOHADA, destinée aux directions financières des PME de la zone OHADA. Elle s'appuie sur la même plateforme technique que Papillon HR Suite, pour une cohérence totale de vos données d'entreprise.",
+    demo: 'Demander une démo', ctaContact: 'Contactez notre équipe commerciale',
+    expTitle: 'Gestion des dépenses', expDesc: 'Suivi et validation des notes de frais et dépenses courantes, avec traçabilité complète pour vos équipes financières.',
+    budTitle: 'Budget et engagements', budDesc: 'Pilotage budgétaire et suivi des engagements financiers, conforme au référentiel SYSCOHADA.',
+    ctaTitle: 'Voir Papillon Corporate Finance en action',
+  },
+  en: {
+    label: 'Product', intro: 'SYSCOHADA-compliant budgeting SaaS for finance departments of OHADA SMEs. Built on the same technical platform as Papillon HR Suite, for full consistency across your business data.',
+    demo: 'Request a demo', ctaContact: 'Talk to our sales team',
+    expTitle: 'Expense management', expDesc: 'Tracking and validation of expense reports and everyday spending, with full traceability for your finance teams.',
+    budTitle: 'Budget and commitments', budDesc: 'Budget steering and financial commitment tracking, compliant with the SYSCOHADA framework.',
+    ctaTitle: 'See Papillon Corporate Finance in action',
+  },
+};
+class Component extends DCLogic {
+  state = { lang: (typeof localStorage !== 'undefined' && localStorage.getItem('altarys-lang')) || 'fr' };
+  setLang = (l) => { this.setState({ lang: l }); try { localStorage.setItem('altarys-lang', l); } catch (e) {} };
+  renderVals() { return { lang: this.state.lang, setLang: this.setLang, t: T[this.state.lang] }; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0; background:#F6F2E9;}
+  a{color:#B8791E;}
+  a:hover{color:#8B5E1B;}
+  ::placeholder{color:#9AA3B4;}
+</style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif;">
+  <dc-import name="Header" active="contact" lang="{{ lang }}" onSetLang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+  <section style="padding:96px 64px 120px; background:#F6F2E9;">
+    <div style="max-width:640px; margin:0 auto;">
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.35em; color:#B8791E; text-transform:uppercase; margin-bottom:16px; text-align:center;">{{ t.label }}</p>
+      <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(30px,4vw,42px); color:#1A2740; margin:0 0 16px; text-align:center;">{{ t.title }}</h1>
+      <p style="font-size:15px; color:#5B6472; line-height:1.7; text-align:center; margin:0 0 48px;">{{ t.subtitle }}</p>
+
+      <sc-if value="{{ submitted }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#FFFFFF; border:1px solid rgba(200,146,42,.3); border-radius:8px; padding:48px; text-align:center; box-shadow:0 1px 3px rgba(26,39,64,.04);">
+          <p style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:24px; color:#B8791E; margin:0 0 12px;">{{ t.sentTitle }}</p>
+          <p style="font-size:14px; color:#5B6472; line-height:1.7; margin:0;">{{ t.sentDesc }}</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{ handleSubmit }}" style="display:flex; flex-direction:column; gap:20px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <label style="font-size:12.5px; color:#5B6472;">{{ t.name }}</label>
+              <input type="text" required="" placeholder="{{ t.namePh }}" style="background:#FFFFFF; border:1px solid rgba(26,39,64,.14); border-radius:5px; padding:12px 14px; color:#1A2740; font-size:14px; font-family:'DM Sans',sans-serif;"></input>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <label style="font-size:12.5px; color:#5B6472;">{{ t.company }}</label>
+              <input type="text" placeholder="{{ t.companyPh }}" style="background:#FFFFFF; border:1px solid rgba(26,39,64,.14); border-radius:5px; padding:12px 14px; color:#1A2740; font-size:14px; font-family:'DM Sans',sans-serif;"></input>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <label style="font-size:12.5px; color:#5B6472;">Email</label>
+              <input type="email" required="" placeholder="vous@societe.com" style="background:#FFFFFF; border:1px solid rgba(26,39,64,.14); border-radius:5px; padding:12px 14px; color:#1A2740; font-size:14px; font-family:'DM Sans',sans-serif;"></input>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <label style="font-size:12.5px; color:#5B6472;">{{ t.phone }}</label>
+              <input type="tel" placeholder="+225 ..." style="background:#FFFFFF; border:1px solid rgba(26,39,64,.14); border-radius:5px; padding:12px 14px; color:#1A2740; font-size:14px; font-family:'DM Sans',sans-serif;"></input>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <label style="font-size:12.5px; color:#5B6472;">{{ t.interest }}</label>
+            <select style="background:#FFFFFF; border:1px solid rgba(26,39,64,.14); border-radius:5px; padding:12px 14px; color:#1A2740; font-size:14px; font-family:'DM Sans',sans-serif;">
+              <option>Papillon HR Suite</option>
+              <option>Papillon Corporate Finance Suite</option>
+              <option>Papillon Collection Solution (PCS)</option>
+              <option>{{ t.optConseil }}</option>
+              <option>{{ t.optDev }}</option>
+              <option>{{ t.optIa }}</option>
+              <option>{{ t.optAutre }}</option>
+            </select>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <label style="font-size:12.5px; color:#5B6472;">{{ t.message }}</label>
+            <textarea rows="5" placeholder="{{ t.messagePh }}" style="background:#FFFFFF; border:1px solid rgba(26,39,64,.14); border-radius:5px; padding:12px 14px; color:#1A2740; font-size:14px; font-family:'DM Sans',sans-serif; resize:vertical;"></textarea>
+          </div>
+          <button type="submit" style="background:#C8922A; color:#07111E; border:none; padding:15px 28px; border-radius:5px; font-weight:600; font-size:15px; cursor:pointer; margin-top:8px;">{{ t.send }}</button>
+        </form>
+      </sc-if>
+    </div>
+  </section>
+
+  <dc-import name="Footer" lang="{{ lang }}" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const T = {
+  fr: {
+    label: 'Contact', title: 'Contactez notre équipe commerciale',
+    subtitle: 'Décrivez-nous votre besoin, nous revenons vers vous rapidement.',
+    sentTitle: 'Message envoyé', sentDesc: 'Merci pour votre message. Notre équipe commerciale vous recontactera très prochainement.',
+    name: 'Nom complet', namePh: 'Votre nom', company: 'Société', companyPh: 'Nom de votre société',
+    phone: 'Téléphone', interest: 'Je suis intéressé par',
+    optConseil: 'Conseil', optDev: 'Développement sur mesure', optIa: 'IA souveraine', optAutre: 'Autre',
+    message: 'Message', messagePh: 'Décrivez votre besoin', send: 'Envoyer',
+  },
+  en: {
+    label: 'Contact', title: 'Talk to our sales team',
+    subtitle: "Tell us about your needs, we'll get back to you quickly.",
+    sentTitle: 'Message sent', sentDesc: 'Thank you for your message. Our sales team will get back to you shortly.',
+    name: 'Full name', namePh: 'Your name', company: 'Company', companyPh: 'Your company name',
+    phone: 'Phone', interest: "I'm interested in",
+    optConseil: 'Consulting', optDev: 'Custom Development', optIa: 'Sovereign AI', optAutre: 'Other',
+    message: 'Message', messagePh: 'Describe your needs', send: 'Send',
+  },
+};
+class Component extends DCLogic {
+  state = { submitted: false, lang: (typeof localStorage !== 'undefined' && localStorage.getItem('altarys-lang')) || 'fr' };
+  setLang = (l) => { this.setState({ lang: l }); try { localStorage.setItem('altarys-lang', l); } catch (e) {} };
+  renderVals() {
+    return {
+      lang: this.state.lang, setLang: this.setLang, t: T[this.state.lang],
+      submitted: this.state.submitted,
+      notSubmitted: !this.state.submitted,
+      handleSubmit: (e) => { e.preventDefault(); this.setState({ submitted: true }); },
+    };
+  }
+}
+</script>
+</body>
+</html>

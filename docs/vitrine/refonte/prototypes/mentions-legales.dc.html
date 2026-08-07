@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0; background:#F6F2E9;}
+  a{color:#B8791E;}
+  a:hover{color:#8B5E1B;}
+</style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif;">
+  <dc-import name="Header" active="legal" lang="{{ lang }}" onSetLang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+  <section style="padding:96px 64px 100px; background:#F6F2E9;">
+    <div style="max-width:760px; margin:0 auto;">
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.35em; color:#B8791E; text-transform:uppercase; margin-bottom:16px;">{{ t.label }}</p>
+      <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(30px,4vw,42px); color:#1A2740; margin:0 0 30px;">{{ t.title }}</h1>
+
+      <p style="font-family:'DM Sans',sans-serif; font-weight:500; font-size:14.5px; color:#1A2740; margin:0 0 8px;">{{ t.editeurTitle }}</p>
+      <p style="font-size:14.5px; color:#5B6472; line-height:1.8; margin:0 0 28px;">{{ t.editeurBody }}</p>
+
+      <p style="font-family:'DM Sans',sans-serif; font-weight:500; font-size:14.5px; color:#1A2740; margin:0 0 8px;">{{ t.dirTitle }}</p>
+      <p style="font-size:14.5px; color:#5B6472; line-height:1.8; margin:0 0 28px;">{{ t.dirBody }}</p>
+
+      <p style="font-family:'DM Sans',sans-serif; font-weight:500; font-size:14.5px; color:#1A2740; margin:0 0 8px;">{{ t.hostTitle }}</p>
+      <p style="font-size:14.5px; color:#5B6472; line-height:1.8; margin:0 0 28px;">{{ t.hostBody }}</p>
+
+      <p style="font-family:'DM Sans',sans-serif; font-weight:500; font-size:14.5px; color:#1A2740; margin:0 0 8px;">{{ t.ipTitle }}</p>
+      <p style="font-size:14.5px; color:#5B6472; line-height:1.8; margin:0;">{{ t.ipBody }}</p>
+    </div>
+  </section>
+
+  <dc-import name="Footer" lang="{{ lang }}" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const T = {
+  fr: {
+    label: 'Informations légales', title: 'Mentions légales',
+    editeurTitle: 'Éditeur du site',
+    editeurBody: "Le site altaryslabs.com est édité par ALTARYS LABS, Société par Actions Simplifiée Unipersonnelle de droit ivoirien, immatriculée au RCCM sous le numéro CI-ABI-03-2026-B17-00070, dont le siège social est situé à Abidjan, Côte d'Ivoire.",
+    dirTitle: 'Direction de la publication',
+    dirBody: 'La direction de la publication est assurée par Emmanuel Blonvia, Fondateur et Président de ALTARYS LABS.',
+    hostTitle: 'Hébergement',
+    hostBody: "Les informations relatives à l'hébergeur du site seront précisées ici avant la mise en ligne définitive.",
+    ipTitle: 'Propriété intellectuelle',
+    ipBody: "L'ensemble des contenus présents sur ce site (textes, marques, logos, solutions Papillon) est la propriété de ALTARYS LABS, sauf mention contraire, et ne peut être reproduit sans autorisation préalable.",
+  },
+  en: {
+    label: 'Legal information', title: 'Legal notice',
+    editeurTitle: 'Website publisher',
+    editeurBody: "The website altaryslabs.com is published by ALTARYS LABS, a single-shareholder company under Ivorian law, registered with the RCCM under number CI-ABI-03-2026-B17-00070, with its registered office in Abidjan, Ivory Coast.",
+    dirTitle: 'Publication director',
+    dirBody: 'The publication is directed by Emmanuel Blonvia, Founder and Chairman of ALTARYS LABS.',
+    hostTitle: 'Hosting',
+    hostBody: "Hosting provider details will be added here before the site goes live.",
+    ipTitle: 'Intellectual property',
+    ipBody: "All content on this site (text, trademarks, logos, Papillon solutions) is the property of ALTARYS LABS, unless otherwise stated, and may not be reproduced without prior authorization.",
+  },
+};
+class Component extends DCLogic {
+  state = { lang: (typeof localStorage !== 'undefined' && localStorage.getItem('altarys-lang')) || 'fr' };
+  setLang = (l) => { this.setState({ lang: l }); try { localStorage.setItem('altarys-lang', l); } catch (e) {} };
+  renderVals() { return { lang: this.state.lang, setLang: this.setLang, t: T[this.state.lang] }; }
+}
+</script>
+</body>
+</html>
