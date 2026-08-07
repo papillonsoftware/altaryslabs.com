@@ -12,7 +12,7 @@ Before reviewing, read `CLAUDE.md`, `docs/AI_Development_Workflow.md`, the work 
 
 Before walking the checklist below, run the `code-review` skill on the pull request under review (`/code-review <PR-number>`), to catch mechanical defects the checklist does not enumerate: broken or unused imports, unhandled promise rejections, CSS rules that never apply, values hardcoded where a token exists, copy-paste between the two language variants that left a stale string behind, and anything else its own analysis surfaces.
 
-At its own final step, the skill posts its own comment directly on the pull request. That is separate from, and in addition to, the single consolidated Round-N comment this procedure posts at the end (`review.md` step 12): the PR ends up carrying two comments for the same round, the skill's and this round's. That duplication is accepted as the cost of using the skill as installed, not a defect to fix.
+Run it at `high` effort, and **without `--comment`**. The skill only posts to the pull request when that option is passed; left off, it returns its findings to you and stays silent, so the PR carries exactly one comment per round, the consolidated one `review.md` step 12 posts. D056 described the opposite and accepted two comments per round as a cost, on the premise that the skill always posts and takes no options. Round 6 of `SITE-FIX-002` ran the skill and established that the premise was false. See D080.
 
 Rules for this pass:
 
@@ -148,7 +148,9 @@ Surface AND BLOCK on every genuine defect you find, **regardless of whether the 
 
 ### File convention
 
-Write to `docs/reviews/<ID>-review.md` on the **feature branch**. If the file already exists from a previous round, **append** a new round section. Never overwrite. Never commit a review file on `main`.
+Write to `docs/reviews/<ID>-review.md`. The file ships **on the work item's branch**, but you do not write it there directly: `.claude/commands/review.md` step 3 opens the review worktree on a disposable `review-<id-lowercase>` branch, and step 11 pushes the commit onto the item branch with an explicit refspec. Write in the review worktree, push by refspec.
+
+If the file already exists from a previous round, **append** a new round section. Never overwrite. Never commit a review file on `main` or on `refonte-multipages`.
 
 ### Round format
 
@@ -173,8 +175,9 @@ Write to `docs/reviews/<ID>-review.md` on the **feature branch**. If the file al
 
 1. Stage only the review file: `git add docs/reviews/<ID>-review.md`
 2. Commit, message in French per the repository language rule: `docs(review): ajouter la revue <ID> round <N>`
-3. Push so the author can see it
+3. Push it onto the work item's branch with the explicit refspec: `git push origin HEAD:<branch>`. The `review-<id-lowercase>` branch does have an upstream, `origin/<branch>`, but it does not carry the same name as the local branch, so the default `push.default=simple` refuses a bare `git push` and another setting could send it somewhere unintended. Naming the destination removes the question. See `.claude/commands/review.md` step 11 for the non-fast-forward recovery.
 4. Post a summary as a PR comment via `gh pr comment`
+5. Tear down the review worktree and its branch, per `.claude/commands/review.md` step 13
 
 ---
 
