@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0; background:#F6F2E9;}
+  a{color:#B8791E;}
+  a:hover{color:#8B5E1B;}
+</style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif;">
+  <dc-import name="Header" active="services" lang="{{ lang }}" onSetLang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+  <section style="padding:96px 64px 64px; background:#F6F2E9;">
+    <div style="max-width:900px; margin:0 auto; text-align:center;">
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.35em; color:#B8791E; text-transform:uppercase; margin-bottom:16px;">{{ t.label }}</p>
+      <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(32px,4vw,48px); color:#1A2740; margin:0 0 22px;">{{ t.title }}</h1>
+      <p style="font-size:16px; color:#5B6472; line-height:1.7;">{{ t.intro }}</p>
+    </div>
+  </section>
+
+  <section style="padding:0 64px 100px; background:#F6F2E9;">
+    <div style="max-width:1300px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+      <div style="background:#FFFFFF; border-radius:8px; padding:40px 32px; border:1px solid rgba(26,39,64,.08); display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(26,39,64,.04);">
+        <h2 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:24px; color:#1A2740; margin:0 0 14px;">{{ t.conseilTitle }}</h2>
+        <p style="font-size:14px; color:#5B6472; line-height:1.75; margin:0 0 26px; flex:1;">{{ t.conseilDesc }}</p>
+        <a href="services-conseil.dc.html" style="color:#B8791E; text-decoration:none; font-size:14px; font-weight:500;">{{ t.more }} &#8594;</a>
+      </div>
+      <div style="background:#FFFFFF; border-radius:8px; padding:40px 32px; border:1px solid rgba(26,39,64,.08); display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(26,39,64,.04);">
+        <h2 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:24px; color:#1A2740; margin:0 0 14px;">{{ t.devTitle }}</h2>
+        <p style="font-size:14px; color:#5B6472; line-height:1.75; margin:0 0 26px; flex:1;">{{ t.devDesc }}</p>
+        <a href="services-dev.dc.html" style="color:#B8791E; text-decoration:none; font-size:14px; font-weight:500;">{{ t.more }} &#8594;</a>
+      </div>
+      <div style="background:#FFFFFF; border-radius:8px; padding:40px 32px; border:1px solid rgba(26,39,64,.08); display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(26,39,64,.04);">
+        <h2 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:24px; color:#1A2740; margin:0 0 14px;">{{ t.iaTitle }}</h2>
+        <p style="font-size:14px; color:#5B6472; line-height:1.75; margin:0 0 26px; flex:1;">{{ t.iaDesc }}</p>
+        <a href="services-ia.dc.html" style="color:#B8791E; text-decoration:none; font-size:14px; font-weight:500;">{{ t.more }} &#8594;</a>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:80px 64px; background:linear-gradient(135deg, #1A2740, #0F1724); text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(24px,2.8vw,34px); color:#FAF7F2; margin:0 0 28px;">{{ t.ctaTitle }}</h2>
+    <a href="contact.dc.html" style="background:#C8922A; color:#07111E; padding:16px 32px; border-radius:5px; text-decoration:none; font-weight:600; font-size:15px;">{{ t.ctaContact }}</a>
+  </section>
+
+  <dc-import name="Footer" lang="{{ lang }}" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const T = {
+  fr: {
+    label: 'Services', title: 'Une expertise au service de vos projets',
+    intro: "Notre expertise sectorielle nourrit aussi bien nos produits que nos missions de conseil et de développement pour compte de tiers.",
+    conseilTitle: 'Conseil IT, RH & Corporate Finance', conseilDesc: "Accompagnement des entreprises OHADA sur leurs systèmes d'information, leurs processus RH et leur gestion financière.",
+    devTitle: 'Développement sur mesure', devDesc: 'Applications web et mobiles, intégrations sur mesure, architecture cloud-native.',
+    iaTitle: 'IA souveraine', iaDesc: "Solutions d'aide à la décision alimentées par une IA souveraine, hébergée et opérée en Afrique.",
+    more: 'En savoir plus', ctaTitle: 'Discutons de votre besoin', ctaContact: 'Contactez notre équipe commerciale',
+  },
+  en: {
+    label: 'Services', title: 'Expertise serving your projects',
+    intro: 'Our sector expertise fuels both our products and our consulting and development engagements for third parties.',
+    conseilTitle: 'IT, HR & Corporate Finance Consulting', conseilDesc: 'Supporting OHADA businesses on their information systems, HR processes and financial management.',
+    devTitle: 'Custom Development', devDesc: 'Web and mobile applications, custom integrations, cloud-native architecture.',
+    iaTitle: 'Sovereign AI', iaDesc: 'Decision support solutions powered by sovereign AI, hosted and operated in Africa.',
+    more: 'Learn more', ctaTitle: "Let's talk about your needs", ctaContact: 'Talk to our sales team',
+  },
+};
+class Component extends DCLogic {
+  state = { lang: (typeof localStorage !== 'undefined' && localStorage.getItem('altarys-lang')) || 'fr' };
+  setLang = (l) => { this.setState({ lang: l }); try { localStorage.setItem('altarys-lang', l); } catch (e) {} };
+  renderVals() { return { lang: this.state.lang, setLang: this.setLang, t: T[this.state.lang] }; }
+}
+</script>
+</body>
+</html>

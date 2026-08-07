@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0; background:#F6F2E9;}
+  a{color:#B8791E;}
+  a:hover{color:#8B5E1B;}
+</style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif;">
+  <dc-import name="Header" active="legal" lang="{{ lang }}" onSetLang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+  <section style="padding:96px 64px 100px; background:#F6F2E9;">
+    <div style="max-width:760px; margin:0 auto;">
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.35em; color:#B8791E; text-transform:uppercase; margin-bottom:16px;">{{ t.label }}</p>
+      <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(30px,4vw,42px); color:#1A2740; margin:0 0 30px;">{{ t.title }}</h1>
+      <p style="font-size:15px; color:#5B6472; line-height:1.85; margin:0 0 20px;">{{ t.intro }}</p>
+      <div style="background:#FFFFFF; border:1px solid rgba(26,39,64,.08); border-radius:8px; padding:32px;">
+        <p style="font-size:14.5px; color:#5B6472; line-height:1.8; margin:0;">{{ t.pending }}</p>
+      </div>
+    </div>
+  </section>
+
+  <dc-import name="Footer" lang="{{ lang }}" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const T = {
+  fr: {
+    label: 'Vie privée', title: 'Politique de confidentialité',
+    intro: "ALTARYS LABS attache une importance particulière à la protection des données de ses clients, partenaires et visiteurs.",
+    pending: "La politique de confidentialité détaillée de ALTARYS LABS, décrivant les données collectées, leur finalité et vos droits, est en cours de finalisation et sera publiée avant la mise en ligne définitive du site. Pour toute question relative à vos données, vous pouvez contacter notre équipe via la page Contact.",
+  },
+  en: {
+    label: 'Privacy', title: 'Privacy policy',
+    intro: 'ALTARYS LABS places particular importance on protecting the data of its clients, partners and visitors.',
+    pending: "ALTARYS LABS' detailed privacy policy, describing the data collected, its purpose and your rights, is being finalized and will be published before the site goes fully live. For any question about your data, please contact our team via the Contact page.",
+  },
+};
+class Component extends DCLogic {
+  state = { lang: (typeof localStorage !== 'undefined' && localStorage.getItem('altarys-lang')) || 'fr' };
+  setLang = (l) => { this.setState({ lang: l }); try { localStorage.setItem('altarys-lang', l); } catch (e) {} };
+  renderVals() { return { lang: this.state.lang, setLang: this.setLang, t: T[this.state.lang] }; }
+}
+</script>
+</body>
+</html>
