@@ -112,6 +112,9 @@ export const en: Dictionary = {
     heroPrimary: 'Talk to our team',
     heroSecondary: 'Explore our products',
 
+    /* Voir le commentaire de `ogSubtitle` dans fr.ts. */
+    ogSubtitle: 'SaaS platforms, IT, HR and finance consulting, custom development.',
+
     productsLabel: 'Our products',
     productsTitle: 'Three SaaS suites designed for African regulatory realities',
 
