@@ -36,8 +36,12 @@ const legalColumn = { title: t.footer.columnLegal, keys: [...LEGAL_KEYS, 'about'
 <footer class="footer">
   <div class="container footer-grid">
     <div class="footer-brand">
-      <a href={localizedPath('home', locale)} aria-label={`ALTARYS LABS, ${t.nav.home}`}>
-        <Logo variant="full" width={150} />
+      <a
+        class="footer-logo"
+        href={localizedPath('home', locale)}
+        aria-label={`ALTARYS LABS, ${t.nav.home}`}
+      >
+        <Logo lockup="inline" detail="simple" surface="dark" />
       </a>
       <p class="footer-tagline">{t.footer.tagline}</p>
     </div>
@@ -110,6 +114,22 @@ const legalColumn = { title: t.footer.columnLegal, keys: [...LEGAL_KEYS, 'about'
     grid-template-columns: 1.3fr 0.9fr 0.9fr 0.7fr 0.9fr;
     gap: 48px;
     padding-bottom: 48px;
+  }
+
+  /* Memes deux raisons qu'au header : sans `inline-flex` l'ancre reserve la
+     descendante de sa ligne de texte sous le logo et creuse l'ecart avec la
+     signature ; et `text-decoration` doit etre annule sur l'ancre elle-meme,
+     un descendant ne pouvant pas retirer la decoration d'un ancetre.
+
+     Le couple `padding` / `margin` negatif porte la cible tactile de 26px a
+     44px sans rien deplacer : l'ancien verrou rendait 36px de haut, le nouveau
+     26. Une `min-height` aurait pousse la signature de 18px vers le bas. */
+  .footer-logo {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 0;
+    margin: -9px 0;
+    text-decoration: none;
   }
 
   .footer-tagline {
