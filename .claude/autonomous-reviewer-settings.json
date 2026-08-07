@@ -3,6 +3,7 @@
     "allow": [
       "Bash(git worktree:*)",
       "Bash(git -C:*)",
+      "Bash(git symbolic-ref:*)",
       "Bash(git rebase:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
@@ -26,8 +27,8 @@
       "Bash(npx astro:*)",
       "Bash(bin/review_shots:*)",
       "Bash(lsof:*)",
-      "Write(docs/reviews/**)",
-      "Edit(docs/reviews/**)"
+      "Edit(docs/reviews/**)",
+      "Edit(**/docs/reviews/**)"
     ]
   }
 }

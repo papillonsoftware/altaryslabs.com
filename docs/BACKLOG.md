@@ -39,6 +39,7 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 
 | Order | Item | Blocked by | Doc |
 |---|---|---|---|
+| 0 | `I18N-FIX-002` | nothing, PR #31 is open | `docs/work-items/I18N-FIX-002.md` |
 | 0 | `SITE-FIX-002` | nothing, and see below | `docs/work-items/SITE-FIX-002.md` |
 | 0 | `SITE-CHR-002` | nothing | `docs/work-items/SITE-CHR-002.md` |
 | 0 | `SITE-FIX-007` | nothing | `docs/work-items/SITE-FIX-007.md` |
