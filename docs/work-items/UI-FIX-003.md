@@ -3,7 +3,7 @@
 - **Type**: FIX
 - **Branch**: `fix/vignettes-og`
 - **Base**: `refonte-multipages`
-- **Decisions**: D100, D101
+- **Decisions**: D101, D102
 - **Date**: 2026-08-07
 - **Origin**: review round 2 of UI-004, `docs/reviews/UI-004-review.md`
 
@@ -42,7 +42,7 @@ page. They were the only visual asset in the repository nobody could reproduce.
 | `public/og-image-en.png` | Regenerated: D086 logomark, validated EN hero |
 | `docs/vitrine/altarys-brand-identity-v3.1.html` | Banner rewritten: the file is obsolete in full, with its three traps named |
 | `CLAUDE.md` | The v3.1 row marked obsolete; the generated-images convention recorded |
-| `docs/DECISIONS.md` | D100, D101 |
+| `docs/DECISIONS.md` | D101, D102 |
 | `docs/work-items/UI-005.md` | Closed by this item; its two documentation errors corrected first |
 
 ## Findings from round 2, and their disposition
@@ -51,7 +51,7 @@ page. They were the only visual asset in the repository nobody could reproduce.
 |---|---|
 | **[BLOCKER]** both images on the pre-D086 logomark | Fixed, both regenerated |
 | **[IMPORTANT]** English image on retired positioning | Fixed, and the French one too, which the review had not caught |
-| **[IMPORTANT]** the D086 banner endorses the obsolete colour section | Fixed. Founder went further than the finding: the whole file is retired, D101 |
+| **[IMPORTANT]** the D086 banner endorses the obsolete colour section | Fixed. Founder went further than the finding: the whole file is retired, D102 |
 | **[IMPORTANT]** `UI-005` typed `CHR` | Corrected to `STORY` before closing it: a visitor does see the difference |
 | **[IMPORTANT]** `UI-005` cites `OG_IMAGES` | Corrected to `OG_DEFAULT` |
 
@@ -63,8 +63,8 @@ grounds as the logomark in UI-004.
 
 ## Notes
 
-- D090 to D099 are reserved by `feat/formulaire-contact`, an open branch. This
-  item takes D100 and D101.
+- D090 to D100 are taken by `FORM-001`, merged as PR #34 while this item was
+  being written. This item takes D101 and D102.
 - The subtitle strings are the originals, kept on the founder's call: they list
   the offer and carry no positioning claim. Only the missing acute accent on
   "developpement" was restored.

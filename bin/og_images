@@ -15,7 +15,7 @@
 //
 // La copie n'est pas ecrite ici : elle est lue dans src/i18n/fr.ts et en.ts, de
 // sorte qu'une vignette ne puisse pas contredire le hero de la page d'accueil.
-// C'est exactement le defaut que la ronde 2 d'UI-004 a trouve. Voir D100.
+// C'est exactement le defaut que la ronde 2 d'UI-004 a trouve. Voir D101.
 //
 // Usage : bin/og_images            (depuis la racine du depot)
 //         bin/og_images --check    (rend dans /tmp et compare, n'ecrit rien)

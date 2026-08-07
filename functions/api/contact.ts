@@ -1,0 +1,231 @@
+/**
+ * Reception du formulaire de contact.
+ *
+ * Fonction Cloudflare Pages, deployee par Cloudflare independamment du build
+ * Astro : le site reste en sortie statique, sans adapter.
+ *
+ * CE FICHIER NE CONTIENT AUCUN SQL ET NE NOMME PAS D1. Il orchestre, il ne
+ * stocke pas. Le magasin est derriere `storeContactRequest`, seul endroit du
+ * depot qui connaisse le fournisseur, parce que ce fournisseur est provisoire.
+ * Voir D090.
+ *
+ * POST PUIS REDIRECTION 303, jamais de `fetch`. Le succes est porte par l'URL
+ * et non par la reponse d'un appel asynchrone : si la connexion lache apres que
+ * le POST est parti, le visiteur ne recupere pas son formulaire intact et ne
+ * renvoie donc pas le message qui vient d'arriver. C'est la raison d'etre du
+ * balisage pose par D066, et cette fonction s'y conforme. Voir D092.
+ *
+ * ORDRE DES OPERATIONS, ET CE QU'IL IMPLIQUE. Turnstile d'abord, validation
+ * ensuite, ecriture, puis notification. Un jeton refuse n'ecrit rien et
+ * n'envoie rien. Une ecriture qui echoue montre l'erreur. Une notification qui
+ * echoue ne l'annule pas : la demande est en base, redemander au visiteur de
+ * renvoyer ne produirait qu'un doublon. Voir D097.
+ */
+
+import { DEFAULT_LOCALE, isLocale, type Locale } from '../../src/i18n/config';
+import { PRODUCT_KEYS, ROUTES, SERVICE_KEYS } from '../../src/i18n/routes';
+import { storeContactRequest, type ContactRequest, type ContactRequestStore } from '../../server/contact-store';
+import { sendContactNotification } from '../../server/notify-resend';
+import { TURNSTILE_FIELD_NAME, verifyTurnstileToken } from '../../server/turnstile';
+
+/**
+ * Variables et bindings attendus sur le projet Pages, en Production ET en
+ * Preview. Aucune valeur ne vit dans le depot ; `wrangler.jsonc` en documente
+ * les noms sans jamais les porter.
+ */
+interface Env {
+  /** Binding D1 des demandes de contact. */
+  DB: ContactRequestStore;
+  TURNSTILE_SECRET_KEY?: string;
+  RESEND_API_KEY?: string;
+  CONTACT_NOTIFY_EMAIL?: string;
+}
+
+/**
+ * Contexte d'une fonction Pages, reduit a ce que ce gestionnaire utilise. Voir
+ * `server/contact-store.ts` pour la raison de ne pas dependre de
+ * `@cloudflare/workers-types`.
+ */
+interface PagesContext {
+  request: Request;
+  env: Env;
+}
+
+/**
+ * Offres selectionnables, derivees de la table de routage : le formulaire ne
+ * peut pas accepter un interet que la navigation ignore, et l'ajout d'une page
+ * produit ici la bonne valeur sans qu'on y touche. `other` complete la liste,
+ * comme la derniere option du select.
+ */
+const VALID_INTERESTS = new Set<string>([...PRODUCT_KEYS, ...SERVICE_KEYS, 'other']);
+
+/**
+ * Longueurs maximales. Une demande legitime tient largement dedans ; la borne
+ * existe pour qu'un robot ne puisse pas faire grossir la base ni la
+ * notification. 254 pour l'email est le maximum d'une adresse selon la RFC.
+ */
+const MAX_LENGTHS = {
+  name: 120,
+  company: 160,
+  email: 254,
+  phone: 40,
+  message: 5000,
+} as const;
+
+/* Volontairement permissive : le role de cette expression est d'ecarter une
+   saisie qui n'est manifestement pas une adresse, pas de trancher la validite
+   d'un domaine. La seule preuve qu'une adresse existe est qu'un message y
+   arrive. */
+const EMAIL_SHAPE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** Valeur nettoyee d'un champ, ou null si absente ou vide. */
+function readField(form: FormData, name: string, maxLength: number): string | null {
+  const value = form.get(name);
+  if (typeof value !== 'string') return null;
+
+  const trimmed = value.trim();
+  if (trimmed.length === 0 || trimmed.length > maxLength) return null;
+
+  return trimmed;
+}
+
+/**
+ * Renvoie le visiteur sur la page Contact de sa langue, etat en clair dans
+ * l'URL. La cible est lue dans `ROUTES` et jamais construite depuis une entree
+ * du client : une valeur trafiquee dans le champ `locale` ne peut donc produire
+ * que l'une des deux pages du site, jamais une redirection ouverte. Voir D091.
+ */
+function redirectToStatus(request: Request, locale: Locale, status: 'envoye' | 'erreur'): Response {
+  const target = new URL(ROUTES.contact[locale], request.url);
+  target.search = `statut=${status}`;
+
+  return new Response(null, {
+    status: 303,
+    headers: {
+      Location: target.toString(),
+      /* Une reponse de soumission ne doit jamais etre servie depuis un cache
+         intermediaire, sous peine d'afficher le succes d'un autre visiteur. */
+      'Cache-Control': 'no-store',
+    },
+  });
+}
+
+/**
+ * Un GET sur l'endpoint renvoie sur la page Contact.
+ *
+ * Sans ce gestionnaire, `wrangler pages dev` sert la page d'accueil en 200 a
+ * cette URL, ce qui est un contenu duplique pour un moteur de recherche et un
+ * cul-de-sac deroutant pour un humain qui aurait suivi un lien errant. Un 405
+ * nu serait correct sur le plan protocolaire mais offrirait la meme impasse. On
+ * redirige donc, sans `?statut` puisqu'il n'y a rien a annoncer, et on interdit
+ * l'indexation de l'URL elle-meme.
+ *
+ * La langue est inconnue sur un GET nu : il n'y a ni champ cache ni contexte.
+ * Le francais est donc le defaut, comme partout ailleurs dans le site.
+ */
+export const onRequestGet = ({ request }: PagesContext): Response => {
+  const target = new URL(ROUTES.contact[DEFAULT_LOCALE], request.url);
+
+  return new Response(null, {
+    status: 303,
+    headers: {
+      Location: target.toString(),
+      'X-Robots-Tag': 'noindex',
+      'Cache-Control': 'no-store',
+    },
+  });
+};
+
+export const onRequestPost = async ({ request, env }: PagesContext): Promise<Response> => {
+  let form: FormData;
+  try {
+    form = await request.formData();
+  } catch {
+    /* Corps illisible : la langue est inconnue, donc le francais par defaut. Ce
+       cas ne vient pas du formulaire du site. */
+    console.error('[contact] corps de requete illisible');
+    return redirectToStatus(request, DEFAULT_LOCALE, 'erreur');
+  }
+
+  /* Langue portee par un champ cache du formulaire, et non deduite du
+     `Referer`. Cet en-tete est facultatif par conception : supprime par une
+     extension ou un proxy, il renverrait silencieusement un visiteur
+     anglophone sur la page francaise, sans qu'aucun journal ne le signale. Le
+     champ, lui, ne peut pas disparaitre. Et la langue est une donnee de la
+     demande, pas une supposition : elle est enregistree comme telle. Voir D091. */
+  const rawLocale = form.get('locale');
+  const locale: Locale =
+    typeof rawLocale === 'string' && isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
+
+  /* Turnstile avant tout le reste : un robot ne doit ni faire grossir la base,
+     ni declencher un email, ni consommer une ecriture. */
+  const verdict = await verifyTurnstileToken(
+    env.TURNSTILE_SECRET_KEY,
+    typeof form.get(TURNSTILE_FIELD_NAME) === 'string'
+      ? (form.get(TURNSTILE_FIELD_NAME) as string)
+      : null,
+  );
+
+  if (!verdict.ok) {
+    /* Les codes restent au journal. Le visiteur recoit l'etat d'erreur de la
+       page, ecrit dans sa langue, qui lui propose de reessayer et lui donne
+       l'adresse email de repli. Voir D082. */
+    console.error(`[contact] Turnstile a refuse la soumission : ${verdict.errorCodes.join(', ')}`);
+    return redirectToStatus(request, locale, 'erreur');
+  }
+
+  const name = readField(form, 'name', MAX_LENGTHS.name);
+  const email = readField(form, 'email', MAX_LENGTHS.email);
+  const interest = readField(form, 'interest', 64);
+  const message = readField(form, 'message', MAX_LENGTHS.message);
+
+  const missing =
+    !name ||
+    !email ||
+    !EMAIL_SHAPE.test(email) ||
+    !interest ||
+    !VALID_INTERESTS.has(interest) ||
+    !message;
+
+  if (missing) {
+    /* Le navigateur bloque deja ce cas : les quatre champs sont `required` et
+       l'email est un `type="email"`. Une requete qui arrive ici n'a donc pas
+       ete postee par le formulaire du site, et n'a pas besoin d'un message
+       plus precis que l'etat d'erreur generique. */
+    console.error('[contact] soumission incomplete ou hors contrat, rejetee');
+    return redirectToStatus(request, locale, 'erreur');
+  }
+
+  const contactRequest: ContactRequest = {
+    locale,
+    name,
+    company: readField(form, 'company', MAX_LENGTHS.company),
+    email,
+    phone: readField(form, 'phone', MAX_LENGTHS.phone),
+    interest,
+    message,
+  };
+
+  try {
+    await storeContactRequest(env.DB, contactRequest);
+  } catch (error) {
+    /* Rien n'est enregistre : c'est le seul cas ou le visiteur doit reessayer,
+       et le seul ou l'etat d'erreur dit la verite. */
+    console.error('[contact] echec de l enregistrement de la demande', error);
+    return redirectToStatus(request, locale, 'erreur');
+  }
+
+  const notified = await sendContactNotification(
+    env.RESEND_API_KEY,
+    env.CONTACT_NOTIFY_EMAIL,
+    contactRequest,
+  );
+
+  if (!notified) {
+    /* Deliberement pas une erreur pour le visiteur : la demande est en base et
+       ne sera pas perdue. Le journal est le canal de rattrapage. Voir D097. */
+    console.error('[contact] demande enregistree mais notification non partie');
+  }
+
+  return redirectToStatus(request, locale, 'envoye');
+};

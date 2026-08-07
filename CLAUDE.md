@@ -64,7 +64,7 @@ Read these before generating or modifying the website:
 |------|---------|
 | `docs/vitrine/refonte/PROMPT_altaryslabs-com-refonte.md` | **Primary spec** for the rebuild: sitemap, editorial tone, constraints |
 | `docs/vitrine/refonte/BRIEF_claude-design_altaryslabs-com.md` | Brief handed to claude.ai/design |
-| `docs/vitrine/altarys-brand-identity-v3.1.html` | **OBSOLETE, kept for history only** (D101). Its colour section still carries the abandoned amber and teal palette and ALTARYS ENTERPRISE. Do not read it for values |
+| `docs/vitrine/altarys-brand-identity-v3.1.html` | **OBSOLETE, kept for history only** (D102). Its colour section still carries the abandoned amber and teal palette and ALTARYS ENTERPRISE. Do not read it for values |
 | `docs/vitrine/platform-vision-prd.md` | Product PRD: module descriptions, personas, differentiators |
 | `docs/vitrine/platform-saas-blueprint.md` | Architecture blueprint: multi-tenancy, Spring Modulith, technical credibility content |
 | `docs/vitrine/prompt-vitrine-altaryslabs-v2.md` | Legacy one-page spec, kept for history only |
@@ -77,7 +77,7 @@ defined by `Header.dc.html` and `Footer.dc.html` and implemented in
 `src/components/Logo.astro`: a thicker diamond, and a wordmark in real HTML text
 rather than SVG `<text>`.
 
-**The v3.1 brand identity file is obsolete in full since D101**, not merely on
+**The v3.1 brand identity file is obsolete in full since D102**, not merely on
 the logomark. Its colour section still lists the amber and teal palette
 (`#D4810A`, `#F5A623`, `#1A8FA0`, `#4DB8CC`) that D015 removed, and presents
 ALTARYS ENTERPRISE as a live product line. It is kept for history. The operative
@@ -88,7 +88,7 @@ and the design project for the form.
 `public/og-image.png` and `og-image-en.png` through headless Chrome from the
 real fonts and the D086 logomark, and reads its copy from `fr.ts` and `en.ts` so
 a share preview cannot contradict the home page. Re-run it after any change to
-the logomark or to the home hero. See D100.
+the logomark or to the home hero. See D101.
 
 **A dated snapshot of its 15 root prototypes lives in
 `docs/vitrine/refonte/prototypes/`** (13 pages plus `Header` and `Footer`, taken
@@ -130,10 +130,34 @@ in the order below.
 - **Stack**: Astro 7 in static output, no UI framework, no adapter
 - **Hosting**: Cloudflare Pages, build output `./dist`, Node 22
 - **Config**: `wrangler.jsonc`
-- **Contact form**: Cloudflare Pages Function in `/functions`, D1 storage plus
-  email notification, Turnstile anti-spam. The D1 binding is commented out until
-  that work lands; reactivate it after `wrangler d1 create` and do not forget the
-  comma after `pages_build_output_dir`.
+- **Contact form**: live since `FORM-001`. `functions/api/contact.ts` verifies
+  Turnstile server side, stores the request in D1 and notifies through Resend,
+  then answers `303` back to the contact page of the submitter's language with
+  `?statut=envoye` or `?statut=erreur`.
+  - **All storage access is confined to `server/contact-store.ts`**, the only
+    file in the repository that contains SQL or names D1. The database sits in
+    Europe and is assumed provisional; relocating it to Africa must touch that
+    one file. See D090.
+  - The schema lives in `migrations/`, applied with
+    `npx wrangler d1 migrations apply altaryslabs-contact --remote`. It stores
+    exactly the six fields section 2 of `/confidentialite` enumerates, plus a
+    server timestamp and the page language. **Never the IP, the user-agent or
+    `CF-IPCountry`**: the published policy closes that list. See D093.
+  - **Three runtime variables** must exist on the Pages project, in Production
+    **and** Preview: `CONTACT_NOTIFY_EMAIL` (text), plus `TURNSTILE_SECRET_KEY`
+    and `RESEND_API_KEY`, which are **secrets and must carry the Secret type,
+    never Text**. There is **no build-time variable at all**.
+  - **The Turnstile site key is a constant in `src/i18n/config.ts`**, not an
+    environment variable. It is not a secret and cannot be one: Turnstile
+    requires it in the rendered HTML. Committing it publishes nothing that was
+    not already served to every visitor, and rotating it always required a
+    rebuild anyway, because the value is frozen into the static HTML.
+  - **The platform trap that forced this**, worth knowing before debugging any
+    future build: because `wrangler.jsonc` carries `pages_build_output_dir`, that
+    file is the source of truth for project configuration and Cloudflare stops
+    reading dashboard variables for the build. The log says
+    `Build environment variables: (none found)` while the dashboard clearly shows
+    the variable set in both environments. See D100, which supersedes D094.
 
 ## Critical Rules
 

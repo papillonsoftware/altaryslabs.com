@@ -355,10 +355,6 @@ export const en: Dictionary = {
 
     noScriptText:
       'Sending this form requires JavaScript, which is turned off in your browser.',
-
-    pendingTitle: 'Form opening soon',
-    pendingText:
-      'Sending messages from this form will be enabled when the site goes live.',
   },
 
   meta: {
