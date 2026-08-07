@@ -64,13 +64,21 @@ Read these before generating or modifying the website:
 |------|---------|
 | `docs/vitrine/refonte/PROMPT_altaryslabs-com-refonte.md` | **Primary spec** for the rebuild: sitemap, editorial tone, constraints |
 | `docs/vitrine/refonte/BRIEF_claude-design_altaryslabs-com.md` | Brief handed to claude.ai/design |
-| `docs/vitrine/altarys-brand-identity-v3.1.html` | **Brand identity**: CSS variables, Google Fonts, SVG logomarks (reuse as-is, do NOT redraw) |
+| `docs/vitrine/altarys-brand-identity-v3.1.html` | **Brand identity**: CSS variables, Google Fonts. **No longer authoritative on the logomark** since D086, see below |
 | `docs/vitrine/platform-vision-prd.md` | Product PRD: module descriptions, personas, differentiators |
 | `docs/vitrine/platform-saas-blueprint.md` | Architecture blueprint: multi-tenancy, Spring Modulith, technical credibility content |
 | `docs/vitrine/prompt-vitrine-altaryslabs-v2.md` | Legacy one-page spec, kept for history only |
 
 The visual reference for the rebuild is the claude.ai/design project
 `53d1c228-d274-4df3-8022-1a427dd96c15`, read through the `DesignSync` tool.
+
+**It is also authoritative on the logomark since D086.** The web logomark is
+defined by `Header.dc.html` and `Footer.dc.html` and implemented in
+`src/components/Logo.astro`: a thicker diamond, and a wordmark in real HTML text
+rather than SVG `<text>`. The v3.1 brand identity file keeps the colour and type
+scales but its own lockups still carry the thin v3.1 diamond and are print and
+institutional assets that have not been re-cut. Do not rebuild the site logo
+from that file.
 
 **A dated snapshot of its 15 root prototypes lives in
 `docs/vitrine/refonte/prototypes/`** (13 pages plus `Header` and `Footer`, taken

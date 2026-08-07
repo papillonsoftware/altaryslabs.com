@@ -30,8 +30,12 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
 
 <header class="nav" id="site-header">
   <div class="nav-inner">
-    <a class="nav-logo" href={localizedPath('home', locale)}>
-      <Logo variant="full" width={160} title={`ALTARYS LABS, ${t.nav.home}`} surface="light" />
+    <a
+      class="nav-logo"
+      href={localizedPath('home', locale)}
+      aria-label={`ALTARYS LABS, ${t.nav.home}`}
+    >
+      <Logo lockup="stacked" detail="full" surface="light" />
     </a>
 
     <nav class="nav-primary" id="nav-primary" aria-label={t.nav.products + ' / ' + t.nav.services}>
@@ -151,7 +155,11 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
     height: var(--nav-h);
   }
 
+  /* `flex` et non `inline-flex` : une ancre en ligne reserve la descendante de
+     sa ligne de texte sous le logo, ce qui le decalait de deux pixels vers le
+     haut dans un header centre verticalement. */
   .nav-logo {
+    display: flex;
     flex-shrink: 0;
   }
 

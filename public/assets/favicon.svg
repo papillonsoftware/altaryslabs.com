@@ -1,11 +1,15 @@
-<svg width="76" height="70" viewBox="0 0 76 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <polygon points="38,5 74,38 38,71 2,38" fill="none" stroke="#C8922A" stroke-width="1.5"/>
-  <polygon points="38,16 60,38 38,60 16,38" fill="#C8922A" opacity="0.11"/>
-  <line x1="26" y1="59" x2="38" y2="18" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="50" y1="59" x2="38" y2="18" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="29" y1="47" x2="47" y2="47" stroke="#C8922A" stroke-width="2" stroke-linecap="round"/>
-  <circle cx="38" cy="5" r="2.5" fill="#C8922A"/>
-  <circle cx="74" cy="38" r="2.5" fill="#C8922A"/>
-  <circle cx="38" cy="71" r="2.5" fill="#C8922A"/>
-  <circle cx="2" cy="38" r="2.5" fill="#C8922A"/>
+<!-- Diamant ALTARYS LABS, geometrie du projet claude.ai/design (D084).
+     Le viewBox deborde d'une unite sur chaque bord : les pastilles de sommet
+     mordent sur le cadre 0 0 76 70 de la maquette, et un fichier autonome n'a
+     pas de CSS pour leur accorder un overflow visible comme le fait Logo.astro. -->
+<svg width="78" height="72" viewBox="-1 -1 78 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="38,4 74,37 38,68 2,37" fill="none" stroke="#C8922A" stroke-width="2"/>
+  <polygon points="38,15 59,37 38,57 17,37" fill="#C8922A" opacity="0.15"/>
+  <line x1="26" y1="57" x2="38" y2="17" stroke="#C8922A" stroke-width="3" stroke-linecap="round"/>
+  <line x1="50" y1="57" x2="38" y2="17" stroke="#C8922A" stroke-width="3" stroke-linecap="round"/>
+  <line x1="29" y1="46" x2="47" y2="46" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="38" cy="4" r="3" fill="#C8922A"/>
+  <circle cx="74" cy="37" r="3" fill="#C8922A"/>
+  <circle cx="38" cy="68" r="3" fill="#C8922A"/>
+  <circle cx="2" cy="37" r="3" fill="#C8922A"/>
 </svg>
