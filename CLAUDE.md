@@ -133,11 +133,21 @@ in the order below.
     exactly the six fields section 2 of `/confidentialite` enumerates, plus a
     server timestamp and the page language. **Never the IP, the user-agent or
     `CF-IPCountry`**: the published policy closes that list. See D093.
-  - Four variables must exist on the Pages project, in Production **and**
-    Preview: `PUBLIC_TURNSTILE_SITE_KEY` (build-time, plain text),
-    `TURNSTILE_SECRET_KEY`, `RESEND_API_KEY` and `CONTACT_NOTIFY_EMAIL`. A build
-    without the site key **fails on purpose** rather than shipping a form that
-    can never succeed. See D094.
+  - **Three runtime variables** must exist on the Pages project, in Production
+    **and** Preview: `CONTACT_NOTIFY_EMAIL` (text), plus `TURNSTILE_SECRET_KEY`
+    and `RESEND_API_KEY`, which are **secrets and must carry the Secret type,
+    never Text**. There is **no build-time variable at all**.
+  - **The Turnstile site key is a constant in `src/i18n/config.ts`**, not an
+    environment variable. It is not a secret and cannot be one: Turnstile
+    requires it in the rendered HTML. Committing it publishes nothing that was
+    not already served to every visitor, and rotating it always required a
+    rebuild anyway, because the value is frozen into the static HTML.
+  - **The platform trap that forced this**, worth knowing before debugging any
+    future build: because `wrangler.jsonc` carries `pages_build_output_dir`, that
+    file is the source of truth for project configuration and Cloudflare stops
+    reading dashboard variables for the build. The log says
+    `Build environment variables: (none found)` while the dashboard clearly shows
+    the variable set in both environments. See D100, which supersedes D094.
 
 ## Critical Rules
 

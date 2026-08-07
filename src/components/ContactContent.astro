@@ -29,7 +29,7 @@
  * francaise sans qu'aucun journal ne le signale. Voir D091.
  */
 import PageHeader from './PageHeader.astro';
-import { CONTACT_EMAIL, type Locale } from '../i18n/config';
+import { CONTACT_EMAIL, TURNSTILE_SITE_KEY, type Locale } from '../i18n/config';
 import { localizedPath, useTranslations } from '../i18n/utils';
 import { PRODUCT_KEYS, SERVICE_KEYS } from '../i18n/routes';
 
@@ -54,25 +54,13 @@ const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
   label: t.pageName[key],
 }));
 
-/* Cle publique par nature : Turnstile l'expose dans le HTML rendu.
+/* La cle de site vient de `config.ts` et non plus d'une variable de build.
 
-   LE BUILD ECHOUE PLUTOT QUE DE SE REPLIER. C'est une variable de build, figee
-   dans le HTML au moment de la compilation. Depuis que l'envoi fonctionne, un
-   build fait sans elle produirait un formulaire parfait a l'oeil dont chaque
-   soumission serait refusee cote serveur, faute de jeton : un defaut invisible
-   au relecteur et fatal au visiteur. L'emplacement vide de D065 avait un sens
-   tant que rien ne partait ; il n'en a plus. D065 est close. Voir D094. */
-const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
-
-if (!turnstileSiteKey) {
-  throw new Error(
-    "PUBLIC_TURNSTILE_SITE_KEY est absente de l'environnement de build.\n" +
-      'Le formulaire de contact serait rendu sans widget Turnstile, et la ' +
-      'fonction /api/contact refuserait chaque envoi faute de jeton.\n' +
-      'Definir cette variable dans Cloudflare Pages > Settings > Environment ' +
-      'variables, en Production ET en Preview, puis relancer le build.',
-  );
-}
+   Ni repli, ni garde-fou : la cle ne peut plus manquer, donc le formulaire ne
+   peut plus etre rendu sans widget. L'emplacement vide de D065 supposait une
+   cle absente, et le garde-fou de D094 supposait qu'elle puisse le redevenir ;
+   les deux hypotheses ont disparu avec la constante. D065 et D094 sont closes.
+   Voir D100 pour la raison, qui est un vrai piege de plateforme. */
 ---
 
 <PageHeader label={t.pageName.contact} title={t.contact.title} intro={t.contact.intro} />
@@ -189,7 +177,7 @@ if (!turnstileSiteKey) {
           required></textarea>
       </p>
 
-      <div class="cf-turnstile turnstile-slot" data-sitekey={turnstileSiteKey} />
+      <div class="cf-turnstile turnstile-slot" data-sitekey={TURNSTILE_SITE_KEY} />
 
       <button class="btn btn-primary contact-submit" type="submit">{t.contact.submit}</button>
 

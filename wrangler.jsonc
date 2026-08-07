@@ -30,22 +30,24 @@
     }
   ]
 
-  // Variables a definir dans le dashboard Cloudflare Pages
-  // (Settings > Environment variables), sur Production ET Preview, jamais en
-  // dur dans ce fichier :
+  // TROIS variables a definir dans le dashboard Cloudflare Pages
+  // (Settings > Variables and Secrets), sur Production ET Preview, jamais en
+  // dur dans ce fichier. Toutes trois sont lues a l'EXECUTION par
+  // functions/api/contact.ts, jamais au build :
   //
-  //   Variables d'execution, lues par functions/api/contact.ts :
-  //     CONTACT_NOTIFY_EMAIL   texte    adresse qui recoit les notifications
-  //     TURNSTILE_SECRET_KEY   secret   cle secrete anti-spam, verifiee cote serveur
-  //     RESEND_API_KEY         secret   cle API Resend, portee "Sending access" seule
+  //   CONTACT_NOTIFY_EMAIL   texte    adresse qui recoit les notifications
+  //   TURNSTILE_SECRET_KEY   secret   cle secrete anti-spam, verifiee cote serveur
+  //   RESEND_API_KEY         secret   cle API Resend, portee "Sending access" seule
   //
-  //   Variable de BUILD, lue par Astro a la compilation :
-  //     PUBLIC_TURNSTILE_SITE_KEY   texte   cle publique du widget Turnstile
+  // Les deux dernieres sont des SECRETS : type "Secret" dans le dashboard, et
+  // jamais "Text". Un secret en clair est lisible par quiconque ouvre l'ecran.
   //
-  //   La distinction n'est pas cosmetique. Le site est en sortie statique, donc
-  //   `import.meta.env.PUBLIC_*` est fige dans le HTML au moment du build : la
-  //   poser comme variable d'execution ne change rien, et il faut relancer un
-  //   build apres l'avoir definie. Depuis FORM-001, son absence fait echouer le
-  //   build au lieu de se replier sur un formulaire sans widget, qui serait
-  //   parfait a l'oeil et refuse a chaque envoi. Voir D065 et D094.
+  // IL N'Y A PLUS AUCUNE VARIABLE DE BUILD, et c'est deliberé. La cle de site
+  // Turnstile vit desormais dans src/i18n/config.ts. Le piege qui a impose ce
+  // choix : des lors que ce fichier porte "pages_build_output_dir", il devient
+  // la source de verite de la configuration du projet et Cloudflare cesse de
+  // lire les variables du dashboard pour le build. Le journal affiche alors
+  // "Build environment variables: (none found)" alors que la variable est bien
+  // posee dans les deux environnements, ce qui envoie chercher l'erreur du
+  // mauvais cote pendant longtemps. Voir D100.
 }
