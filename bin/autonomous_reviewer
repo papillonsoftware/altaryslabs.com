@@ -18,7 +18,17 @@
 # Usage : bin/autonomous_reviewer "<ID> (PR #<num>)"      (depuis la racine du depot)
 #   ex. : bin/autonomous_reviewer "PAGE-004 (PR #17)"
 set -euo pipefail
-cd "$(dirname "$0")/.."
+# Racine du checkout, resolue en absolu pour pouvoir sourcer bin/lib apres le cd.
+RACINE="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$RACINE"
+
+# Refuse de demarrer si cet arbre est en retard sur origin/refonte-multipages :
+# les instructions du relecteur seraient perimees. Voir bin/lib/fraicheur.sh.
+# Critique ici : une ronde autonome tourne en -p, donc sans personne pour
+# remarquer que le relecteur applique des regles annulees.
+. "$RACINE/bin/lib/fraicheur.sh"
+verifier_fraicheur
+
 AUTONOMY='AUTONOMOUS MODE: you run headless in the background, pre-authorized by the founder. Do NOT present a plan or ask "may I proceed" - execute the review end to end on your own. Write the review file directly with Write/Edit (do not delegate to a subagent). STOP only for a genuine editorial or commercial decision that only the founder can make. You still never modify source files and never merge.'
 claude --system-prompt-file .claude/personalities/REVIEWER.md \
        --append-system-prompt "$(cat .claude/reviewer-append.txt)

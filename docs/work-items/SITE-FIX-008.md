@@ -1,76 +1,62 @@
-# SITE-FIX-008 - `bin/review_shots` reports failed captures as successes
+# SITE-FIX-008 - `bin/tech-lead` seeds a session from an unchecked tree
 
-**Type** FIX | **Status** OPEN, not started | **Branch to create** `fix/review-shots-errortext`
+**Type** FIX | **Status** OPEN, not started | **Branch to create** `fix/fraicheur-tech-lead`
 **Base** `refonte-multipages`
 
-**Decision** D075 in `docs/DECISIONS.md`. Raised as a blocker by round 2 of
-`docs/reviews/I18N-001-review.md`, reproduced live during that round.
+**Decisions** extends D078 in `docs/DECISIONS.md`.
+
+**Observed on** round 6 of `SITE-FIX-002`, 7 August 2026, reported as a suggestion.
 
 ## The defect
 
-`bin/review_shots:124` fires the navigation and throws the answer away:
+`SITE-FIX-002` established that `bin/reviewer` and `bin/autonomous_reviewer` seed a
+session with `.claude/personalities/REVIEWER.md` as it exists in the tree the script
+runs from, with no freshness check, and that a round so seeded applies annulled rules
+without any way to notice. D078 records the guard that fixes it: `bin/lib/fraicheur.sh`,
+sourced by both launchers, refusing to start when the files that seed a round are behind
+`origin/refonte-multipages`.
 
-```js
-await send('Page.navigate', { url: `${baseUrl}${path}` });
-await sleep(1800);
-```
+`bin/tech-lead` has exactly the same shape and none of the guard. It seeds a session with
+`.claude/personalities/TECH_LEAD.md` read from its own tree, and that tree drifts the
+moment nobody merges the integration branch into the item branch.
 
-`Page.navigate` returns `{ frameId, loaderId, errorText }`. When the page cannot
-be reached, `errorText` carries the reason (`net::ERR_CONNECTION_REFUSED` and the
-like) and the script never looks. It then screenshots whatever Chrome is showing,
-which is the browser's own error page, writes it as a PNG and counts it as a
-capture.
+## Why it is a separate item
 
-**Observed, not theorised.** During round 2 of the `I18N-001` review the preview
-server had died. The tool produced fifteen images of `ERR_CONNECTION_REFUSED` and
-printed `15 captures`.
+The founder ruled it out of scope for `SITE-FIX-002` on 7 August. That PR was on its sixth
+review round and already carried three blockers; adding an unreviewed file to it would have
+widened the surface at the worst moment.
 
-## Why it is a blocker and not a nuisance
+## Why it is lower severity than the reviewer case
 
-`review_shots` is the instrument that certifies visual fidelity and responsive
-behaviour, two mandatory sections of `REVIEWER.md`. A silent false green there
-means **a review round can declare the site visually verified when no page ever
-rendered**. An attended reviewer might notice the images; an unattended one, run
-through `bin/autonomous_reviewer`, has nobody to look.
+A tech-lead session is attended: the founder is in the loop at the plan gate and at the done
+gate, so a session running on stale instructions has two human checkpoints where the drift can
+surface. An autonomous review round has none, which is why D078 was treated as blocking.
+Lower, not absent: a stale `TECH_LEAD.md` can carry a superseded palette rule, a retired
+convention or a forbidden reference folder into a whole session's work before anyone reads a
+line of it.
 
-This is the same failure mode D048, D055 and D060 fought on `bin/contrast_sweep`,
-which received in D060 exactly the guard this script still lacks. One tool was
-fixed and its sibling was not.
+## What to fix
 
-## Scope
+`bin/lib/fraicheur.sh` already exists and is the shared implementation. The work is to call it
+from `bin/tech-lead` and to widen its watched-file list, or to give the function a parameter, so
+that a tech-lead session watches `.claude/personalities/TECH_LEAD.md` and `CLAUDE.md` rather
+than the reviewer's three files.
 
-`bin/review_shots`. No source file, no page, no dictionary.
+Decide and record which of the two shapes is taken. A parameterised function keeps one guard;
+two lists in one file keeps the call sites trivial. Neither is obviously right.
 
-## Fix
+## Out of scope
 
-Two guards, both cheap:
-
-1. **Check `errorText`.** Capture the result of `Page.navigate` and abort loudly
-   on a non-empty `errorText`, naming the URL and the reason. Exit non-zero so a
-   caller in a script notices.
-2. **Assert the page is the site.** `contrast_sweep` asserts at least one
-   `.section` before accepting a page as measured (D060). Do the same here with a
-   `Runtime.evaluate`, so a 200 response serving something unexpected cannot pass
-   either.
-
-Do not settle for checking that the PNG is non-empty. An error page is a
-perfectly valid non-empty PNG, which is the whole problem.
+- The narrowing criterion itself, settled by D078: a guard that counts every commit blocks every
+  open PR of the repository.
+- The `/review` and `/tech-lead` slash-command paths, which run inside an existing session where
+  no shell executes. D078 already records that limit and its reason.
+- Anything about the review procedure, which `SITE-FIX-002` owns.
 
 ## Acceptance criteria
 
-1. With the preview server stopped, `bin/review_shots` fails loudly, names the
-   unreachable URL and exits non-zero. Verify by actually stopping the server,
-   not by reasoning about the code.
-2. With the server running, behaviour is unchanged and the three widths still
-   come out at 360, 768 and 1440.
-3. The 360px capture is still a real 360px viewport. `Emulation.setDeviceMetricsOverride`
-   stays; Chrome's window floor is 500px and a plain resize silently renders at
-   500 (D034).
-4. No source file, page or dictionary is touched.
-
-## While you are in there
-
-`bin/contrast_sweep` received its guards in D060 and `review_shots` did not, which
-suggests nobody swept the sibling at the time. Check whether any other script
-under `bin/` drives the DevTools protocol without checking `errorText`, and say so
-in the pull request even if the answer is none.
+1. `bin/tech-lead` refuses to start when the files that seed a tech-lead session are behind `origin/refonte-multipages`, and prints the offending commits.
+2. It starts normally when they are current, verified on a branch that is behind the integration branch on other paths, since that is the ordinary state of an item branch.
+3. The guard stays in one shared file. Two copies of the same procedure drift, which is what acceptance criterion 3 of `SITE-FIX-002` exists to prevent.
+4. The chosen shape is recorded as a D-row extending D078, with the rejected one named.
+5. Verified by running the launcher in both states, not by reading.
