@@ -33,6 +33,7 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | `UI-002` | Light-surface switch across the whole site, five-column footer |
 | `I18N-001` | The handoff copy deltas: both heroes, the consulting service name, the English leadership role |
 | `PAGE-002` | Contact pages FR and EN, inert form, three states, `PageScaffold` deleted |
+| `I18N-FIX-001` | The residual-string sweep: nine values still carrying the pre-handoff positioning, plus a stale comment |
 
 ## Open, in dependency order
 
@@ -40,18 +41,19 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 |---|---|---|---|
 | 0 | `SITE-FIX-002` | nothing, and see below | `docs/work-items/SITE-FIX-002.md` |
 | 0 | `SITE-CHR-002` | nothing | `docs/work-items/SITE-CHR-002.md` |
-| 1 | `I18N-FIX-001` | `I18N-001` | `docs/work-items/I18N-FIX-001.md` |
+| 0 | `SITE-FIX-007` | nothing | `docs/work-items/SITE-FIX-007.md` |
 | 1 | `UI-FIX-001` | nothing | `docs/work-items/UI-FIX-001.md` |
+| 1 | `SEO-FIX-001` | `I18N-FIX-001`, merged | `docs/work-items/SEO-FIX-001.md` |
 | 3 | `UI-FIX-002` | nothing, `UI-002` has merged | `docs/work-items/UI-FIX-002.md` |
 | 3 | `UI-REF-001` | nothing, `UI-002` has merged | `docs/work-items/UI-REF-001.md` |
 | 4 | `FORM-001` | `PAGE-002` | `docs/work-items/FORM-001.md` |
 | 5 | `OPS-002` | everything above | `docs/work-items/OPS-002.md` |
 
-`I18N-FIX-001` and `UI-FIX-001` touch dictionaries and `LegalPage.astro`
-respectively. `UI-002` has merged, so its collision warning no longer applies,
-and `PAGE-002` has landed its `contact` block, so the `fr.ts` collision it was
-warned about is resolved: `I18N-FIX-001` now rebases onto a `fr.ts` that already
-carries those keys, far from the footer keys it edits.
+**`SITE-FIX-007` is order 0 for the same reason `SITE-FIX-002` is.** It corrects
+two lines of `REVIEWER.md` that contradict `CLAUDE.md`, one of which tells every
+reviewer that Services come before Products. Until it lands, each round can raise
+a blocker against a correct site, and an unattended round has nobody to catch it.
+Run it before the next review, not after.
 
 **Next up, not yet written as an item**: the footer reorganisation. The updated
 `Footer.dc.html` moves the contact details into their own column, sends `About`
@@ -59,8 +61,25 @@ down to Legal, and finally publishes an email and a phone number. That unblocks
 D069, whose error state and no-JavaScript fallback on the Contact page are still
 worded for a site that publishes no channel at all.
 
-`I18N-FIX-001` cannot start until its replacement wording is approved by the
-founder. It is blocked on a decision, not on code.
+The `I18N-FIX-001` / `PAGE-002` collision this file used to warn about is
+resolved: `PAGE-002` merged first with its `contact` block, and `I18N-FIX-001`
+merged on top of it, its footer and meta keys sitting far from those.
+
+**`SEO-FIX-001` waits on nothing technical**, only on the copy: the two Open Graph
+thumbnails must carry the wording `I18N-FIX-001` settled, so they are exported
+after it merges. It needs a founder ruling on the line each thumbnail carries.
+
+**Watch the D-numbers.** `PAGE-002` merged with D064 to D071, and this branch had
+already reserved D070 and D071 for other decisions, so it was renumbered to D072
+to D075 on merge. **Two unmerged branches still claim rows that now exist**:
+`fix/procedure-de-revue` holds D064 to D066 and `fix/worktree-de-revue-r3` D064
+to D065. Both will have to renumber before they land.
+
+The lesson is not "grep harder", which the header of `DECISIONS.md` already tells
+you to do and which this branch did do. It is that **a reservation goes stale the
+moment another branch merges**. Re-check immediately before opening the pull
+request, not only when reserving, and rebase rather than assuming the base has
+not moved.
 
 **Order 0 touches no page and no token.** `SITE-FIX-002` edits the review
 procedure, `SITE-CHR-002` edits a review file. Both are safe at any moment and
