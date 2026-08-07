@@ -120,10 +120,24 @@ in the order below.
 - **Stack**: Astro 7 in static output, no UI framework, no adapter
 - **Hosting**: Cloudflare Pages, build output `./dist`, Node 22
 - **Config**: `wrangler.jsonc`
-- **Contact form**: Cloudflare Pages Function in `/functions`, D1 storage plus
-  email notification, Turnstile anti-spam. The D1 binding is commented out until
-  that work lands; reactivate it after `wrangler d1 create` and do not forget the
-  comma after `pages_build_output_dir`.
+- **Contact form**: live since `FORM-001`. `functions/api/contact.ts` verifies
+  Turnstile server side, stores the request in D1 and notifies through Resend,
+  then answers `303` back to the contact page of the submitter's language with
+  `?statut=envoye` or `?statut=erreur`.
+  - **All storage access is confined to `server/contact-store.ts`**, the only
+    file in the repository that contains SQL or names D1. The database sits in
+    Europe and is assumed provisional; relocating it to Africa must touch that
+    one file. See D090.
+  - The schema lives in `migrations/`, applied with
+    `npx wrangler d1 migrations apply altaryslabs-contact --remote`. It stores
+    exactly the six fields section 2 of `/confidentialite` enumerates, plus a
+    server timestamp and the page language. **Never the IP, the user-agent or
+    `CF-IPCountry`**: the published policy closes that list. See D093.
+  - Four variables must exist on the Pages project, in Production **and**
+    Preview: `PUBLIC_TURNSTILE_SITE_KEY` (build-time, plain text),
+    `TURNSTILE_SECRET_KEY`, `RESEND_API_KEY` and `CONTACT_NOTIFY_EMAIL`. A build
+    without the site key **fails on purpose** rather than shipping a form that
+    can never succeed. See D094.
 
 ## Critical Rules
 

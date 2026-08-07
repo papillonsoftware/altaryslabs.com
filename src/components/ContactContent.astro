@@ -6,14 +6,14 @@
  * structure ne peut pas diverger d'une langue a l'autre, seul le dictionnaire
  * change. Voir D019.
  *
- * TROIS ETATS, PILOTES PAR L'URL. Les panneaux succes et erreur sont dans le
+ * DEUX ETATS, PILOTES PAR L'URL. Les panneaux succes et erreur sont dans le
  * document des le rendu, masques par `hidden`, et reveles par `?statut=`. Le
  * succes est donc porte par une redirection du serveur et non par la reponse
  * d'un `fetch` : si la connexion lache apres que le POST est parti, le
  * visiteur ne revoit pas son formulaire intact et ne renvoie pas. Un
- * rechargement reaffiche l'etat au lieu de ressusciter le formulaire. Ce
- * balisage laisse FORM-001 libre de choisir entre POST-redirection et envoi
- * en `fetch`. Voir D066.
+ * rechargement reaffiche l'etat au lieu de ressusciter le formulaire. FORM-001
+ * a tranche pour la POST-redirection que ce balisage rendait possible. Voir
+ * D066 et D092.
  *
  * POURQUOI LA LECTURE EST CLIENTE. Le site est en sortie statique : la page
  * est prerendue une fois, et `Astro.url` n'a aucune chaine de requete au
@@ -22,15 +22,11 @@
  * pendant l'analyse du document, avant le premier rendu : le formulaire
  * n'apparait pas une fraction de seconde avant d'etre masque.
  *
- * FORMULAIRE INERTE. Le balisage d'envoi est definitif, mais la fonction
- * serveur appartient a FORM-001. Le script en fin de fichier bloque l'envoi et
- * revele le panneau d'attente ; FORM-001 le supprime, et rien d'autre. Cet
- * etat n'est jamais public : FORM-001 precede la bascule DNS. Voir D064.
- *
- * COORDONNEES ABSENTES. La maquette ne dessine pas encore de bloc de
- * coordonnees. L'etat d'erreur et le repli sans JavaScript se limitent donc a
- * ce qu'on peut promettre sans canal publie. Second commit de PAGE-002, une
- * fois `contact.dc.html` mis a jour. Voir D069.
+ * LA LANGUE VOYAGE DANS LE CORPS DU POST. Les deux pages postent vers le meme
+ * `/api/contact`, donc la fonction doit savoir vers quelle langue rediriger.
+ * Elle le lit dans un champ cache et non dans le `Referer`, en-tete facultatif
+ * par conception dont la disparition renverrait un anglophone sur la page
+ * francaise sans qu'aucun journal ne le signale. Voir D091.
  */
 import PageHeader from './PageHeader.astro';
 import { CONTACT_EMAIL, type Locale } from '../i18n/config';
@@ -58,10 +54,25 @@ const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
   label: t.pageName[key],
 }));
 
-/* Cle publique par nature : Turnstile l'expose dans le HTML rendu. Elle n'est
-   pas encore posee sur le projet Cloudflare, d'ou le repli sur un emplacement
-   vide qui reserve la hauteur du widget. Voir D065. */
+/* Cle publique par nature : Turnstile l'expose dans le HTML rendu.
+
+   LE BUILD ECHOUE PLUTOT QUE DE SE REPLIER. C'est une variable de build, figee
+   dans le HTML au moment de la compilation. Depuis que l'envoi fonctionne, un
+   build fait sans elle produirait un formulaire parfait a l'oeil dont chaque
+   soumission serait refusee cote serveur, faute de jeton : un defaut invisible
+   au relecteur et fatal au visiteur. L'emplacement vide de D065 avait un sens
+   tant que rien ne partait ; il n'en a plus. D065 est close. Voir D094. */
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+
+if (!turnstileSiteKey) {
+  throw new Error(
+    "PUBLIC_TURNSTILE_SITE_KEY est absente de l'environnement de build.\n" +
+      'Le formulaire de contact serait rendu sans widget Turnstile, et la ' +
+      'fonction /api/contact refuserait chaque envoi faute de jeton.\n' +
+      'Definir cette variable dans Cloudflare Pages > Settings > Environment ' +
+      'variables, en Production ET en Preview, puis relancer le build.',
+  );
+}
 ---
 
 <PageHeader label={t.pageName.contact} title={t.contact.title} intro={t.contact.intro} />
@@ -81,11 +92,6 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       </p>
     </div>
 
-    <div class="panel panel--error" id="form-pending" role="alert" tabindex="-1" hidden>
-      <p class="panel-title">{t.contact.pendingTitle}</p>
-      <p class="panel-text">{t.contact.pendingText}</p>
-    </div>
-
     <form id="contact-form" class="contact-form" method="POST" action="/api/contact">
       {/* En tete de formulaire, et non en pied : le but est d'epargner au
           visiteur six champs remplis pour rien, ce qu'un message place apres
@@ -96,6 +102,14 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
         </p>
       </noscript>
+
+      {/* Langue de la page, pour que `/api/contact` sache ou renvoyer le
+          visiteur. Jamais une URL, toujours l'une des deux cles de langue : la
+          fonction lit la cible dans `ROUTES` et ne construit rien depuis cette
+          valeur, si bien qu'un champ trafique ne peut produire que l'une des
+          deux pages Contact du site. Enregistree en base comme une donnee de la
+          demande, parce qu'elle dicte la langue de la reponse. Voir D091. */}
+      <input type="hidden" name="locale" value={locale} />
 
       <div class="field-row">
         <p class="field">
@@ -175,16 +189,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           required></textarea>
       </p>
 
-      {
-        turnstileSiteKey ? (
-          <div class="cf-turnstile turnstile-slot" data-sitekey={turnstileSiteKey} />
-        ) : (
-          /* Emplacement vide a la hauteur exacte du widget standard, pour que
-             la mise en page soit verifiee des maintenant telle qu'elle sera
-             une fois la cle posee. Voir D065. */
-          <div class="turnstile-slot" aria-hidden="true" />
-        )
-      }
+      <div class="cf-turnstile turnstile-slot" data-sitekey={turnstileSiteKey} />
 
       <button class="btn btn-primary contact-submit" type="submit">{t.contact.submit}</button>
 
@@ -218,41 +223,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
   </div>
 </section>
 
-{
-  turnstileSiteKey && (
-    <script
-      is:inline
-      async
-      defer
-      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-    />
-  )
-}
-
-<script>
-  // Garde-fou de l'intervalle : la fonction serveur `/api/contact` n'existe pas
-  // encore, un envoi reel finirait donc sur une 404. On bloque et on explique.
-  // FORM-001 supprime ce bloc en entier. Voir D064.
-  const form = document.querySelector<HTMLFormElement>('#contact-form');
-  const pending = document.querySelector<HTMLElement>('#form-pending');
-
-  form?.addEventListener('submit', (event) => {
-    event.preventDefault();
-    if (!pending) return;
-    pending.hidden = false;
-
-    // `behavior: 'smooth'` en dur passerait au travers du garde-fou que le
-    // depot pose lui-meme dans global.css : l'option explicite d'un
-    // scrollIntoView bat la valeur calculee de `scroll-behavior`. On lit donc
-    // la preference plutot que de l'imposer.
-    const sansAnimation = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    pending.scrollIntoView({ behavior: sansAnimation ? 'auto' : 'smooth', block: 'center' });
-
-    // Le role="alert" annonce le panneau aux lecteurs d'ecran, mais le focus
-    // reste sur le bouton : un utilisateur de loupe ne verrait rien bouger.
-    pending.focus();
-  });
-</script>
+<script is:inline async defer src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
 
 <style>
   /* Colonne unique de 640px, comme la maquette. Le conteneur garde sa

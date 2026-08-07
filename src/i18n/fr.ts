@@ -380,14 +380,6 @@ export const fr = {
        que de laisser le visiteur remplir six champs pour rien. */
     noScriptText:
       "L'envoi de ce formulaire nécessite JavaScript, qui est désactivé dans votre navigateur.",
-
-    /* Garde-fou de l'intervalle : le balisage d'envoi est définitif, mais la
-       fonction serveur appartient à FORM-001, qui supprimera ce panneau et le
-       script qui le déclenche. Jamais public : FORM-001 précède la bascule
-       DNS. D064. */
-    pendingTitle: 'Formulaire bientôt disponible',
-    pendingText:
-      "L'envoi de messages depuis ce formulaire sera ouvert à la mise en ligne du site.",
   },
 
   meta: {
