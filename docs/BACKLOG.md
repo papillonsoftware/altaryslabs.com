@@ -6,8 +6,12 @@ read. Item details live in `docs/work-items/`; decisions in `docs/DECISIONS.md`.
 
 ## Where the rebuild stands
 
-26 pages built, bilingual, `npm run check` clean. Every page is final except the
-two Contact pages, which are still `PageScaffold` placeholders.
+26 pages built, bilingual, `npm run check` clean. **Every page is final.**
+`PAGE-002` delivered the two Contact pages and deleted `PageScaffold.astro`, the
+provisional scaffold, which no longer exists in the tree.
+
+What is not final is the contact form's **submission**: the markup ships inert
+behind a guard script, and `FORM-001` makes it actually send. See D064.
 
 **The site is light.** The July 2026 handoff turns it into an alternation of
 cream and navy. `UI-001` installed that foundation dormant and `UI-002` threw
@@ -28,7 +32,8 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | `OPS-001` | Duplicate Cloudflare Pages project deleted, step 1 of 1 |
 | `UI-002` | Light-surface switch across the whole site, five-column footer |
 | `I18N-001` | The handoff copy deltas: both heroes, the consulting service name, the English leadership role |
-| `I18N-FIX-001` | The residual-string sweep: ten values still carrying the pre-handoff positioning, plus a stale comment |
+| `PAGE-002` | Contact pages FR and EN, inert form, three states, `PageScaffold` deleted |
+| `I18N-FIX-001` | The residual-string sweep: nine values still carrying the pre-handoff positioning, plus a stale comment |
 
 ## Open, in dependency order
 
@@ -39,7 +44,6 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | 0 | `SITE-FIX-007` | nothing | `docs/work-items/SITE-FIX-007.md` |
 | 1 | `UI-FIX-001` | nothing | `docs/work-items/UI-FIX-001.md` |
 | 1 | `SEO-FIX-001` | `I18N-FIX-001`, merged | `docs/work-items/SEO-FIX-001.md` |
-| 3 | `PAGE-002` | nothing, `UI-002` has merged | `docs/work-items/PAGE-002.md` |
 | 3 | `UI-FIX-002` | nothing, `UI-002` has merged | `docs/work-items/UI-FIX-002.md` |
 | 3 | `UI-REF-001` | nothing, `UI-002` has merged | `docs/work-items/UI-REF-001.md` |
 | 4 | `FORM-001` | `PAGE-002` | `docs/work-items/FORM-001.md` |
@@ -51,16 +55,31 @@ reviewer that Services come before Products. Until it lands, each round can rais
 a blocker against a correct site, and an unattended round has nobody to catch it.
 Run it before the next review, not after.
 
+**Next up, not yet written as an item**: the footer reorganisation. The updated
+`Footer.dc.html` moves the contact details into their own column, sends `About`
+down to Legal, and finally publishes an email and a phone number. That unblocks
+D069, whose error state and no-JavaScript fallback on the Contact page are still
+worded for a site that publishes no channel at all.
+
+The `I18N-FIX-001` / `PAGE-002` collision this file used to warn about is
+resolved: `PAGE-002` merged first with its `contact` block, and `I18N-FIX-001`
+merged on top of it, its footer and meta keys sitting far from those.
+
 **`SEO-FIX-001` waits on nothing technical**, only on the copy: the two Open Graph
 thumbnails must carry the wording `I18N-FIX-001` settled, so they are exported
 after it merges. It needs a founder ruling on the line each thumbnail carries.
 
-**Watch the D-numbers.** Three unmerged branches currently claim overlapping
-rows: `feat/page-contact` reserves D064 to D069, `fix/procedure-de-revue` D064 to
-D066 and `fix/worktree-de-revue-r3` D064 to D065. Whoever merges second has to
-renumber. Grep every branch before reserving, as the header of `DECISIONS.md`
-already says, and do not assume the highest row on `refonte-multipages` is the
-highest row that exists.
+**Watch the D-numbers.** `PAGE-002` merged with D064 to D071, and this branch had
+already reserved D070 and D071 for other decisions, so it was renumbered to D072
+to D075 on merge. **Two unmerged branches still claim rows that now exist**:
+`fix/procedure-de-revue` holds D064 to D066 and `fix/worktree-de-revue-r3` D064
+to D065. Both will have to renumber before they land.
+
+The lesson is not "grep harder", which the header of `DECISIONS.md` already tells
+you to do and which this branch did do. It is that **a reservation goes stale the
+moment another branch merges**. Re-check immediately before opening the pull
+request, not only when reserving, and rebase rather than assuming the base has
+not moved.
 
 **Order 0 touches no page and no token.** `SITE-FIX-002` edits the review
 procedure, `SITE-CHR-002` edits a review file. Both are safe at any moment and

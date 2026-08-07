@@ -318,6 +318,76 @@ export const fr = {
     ctaLabel: 'Contactez notre équipe commerciale',
   },
 
+  /**
+   * Page Contact.
+   *
+   * Les sept options du select ne sont pas écrites ici : six sont dérivées de
+   * `pageName`, dans l'ordre PRODUCT_KEYS puis SERVICE_KEYS de `routes.ts`, et
+   * la septième est `interestOther`. Un intitulé de produit ou de service ne
+   * peut donc pas diverger entre la navigation et le formulaire. Voir D068.
+   */
+  contact: {
+    title: 'Contactez notre équipe commerciale',
+    intro: 'Décrivez-nous votre besoin, nous revenons vers vous rapidement.',
+
+    /* Suffixe des deux champs facultatifs. Quatre champs sur six sont requis :
+       marquer la minorité est plus court et plus clair que marquer la
+       majorité, et la maquette ne marquait ni les uns ni les autres. */
+    optional: '(facultatif)',
+
+    nameLabel: 'Nom complet',
+    namePlaceholder: 'Votre nom',
+    companyLabel: 'Société',
+    companyPlaceholder: 'Nom de votre société',
+    emailLabel: 'Email',
+    emailPlaceholder: 'vous@societe.com',
+    phoneLabel: 'Téléphone',
+    phonePlaceholder: '+225 ...',
+    interestLabel: 'Je suis intéressé par',
+    /* Première option, vide et désactivée, pour que `required` ait un sens :
+       sans elle le select est valide dès le premier rendu et toute demande
+       envoyée sans ouvrir la liste est enregistrée comme une piste PCS, le
+       seul produit qui n'est pas encore commercialisé. */
+    interestPrompt: 'Choisissez une option',
+    interestOther: 'Autre',
+    messageLabel: 'Message',
+    messagePlaceholder: 'Décrivez votre besoin',
+
+    submit: 'Envoyer',
+
+    /* Information sur le traitement des données, sans case à cocher : le
+       formulaire est le seul point de conversion du site. D067. */
+    privacyNotice:
+      'En envoyant ce formulaire, vous acceptez que vos données soient utilisées pour répondre à votre demande.',
+    privacyLink: 'Voir notre politique de confidentialité',
+
+    successTitle: 'Message envoyé',
+    successText:
+      'Merci pour votre message. Notre équipe commerciale vous recontactera très prochainement.',
+
+    /* L'état d'erreur cite un canal de repli que la maquette ne dessine pas
+       encore. Tant qu'aucune coordonnée n'est publiée, la seule action
+       concrète disponible est de réessayer. Complété par le second commit de
+       PAGE-002, une fois `contact.dc.html` mis à jour. D069. */
+    errorTitle: 'Envoi impossible',
+    errorText:
+      "Votre message n'a pas pu être transmis. Vérifiez votre connexion et réessayez dans quelques instants.",
+
+    /* Turnstile a besoin de JavaScript pour produire son jeton : sans lui, le
+       formulaire ne peut pas être envoyé du tout. Ce message le dit, plutôt
+       que de laisser le visiteur remplir six champs pour rien. */
+    noScriptText:
+      "L'envoi de ce formulaire nécessite JavaScript, qui est désactivé dans votre navigateur. Activez-le pour nous écrire.",
+
+    /* Garde-fou de l'intervalle : le balisage d'envoi est définitif, mais la
+       fonction serveur appartient à FORM-001, qui supprimera ce panneau et le
+       script qui le déclenche. Jamais public : FORM-001 précède la bascule
+       DNS. D064. */
+    pendingTitle: 'Formulaire bientôt disponible',
+    pendingText:
+      "L'envoi de messages depuis ce formulaire sera ouvert à la mise en ligne du site.",
+  },
+
   meta: {
     home: {
       title: 'ALTARYS LABS | Partenaire technologique des entreprises OHADA et CIMA',
