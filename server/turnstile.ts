@@ -2,8 +2,17 @@
  * Verification serveur du jeton Cloudflare Turnstile.
  *
  * Le widget cote client ne prouve rien : il produit un jeton, et n'importe qui
- * peut poster le formulaire sans passer par la page. C'est cette verification,
- * et elle seule, qui fait tenir l'anti-robot.
+ * peut poster le formulaire sans passer par la page. Cette verification est la
+ * premiere moitie de l'anti-robot.
+ *
+ * LA SECONDE MOITIE VIT AILLEURS, ET CE MODULE N'EST PAS AUTOPORTANT. Un jeton
+ * valide ne suffit pas : la cle de site est publique par construction, donc
+ * quiconque sert une page sur un hote que le widget autorise peut resoudre le
+ * defi et poster le jeton ici. C'est pourquoi ce module renvoie le `hostname`
+ * rapporte par siteverify au lieu de le jeter, et pourquoi
+ * `functions/api/contact.ts` le compare a l'hote de la requete et refuse un
+ * jeton produit ailleurs. Ne pas supprimer cette comparaison en croyant que ce
+ * fichier tient seul : elle est necessaire, pas decorative. Voir D107.
  *
  * ECHEC FERME. Toute anomalie (secret absent, jeton absent, reseau coupe,
  * reponse illisible) renvoie un refus. Un anti-spam qui laisse passer quand il

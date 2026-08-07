@@ -69,9 +69,11 @@ storybook-static
 dist/
 .wrangler/
 
-# Secrets. Les quatre variables du formulaire de contact vivent dans le
-# dashboard Cloudflare Pages, jamais dans le depot. Un fichier .env local ne
-# doit pas pouvoir etre commite par accident. Voir FORM-001, critere 4.
+# Secrets. Les cles du formulaire de contact vivent dans le dashboard
+# Cloudflare Pages, jamais dans le depot. Un fichier .env local ne doit pas
+# pouvoir etre commite par accident. Voir FORM-001, critere 4. La liste des
+# variables est tenue a un seul endroit, l'interface Env de
+# functions/api/contact.ts ; ne pas la recopier ici. Voir D110.
 .env
 .env.*
 !.env.example

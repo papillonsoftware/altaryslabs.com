@@ -1,8 +1,11 @@
 /**
  * Notification email d'une demande de contact, via Resend.
  *
- * Ce message est interne : il part vers `CONTACT_NOTIFY_EMAIL` et n'est jamais
- * lu par le visiteur. Il est donc redige en francais, langue de travail du
+ * Ce message est interne : il part vers `CONTACT_NOTIFY_EMAIL` ou, a defaut,
+ * vers `CONTACT_EMAIL`, et n'est jamais lu par le visiteur. Le repli est ce qui
+ * rend la variable facultative, voir D106 et l'interface `Env` de
+ * `functions/api/contact.ts`, enumeration de reference des variables du
+ * formulaire. Il est donc redige en francais, langue de travail du
  * depot, quelle que soit la langue de la page d'ou vient la demande. La langue
  * du visiteur figure en clair dans le corps, parce qu'elle dicte la langue de
  * la reponse commerciale.

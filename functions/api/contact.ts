@@ -15,11 +15,13 @@
  * renvoie donc pas le message qui vient d'arriver. C'est la raison d'etre du
  * balisage pose par D066, et cette fonction s'y conforme. Voir D092.
  *
- * ORDRE DES OPERATIONS, ET CE QU'IL IMPLIQUE. Turnstile d'abord, validation
- * ensuite, ecriture, puis notification. Un jeton refuse n'ecrit rien et
- * n'envoie rien. Une ecriture qui echoue montre l'erreur. Une notification qui
- * echoue ne l'annule pas : la demande est en base, redemander au visiteur de
- * renvoyer ne produirait qu'un doublon. Voir D097.
+ * ORDRE DES OPERATIONS, ET CE QU'IL IMPLIQUE. Turnstile d'abord, puis la
+ * comparaison de l'hote du jeton avec celui de la requete, puis la validation
+ * des champs, l'ecriture, et enfin la notification. Un jeton refuse, ou produit
+ * sur un autre hote, n'ecrit rien et n'envoie rien. Une ecriture qui echoue
+ * montre l'erreur. Une notification qui echoue ne l'annule pas : la demande est
+ * en base, redemander au visiteur de renvoyer ne produirait qu'un doublon. Voir
+ * D097 pour l'ordre et D107 pour le controle d'hote.
  */
 
 import { DEFAULT_LOCALE, isLocale, type Locale } from '../../src/i18n/config';
@@ -29,15 +31,54 @@ import { sendContactNotification } from '../../server/notify-resend';
 import { TURNSTILE_FIELD_NAME, verifyTurnstileToken } from '../../server/turnstile';
 
 /**
- * Variables et bindings attendus sur le projet Pages, en Production ET en
- * Preview. Aucune valeur ne vit dans le depot ; `wrangler.jsonc` en documente
- * les noms sans jamais les porter.
+ * ENUMERATION DE REFERENCE DES VARIABLES DU FORMULAIRE. C'est ici, et nulle
+ * part ailleurs, que la liste est tenue a jour et commentee variable par
+ * variable. `CLAUDE.md`, `wrangler.jsonc`, `.gitignore` et le runbook
+ * `docs/kb/turnstile-d1-resend-setup.md` y renvoient sans la recopier et sans
+ * en donner le compte. Voir D110.
+ *
+ * La raison de cette regle est un defaut survenu deux fois de suite : D100
+ * retire une variable, D106 en rend une facultative, et a chaque fois les
+ * descriptions eparpillees sont restees en arriere, jusqu'a decrire l'inverse
+ * du code. La description vit donc a cote du comportement, parce que c'est le
+ * comportement qui bouge.
+ *
+ * Aucune valeur ne vit dans le depot. Toutes sont lues a l'EXECUTION par cette
+ * fonction, jamais au build : le projet n'a plus aucune variable de build
+ * depuis D100.
  */
 interface Env {
-  /** Binding D1 des demandes de contact. */
+  /**
+   * Binding D1 des demandes de contact. Declare dans `wrangler.jsonc`, pas dans
+   * le dashboard.
+   */
   DB: ContactRequestStore;
+
+  /**
+   * OBLIGATOIRE. Secret Key du widget Turnstile, verifiee cote serveur. A poser
+   * dans le dashboard Cloudflare Pages, en Production ET en Preview, avec le
+   * type "Secret" et jamais "Text". Absente, toute soumission est refusee :
+   * `server/turnstile.ts` echoue ferme.
+   */
   TURNSTILE_SECRET_KEY?: string;
+
+  /**
+   * OBLIGATOIRE. Cle API Resend, portee "Sending access" seule. Meme regle de
+   * type que ci-dessus. Absente, la demande est enregistree mais aucune
+   * notification ne part, et le journal le dit sur sa propre ligne. Voir D097
+   * et D106.
+   */
   RESEND_API_KEY?: string;
+
+  /**
+   * FACULTATIVE, remplacement du destinataire des notifications. En son absence
+   * elles partent vers `CONTACT_EMAIL`, constante de `src/i18n/config.ts`, donc
+   * le formulaire ne depend pas de cette variable pour fonctionner. Ne pas
+   * chercher a la poser en type "Text" dans le dashboard : sur un projet dont
+   * `wrangler.jsonc` porte `pages_build_output_dir`, une variable en clair
+   * n'atteint pas le projet. C'est ce piege qui a coute trois demandes reelles.
+   * Voir D100 et D106.
+   */
   CONTACT_NOTIFY_EMAIL?: string;
 }
 
