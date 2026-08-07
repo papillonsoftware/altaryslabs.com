@@ -33,7 +33,7 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | `UI-002` | Light-surface switch across the whole site, five-column footer |
 | `I18N-001` | The handoff copy deltas: both heroes, the consulting service name, the English leadership role |
 | `PAGE-002` | Contact pages FR and EN, inert form, three states, `PageScaffold` deleted |
-| `I18N-FIX-001` | The residual-string sweep: nine values still carrying the pre-handoff positioning, plus a stale comment |
+| `I18N-FIX-001` | The residual-string sweep: fourteen values still carrying the pre-handoff positioning, plus two stale comments |
 
 ## Open, in dependency order
 
@@ -42,6 +42,7 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | 0 | `SITE-FIX-002` | nothing, and see below | `docs/work-items/SITE-FIX-002.md` |
 | 0 | `SITE-CHR-002` | nothing | `docs/work-items/SITE-CHR-002.md` |
 | 0 | `SITE-FIX-007` | nothing | `docs/work-items/SITE-FIX-007.md` |
+| 0 | `SITE-FIX-008` | nothing | `docs/work-items/SITE-FIX-008.md` |
 | 1 | `UI-FIX-001` | nothing | `docs/work-items/UI-FIX-001.md` |
 | 1 | `SEO-FIX-001` | `I18N-FIX-001`, merged | `docs/work-items/SEO-FIX-001.md` |
 | 3 | `UI-FIX-002` | nothing, `UI-002` has merged | `docs/work-items/UI-FIX-002.md` |
@@ -54,6 +55,14 @@ two lines of `REVIEWER.md` that contradict `CLAUDE.md`, one of which tells every
 reviewer that Services come before Products. Until it lands, each round can raise
 a blocker against a correct site, and an unattended round has nobody to catch it.
 Run it before the next review, not after.
+
+**`SITE-FIX-008` is order 0 for a sharper version of the same reason.**
+`bin/review_shots` throws away `Page.navigate`'s `errorText`, so when the preview
+server is down it screenshots Chrome's error page and reports the run as
+successful. It did exactly that during round 2 of `I18N-FIX-001`: fifteen images
+of `ERR_CONNECTION_REFUSED`, announced as fifteen captures. Until it is fixed, a
+round can certify visual fidelity when no page ever rendered. `bin/contrast_sweep`
+got this guard in D060; its sibling never did.
 
 **Next up, not yet written as an item**: the footer reorganisation. The updated
 `Footer.dc.html` moves the contact details into their own column, sends `About`

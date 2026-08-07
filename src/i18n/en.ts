@@ -8,8 +8,19 @@ import type { Dictionary } from './fr';
  * international investors and partners, and institutional funders and NGOs.
  *
  * Practical consequences, applied consistently across every English string:
- *  - OHADA and CIMA are spelled out on first use, because the acronyms carry no
- *    meaning for a reader in Accra, Lagos or Nairobi.
+ *  - OHADA and CIMA are expanded in body copy wherever a page argues the
+ *    regulatory point, because the acronyms carry no meaning for a reader in
+ *    Accra, Lagos or Nairobi. The house form is "the OHADA business-law zone
+ *    and the CIMA insurance zone". It is used today on the home page, the
+ *    products hub, the HR and PCS product pages, and About.
+ *    The bare acronyms are used where the expansion does not fit: `meta.*.title`
+ *    values, which search engines truncate around 60 characters; page `h1`s,
+ *    where it would wrap to a third line; and `footer.tagline`, which sits in a
+ *    280px column.
+ *    Known gap, measured rather than assumed: the three services pages, Contact
+ *    and the two legal pages carry the bare acronyms in their footer and expand
+ *    them nowhere. Verify with a grep for "business-law zone" over `dist/en`
+ *    before claiming otherwise.
  *  - Emphasis shifts to what travels across borders (offline-first design,
  *    multi-country deployment, configurable compliance) rather than to
  *    Ivorian-specific schemes such as CNPS or ITS.
@@ -63,9 +74,9 @@ export const en: Dictionary = {
   pageTagline: {
     home: '',
     products: '',
-    productsHr: 'Payroll and HR software built for African compliance',
-    productsFinance: 'Budgeting aligned with West African accounting standards',
-    productsPcs: 'Insurance premium collection across Central and West Africa',
+    productsHr: 'OHADA-compliant HR and payroll SaaS',
+    productsFinance: 'Budgeting aligned with the SYSCOHADA standard',
+    productsPcs: 'Premium collection in the CIMA zone',
     services: '',
     servicesConsulting: 'Information systems, HR and financial management',
     servicesDev: 'Web and mobile applications, and systems integration',
@@ -113,7 +124,7 @@ export const en: Dictionary = {
     heroSecondary: 'Explore our products',
 
     productsLabel: 'Our products',
-    productsTitle: 'Three SaaS suites designed for African regulatory realities',
+    productsTitle: 'Three SaaS suites designed for OHADA and CIMA regulatory realities',
 
     servicesLabel: 'Our services',
     servicesTitle: 'Sector expertise applied to your projects',
@@ -130,7 +141,7 @@ export const en: Dictionary = {
     label: 'Products',
     title: 'Three SaaS suites for the OHADA and CIMA regions',
     intro:
-      'Each one answers the regulatory and operational realities of the region. Compliance, limited connectivity and multi-country operations are designed in from the start, not bolted on afterwards.',
+      'Each one answers the regulatory and operational realities of the OHADA business-law zone and the CIMA insurance zone. Compliance, limited connectivity and multi-country operations are designed in from the start, not bolted on afterwards.',
     ctaTitle: 'A question about our products?',
     ctaLabel: 'Talk to our team',
   },
