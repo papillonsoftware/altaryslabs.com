@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0; background:#F6F2E9;}
+  a{color:#B8791E;}
+  a:hover{color:#8B5E1B;}
+</style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif;">
+  <dc-import name="Header" active="produits" lang="{{ lang }}" onSetLang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+  <section style="padding:110px 64px 120px; text-align:center; background:#F6F2E9;">
+    <div style="max-width:760px; margin:0 auto;">
+      <span style="display:inline-block; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; color:#07111E; background:#E5B55A; padding:6px 16px; border-radius:100px; margin-bottom:28px;">{{ t.badge }}</span>
+      <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(32px,4vw,48px); color:#1A2740; margin:0 0 22px;">Papillon Collection Solution</h1>
+      <p style="font-size:17px; color:#5B6472; line-height:1.8; margin:0 0 40px;">{{ t.desc }}</p>
+      <a href="https://papillon-collection.com" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:10px; background:#C8922A; color:#07111E; padding:16px 32px; border-radius:5px; text-decoration:none; font-weight:600; font-size:15px;">
+        {{ t.cta }}
+        <span style="font-size:13px;">&#8599;</span>
+      </a>
+    </div>
+  </section>
+
+  <dc-import name="Footer" lang="{{ lang }}" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const T = {
+  fr: {
+    badge: 'Disponible T3 2026',
+    desc: "Papillon Collection Solution (PCS) permet aux assureurs et courtiers en assurance de la zone CIMA d'automatiser le renouvellement de contrats et la relance de primes, par SMS, WhatsApp et email, jusqu'à l'authentification et le paiement par leurs clients.",
+    cta: 'Découvrir PCS sur papillon-collection.com',
+  },
+  en: {
+    badge: 'Available Q3 2026',
+    desc: 'Papillon Collection Solution (PCS) lets insurers and brokers across the CIMA region automate policy renewals and premium reminders, via SMS, WhatsApp and email, through to authentication and payment by their customers.',
+    cta: 'Discover PCS on papillon-collection.com',
+  },
+};
+class Component extends DCLogic {
+  state = { lang: (typeof localStorage !== 'undefined' && localStorage.getItem('altarys-lang')) || 'fr' };
+  setLang = (l) => { this.setState({ lang: l }); try { localStorage.setItem('altarys-lang', l); } catch (e) {} };
+  renderVals() { return { lang: this.state.lang, setLang: this.setLang, t: T[this.state.lang] }; }
+}
+</script>
+</body>
+</html>

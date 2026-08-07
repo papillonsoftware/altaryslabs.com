@@ -72,6 +72,15 @@ Read these before generating or modifying the website:
 The visual reference for the rebuild is the claude.ai/design project
 `53d1c228-d274-4df3-8022-1a427dd96c15`, read through the `DesignSync` tool.
 
+**A dated snapshot of its 15 root prototypes lives in
+`docs/vitrine/refonte/prototypes/`** (13 pages plus `Header` and `Footer`, taken
+on 2026-08-07, without `support.js`). It is there to be read offline, diffed and
+cited in review. **The design project remains authoritative**: when the two
+disagree, the project wins and the snapshot is stale. Never rebuild a page from
+the snapshot without checking it against the project first. Building from a
+frozen copy is precisely what produced an obsolete About page once already. See
+D083.
+
 **Read the prototypes at the project ROOT, not the ones in
 `design_handoff_altaryslabs_refonte/`.** That folder is a frozen export of the
 first, all-navy iteration. The root holds the live set: 13 `.dc.html` pages plus

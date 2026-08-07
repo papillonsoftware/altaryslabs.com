@@ -86,7 +86,9 @@ D075. `SITE-FIX-002` then landed D078 to D081. And two sessions independently
 created a **`SITE-FIX-008`** for unrelated defects: the `bin/tech-lead` freshness
 guard kept the number, the `bin/review_shots` fix became `SITE-FIX-009`.
 
-D076 and D077 are unused. The gap is a renumbering scar, not a missing entry.
+The gap D076 and D077 left by that renumbering has since been filled by `UI-003`,
+so the log runs unbroken from D060 to D083. This paragraph claimed the gap was
+permanent and was wrong within the hour, which is itself the point being made.
 
 The lesson is not "grep harder", which the header of `DECISIONS.md` already tells
 you to do and which every one of these branches did do. It is that **a

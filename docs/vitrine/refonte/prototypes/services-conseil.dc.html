@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0; background:#F6F2E9;}
+  a{color:#B8791E;}
+  a:hover{color:#8B5E1B;}
+</style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif;">
+  <dc-import name="Header" active="services" lang="{{ lang }}" onSetLang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+  <section style="padding:96px 64px 64px; background:#F6F2E9;">
+    <div style="max-width:820px; margin:0 auto;">
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.35em; color:#B8791E; text-transform:uppercase; margin-bottom:16px;">{{ t.label }}</p>
+      <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(32px,4vw,48px); color:#1A2740; margin:0 0 22px;">{{ t.title }}</h1>
+      <p style="font-size:17px; color:#5B6472; line-height:1.75;">{{ t.intro }}</p>
+    </div>
+  </section>
+
+  <section style="padding:0 64px 90px; background:#F6F2E9;">
+    <div style="max-width:1000px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+      <div style="background:#FFFFFF; border-radius:8px; padding:32px; border:1px solid rgba(26,39,64,.08); box-shadow:0 1px 3px rgba(26,39,64,.04);">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:20px; color:#1A2740; margin:0 0 12px;">{{ t.c1Title }}</h3>
+        <p style="font-size:14px; color:#5B6472; line-height:1.75; margin:0;">{{ t.c1Desc }}</p>
+      </div>
+      <div style="background:#FFFFFF; border-radius:8px; padding:32px; border:1px solid rgba(26,39,64,.08); box-shadow:0 1px 3px rgba(26,39,64,.04);">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:20px; color:#1A2740; margin:0 0 12px;">{{ t.c2Title }}</h3>
+        <p style="font-size:14px; color:#5B6472; line-height:1.75; margin:0;">{{ t.c2Desc }}</p>
+      </div>
+      <div style="background:#FFFFFF; border-radius:8px; padding:32px; border:1px solid rgba(26,39,64,.08); box-shadow:0 1px 3px rgba(26,39,64,.04);">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:20px; color:#1A2740; margin:0 0 12px;">{{ t.c3Title }}</h3>
+        <p style="font-size:14px; color:#5B6472; line-height:1.75; margin:0;">{{ t.c3Desc }}</p>
+      </div>
+      <div style="background:#FFFFFF; border-radius:8px; padding:32px; border:1px solid rgba(26,39,64,.08); box-shadow:0 1px 3px rgba(26,39,64,.04);">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:20px; color:#1A2740; margin:0 0 12px;">{{ t.c4Title }}</h3>
+        <p style="font-size:14px; color:#5B6472; line-height:1.75; margin:0;">{{ t.c4Desc }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:80px 64px; background:linear-gradient(135deg, #1A2740, #0F1724); text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(24px,2.8vw,34px); color:#FAF7F2; margin:0 0 28px;">{{ t.ctaTitle }}</h2>
+    <a href="contact.dc.html" style="background:#C8922A; color:#07111E; padding:16px 32px; border-radius:5px; text-decoration:none; font-weight:600; font-size:15px;">{{ t.ctaContact }}</a>
+  </section>
+
+  <dc-import name="Footer" lang="{{ lang }}" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const T = {
+  fr: {
+    label: 'Service', title: 'Conseil IT, RH & Corporate Finance',
+    intro: "Nous accompagnons les entreprises de la zone OHADA sur leurs systèmes d'information, leurs processus RH et leur gestion financière. Cette expertise nourrit aussi la conception de nos propres suites Papillon.",
+    c1Title: "Systèmes d'information", c1Desc: 'Audit, cadrage et accompagnement à la transformation digitale de vos outils métier.',
+    c2Title: 'Ressources humaines', c2Desc: 'Structuration des processus RH et accompagnement à la conformité réglementaire OHADA.',
+    c3Title: 'Gestion financière', c3Desc: 'Cadrage budgétaire, conformité SYSCOHADA et pilotage financier pour vos équipes.',
+    c4Title: 'Conduite du changement', c4Desc: 'Formation des équipes et accompagnement du déploiement de nouveaux outils.',
+    ctaTitle: 'Discutons de votre besoin', ctaContact: 'Contactez notre équipe commerciale',
+  },
+  en: {
+    label: 'Service', title: 'IT, HR & Corporate Finance Consulting',
+    intro: 'We support OHADA businesses on their information systems, HR processes and financial management. This expertise also feeds the design of our own Papillon suites.',
+    c1Title: 'Information systems', c1Desc: 'Audit, scoping and support for the digital transformation of your business tools.',
+    c2Title: 'Human resources', c2Desc: 'Structuring HR processes and supporting OHADA regulatory compliance.',
+    c3Title: 'Financial management', c3Desc: 'Budget scoping, SYSCOHADA compliance and financial steering for your teams.',
+    c4Title: 'Change management', c4Desc: 'Team training and support for the rollout of new tools.',
+    ctaTitle: "Let's talk about your needs", ctaContact: 'Talk to our sales team',
+  },
+};
+class Component extends DCLogic {
+  state = { lang: (typeof localStorage !== 'undefined' && localStorage.getItem('altarys-lang')) || 'fr' };
+  setLang = (l) => { this.setState({ lang: l }); try { localStorage.setItem('altarys-lang', l); } catch (e) {} };
+  renderVals() { return { lang: this.state.lang, setLang: this.setLang, t: T[this.state.lang] }; }
+}
+</script>
+</body>
+</html>

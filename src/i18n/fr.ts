@@ -365,19 +365,21 @@ export const fr = {
     successText:
       'Merci pour votre message. Notre équipe commerciale vous recontactera très prochainement.',
 
-    /* L'état d'erreur cite un canal de repli que la maquette ne dessine pas
-       encore. Tant qu'aucune coordonnée n'est publiée, la seule action
-       concrète disponible est de réessayer. Complété par le second commit de
-       PAGE-002, une fois `contact.dc.html` mis à jour. D069. */
     errorTitle: 'Envoi impossible',
     errorText:
       "Votre message n'a pas pu être transmis. Vérifiez votre connexion et réessayez dans quelques instants.",
+
+    /* Repli commun à l'état d'erreur et au cas sans JavaScript, suivi du lien
+       `mailto:`. Une seule formulation pour les deux, et une adresse lue dans
+       `config.ts`. Ferme D069 : la page cesse d'être un cul-de-sac pour le
+       visiteur dont l'envoi échoue ou qui n'a pas JavaScript. Voir D082. */
+    fallbackText: 'Vous pouvez aussi nous écrire directement à',
 
     /* Turnstile a besoin de JavaScript pour produire son jeton : sans lui, le
        formulaire ne peut pas être envoyé du tout. Ce message le dit, plutôt
        que de laisser le visiteur remplir six champs pour rien. */
     noScriptText:
-      "L'envoi de ce formulaire nécessite JavaScript, qui est désactivé dans votre navigateur. Activez-le pour nous écrire.",
+      "L'envoi de ce formulaire nécessite JavaScript, qui est désactivé dans votre navigateur.",
 
     /* Garde-fou de l'intervalle : le balisage d'envoi est définitif, mais la
        fonction serveur appartient à FORM-001, qui supprimera ce panneau et le
@@ -461,8 +463,13 @@ export const fr = {
       'Éditeur de logiciels et expertise conseil, zones OHADA et CIMA.',
     columnProducts: 'Produits',
     columnServices: 'Services',
-    columnCompany: 'Entreprise',
+    /* La colonne 4 passe de "Entreprise" a "Contact" et "À propos" descend
+       dans la colonne Légal, comme la maquette de juillet. Voir D077. */
+    columnContact: 'Contact',
     columnLegal: 'Légal',
+    emailLabel: 'E-mail :',
+    phoneLabel: 'Téléphone :',
+    contactForm: 'Formulaire de contact',
     legalEntity: 'ALTARYS LABS, SASU de droit ivoirien',
     rccm: 'RCCM CI-ABJ-03-2026-B17-00070',
     location: "Abidjan, Côte d'Ivoire",

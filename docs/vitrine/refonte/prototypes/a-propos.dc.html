@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0; background:#F6F2E9;}
+  a{color:#B8791E;}
+  a:hover{color:#8B5E1B;}
+</style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif;">
+  <dc-import name="Header" active="apropos" lang="{{ lang }}" onSetLang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+  <section style="padding:96px 64px 70px; background:#F6F2E9;">
+    <div style="max-width:820px; margin:0 auto;">
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.35em; color:#B8791E; text-transform:uppercase; margin-bottom:16px;">{{ t.label }}</p>
+      <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(32px,4vw,48px); color:#1A2740; margin:0 0 22px;">{{ t.title }}</h1>
+      <p style="font-size:16px; color:#5B6472; line-height:1.85; margin:0 0 20px;">{{ t.p1a }} <strong style="color:#1A2740;">ALTARYS LABS</strong>{{ t.p1b }}</p>
+      <p style="font-size:16px; color:#5B6472; line-height:1.85; margin:0;">{{ t.p2 }}</p>
+    </div>
+  </section>
+
+  <section style="padding:0 64px 90px; background:#F6F2E9;">
+    <div style="max-width:820px; margin:0 auto; background:#FFFFFF; border-radius:8px; padding:40px; border:1px solid rgba(26,39,64,.08); box-shadow:0 1px 3px rgba(26,39,64,.04);">
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.15em; color:#B8791E; text-transform:uppercase; margin:0 0 20px;">{{ t.direction }}</p>
+      <p style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:22px; color:#1A2740; margin:0 0 6px;">Emmanuel Blonvia</p>
+      <p style="font-size:14px; color:#5B6472; margin:0;">{{ t.role }}</p>
+    </div>
+  </section>
+
+  <section style="padding:0 64px 100px; background:#F6F2E9;">
+    <div style="max-width:820px; margin:0 auto;">
+      <p style="font-family:'Space Mono',monospace; font-size:10.5px; color:#8A93A6; letter-spacing:.05em;">{{ t.legal }}</p>
+    </div>
+  </section>
+
+  <section style="padding:80px 64px; background:linear-gradient(135deg, #1A2740, #0F1724); text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(24px,2.8vw,34px); color:#FAF7F2; margin:0 0 28px;">{{ t.ctaTitle }}</h2>
+    <a href="contact.dc.html" style="background:#C8922A; color:#07111E; padding:16px 32px; border-radius:5px; text-decoration:none; font-weight:600; font-size:15px;">{{ t.ctaContact }}</a>
+  </section>
+
+  <dc-import name="Footer" lang="{{ lang }}" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const T = {
+  fr: {
+    label: 'À propos', title: 'Pourquoi ALTARYS LABS',
+    p1a: '', p1b: " est une SASU de droit ivoirien, active sur les zones OHADA et CIMA. Notre mission est de rendre accessibles aux entreprises de ces zones des outils SaaS et une expertise conseil habituellement réservés aux grands groupes.",
+    p2: 'Notre équipe réunit des experts techniques et fonctionnels expérimentés en banque, en assurance et dans la mise en oeuvre de systèmes métiers complexes et sécurisés, au service de la croissance des entreprises OHADA et CIMA.',
+    direction: 'Direction', role: 'Fondateur et Président',
+    legal: 'ALTARYS LABS, SASU de droit ivoirien, RCCM CI-ABI-03-2026-B17-00070',
+    ctaTitle: 'Discutons de votre projet', ctaContact: 'Contactez notre équipe commerciale',
+  },
+  en: {
+    label: 'About', title: 'Why ALTARYS LABS',
+    p1a: '', p1b: ' is a single-shareholder company under Ivorian law, active across the OHADA and CIMA regions. Our mission is to make SaaS tools and consulting expertise, usually reserved for large groups, accessible to businesses in these regions.',
+    p2: 'Our team brings together technical and functional experts experienced in banking, insurance, and the delivery of complex, secure business systems, supporting the growth of OHADA and CIMA businesses.',
+    direction: 'Leadership', role: 'Founder and Chairman',
+    legal: 'ALTARYS LABS, single-shareholder company under Ivorian law, RCCM CI-ABI-03-2026-B17-00070',
+    ctaTitle: "Let's talk about your project", ctaContact: 'Talk to our sales team',
+  },
+};
+class Component extends DCLogic {
+  state = { lang: (typeof localStorage !== 'undefined' && localStorage.getItem('altarys-lang')) || 'fr' };
+  setLang = (l) => { this.setState({ lang: l }); try { localStorage.setItem('altarys-lang', l); } catch (e) {} };
+  renderVals() { return { lang: this.state.lang, setLang: this.setLang, t: T[this.state.lang] }; }
+}
+</script>
+</body>
+</html>

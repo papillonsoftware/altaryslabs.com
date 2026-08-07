@@ -362,8 +362,10 @@ export const en: Dictionary = {
     errorText:
       'Your message could not be delivered. Check your connection and try again in a few moments.',
 
+    fallbackText: 'You can also write to us directly at',
+
     noScriptText:
-      'Sending this form requires JavaScript, which is turned off in your browser. Turn it on to write to us.',
+      'Sending this form requires JavaScript, which is turned off in your browser.',
 
     pendingTitle: 'Form opening soon',
     pendingText:
@@ -443,8 +445,11 @@ export const en: Dictionary = {
       'Software publisher and consulting practice, OHADA and CIMA regions.',
     columnProducts: 'Products',
     columnServices: 'Services',
-    columnCompany: 'Company',
+    columnContact: 'Contact',
     columnLegal: 'Legal',
+    emailLabel: 'Email:',
+    phoneLabel: 'Phone:',
+    contactForm: 'Contact form',
     legalEntity: "ALTARYS LABS, a company incorporated in Côte d'Ivoire",
     rccm: 'Company registration CI-ABJ-03-2026-B17-00070',
     location: "Abidjan, Côte d'Ivoire",

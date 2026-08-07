@@ -33,7 +33,7 @@
  * fois `contact.dc.html` mis a jour. Voir D069.
  */
 import PageHeader from './PageHeader.astro';
-import type { Locale } from '../i18n/config';
+import { CONTACT_EMAIL, type Locale } from '../i18n/config';
 import { localizedPath, useTranslations } from '../i18n/utils';
 import { PRODUCT_KEYS, SERVICE_KEYS } from '../i18n/routes';
 
@@ -75,7 +75,10 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
     <div class="panel panel--error" id="form-error" role="alert" hidden>
       <p class="panel-title">{t.contact.errorTitle}</p>
-      <p class="panel-text">{t.contact.errorText}</p>
+      <p class="panel-text">
+        {t.contact.errorText} {t.contact.fallbackText}{' '}
+        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+      </p>
     </div>
 
     <div class="panel panel--error" id="form-pending" role="alert" tabindex="-1" hidden>
@@ -88,7 +91,10 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           visiteur six champs remplis pour rien, ce qu'un message place apres
           le dernier champ ne fait pas. */}
       <noscript>
-        <p class="noscript-note">{t.contact.noScriptText}</p>
+        <p class="noscript-note">
+          {t.contact.noScriptText} {t.contact.fallbackText}{' '}
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+        </p>
       </noscript>
 
       <div class="field-row">
@@ -360,7 +366,11 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     line-height: 1.65;
   }
 
-  .privacy-notice a {
+  /* --gold-deeper et non --gold-deep : 5.66:1 sur blanc et 5.06:1 sur creme,
+     alors que --gold-deep tombe sous le seuil AA en petit texte. D029, D030. */
+  .privacy-notice a,
+  .noscript-note a,
+  .panel-text a {
     color: var(--gold-deeper);
   }
 
