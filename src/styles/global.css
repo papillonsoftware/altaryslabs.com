@@ -635,30 +635,9 @@ h3 {
   border-color: var(--gold-deep);
 }
 
-/* `PageScaffold` disparaitra avec les pages Contact, mais tant qu'il rend il
-   doit rendre correctement : 1.02:1 pour le fil d'Ariane, 1.56:1 pour la
-   note. */
-.section--light.section--light .breadcrumb li {
-  color: var(--slate-body);
-}
-
-.section--light.section--light .breadcrumb a {
-  color: var(--gold-deeper);
-}
-
-.section--light.section--light .breadcrumb li + li::before {
-  color: var(--gold-deep);
-}
-
-.section--light.section--light .scaffold-note {
-  color: var(--gold-deeper);
-  background: var(--gold-12);
-  border-color: var(--gold-deep);
-}
-
 /* --- Controles de formulaire -----------------------------------------------
-   Poses ici pour que le lot FORM n'ait pas a inventer son propre style au
-   moment ou il ecrira la page Contact. Aucune page ne les utilise a ce jour.
+   Poses par UI-001 pour que la page Contact n'ait pas a inventer son propre
+   style. `ContactContent` les consomme depuis PAGE-002.
    -------------------------------------------------------------------------- */
 .field {
   display: flex;
@@ -694,9 +673,13 @@ h3 {
   color: var(--slate-body);
 }
 
+/* Meme decalage que partout ailleurs sur le site. UI-001 avait pose 1px alors
+   qu'aucune page ne rendait encore ces regles ; la page Contact est la
+   premiere a les afficher, et six controles cernes a 1px au milieu d'un site
+   cerne a 3px se voyaient. */
 .field-input:focus,
 .field-select:focus,
 .field-textarea:focus {
   outline: 2px solid var(--gold-deep);
-  outline-offset: 1px;
+  outline-offset: 3px;
 }
