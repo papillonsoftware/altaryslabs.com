@@ -42,7 +42,7 @@ export const fr = {
     productsFinance: 'Papillon Corporate Finance Suite',
     productsPcs: 'Papillon Collection Solution',
     services: 'Services',
-    servicesConsulting: 'Conseil IT, RH et Finance',
+    servicesConsulting: 'Conseil IT, RH & Corporate Finance',
     servicesDev: 'Développement sur mesure',
     servicesAi: 'IA souveraine',
     about: 'À propos',
@@ -103,7 +103,7 @@ export const fr = {
 
   home: {
     heroBadge: 'Papillon Collection Solution',
-    heroTitle: "Des solutions technologiques pour les entreprises d'Afrique.",
+    heroTitle: 'Votre partenaire technologique pour les entreprises Africaines.',
     heroEmphasis: 'Zones OHADA et CIMA',
     heroSubtitle:
       "Ressources humaines, finance d'entreprise et recouvrement de créances, trois domaines où nos suites logicielles et notre expertise conseil accompagnent la croissance des entreprises.",
@@ -347,10 +347,10 @@ export const fr = {
     services: {
       title: 'Nos services | ALTARYS LABS',
       description:
-        "Conseil IT, RH et Finance, développement sur mesure et solutions d'aide à la décision par IA souveraine pour les entreprises des zones OHADA et CIMA.",
+        "Conseil IT, RH & Corporate Finance, Développement sur mesure et solutions d'aide à la décision par IA souveraine pour les entreprises des zones OHADA et CIMA.",
     },
     servicesConsulting: {
-      title: 'Conseil IT, RH et Finance | ALTARYS LABS',
+      title: 'Conseil IT, RH & Corporate Finance | ALTARYS LABS',
       description:
         "Accompagnement des entreprises OHADA sur leurs systèmes d'information, leurs processus RH et leur gestion financière.",
     },

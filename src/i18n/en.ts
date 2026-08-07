@@ -51,7 +51,7 @@ export const en: Dictionary = {
     productsFinance: 'Papillon Corporate Finance Suite',
     productsPcs: 'Papillon Collection Solution',
     services: 'Services',
-    servicesConsulting: 'IT, HR and Finance Consulting',
+    servicesConsulting: 'IT, HR & Corporate Finance Consulting',
     servicesDev: 'Custom Development',
     servicesAi: 'Sovereign AI',
     about: 'About',
@@ -105,8 +105,8 @@ export const en: Dictionary = {
 
   home: {
     heroBadge: 'Papillon Collection Solution',
-    heroTitle: 'Enterprise software built for African companies.',
-    heroEmphasis: 'West and Central Africa',
+    heroTitle: 'Your technology partner for businesses across Africa.',
+    heroEmphasis: 'OHADA and CIMA regions',
     heroSubtitle:
       'Human resources, corporate finance and insurance premium collection. Three domains where our software and our consulting practice support the growth of African organisations.',
     heroPrimary: 'Talk to our team',
@@ -311,7 +311,7 @@ export const en: Dictionary = {
 
     leadershipLabel: 'Leadership',
     leaderName: 'Emmanuel Blonvia',
-    leaderRole: 'Founder and President',
+    leaderRole: 'Founder and Chairman',
 
     ctaTitle: "Let's discuss your project",
     ctaLabel: 'Talk to our team',
@@ -346,10 +346,10 @@ export const en: Dictionary = {
     services: {
       title: 'Services | ALTARYS LABS',
       description:
-        'IT, HR and finance consulting, custom software development, and sovereign AI decision support for organisations operating in Africa.',
+        'IT, HR & Corporate Finance Consulting, Custom Development, and Sovereign AI decision support for organisations operating in Africa.',
     },
     servicesConsulting: {
-      title: 'IT, HR and Finance Consulting | ALTARYS LABS',
+      title: 'IT, HR & Corporate Finance Consulting | ALTARYS LABS',
       description:
         'We help African organisations strengthen their information systems, HR processes and financial management, with the regulatory context factored in from the start.',
     },
