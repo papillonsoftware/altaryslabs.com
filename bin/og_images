@@ -9,13 +9,15 @@
 // reproductibles.
 //
 // Le rendu passe par le meme moteur que le site : Chrome sans tete, les vraies
-// polices Google, les vrais tokens. Ce n'est pas une approximation dessinee a la
-// main, c'est la page telle que Chrome la peint. Le logomark est donc toujours
-// celui de src/components/Logo.astro, a la geometrie de D086.
+// polices Google. Ce n'est pas une approximation dessinee a la main, c'est la
+// page telle que Chrome la peint.
 //
-// La copie n'est pas ecrite ici : elle est lue dans src/i18n/fr.ts et en.ts, de
-// sorte qu'une vignette ne puisse pas contredire le hero de la page d'accueil.
-// C'est exactement le defaut que la ronde 2 d'UI-004 a trouve. Voir D101.
+// RIEN de ce qui peut deriver n'est ecrit ici. La copie est lue dans
+// src/i18n/fr.ts et en.ts, titre, accent et sous-titre compris. La geometrie du
+// diamant est lue dans public/assets/favicon.svg. Une vignette ne peut donc ni
+// contredire le hero de l'accueil, ni repeindre un logomark perime : c'est
+// exactement le double defaut trouve par les rondes 2 d'UI-004 et 1 de
+// UI-FIX-003. Voir D101.
 //
 // Usage : bin/og_images            (depuis la racine du depot)
 //         bin/og_images --check    (rend dans /tmp et compare, n'ecrit rien)
@@ -65,27 +67,51 @@ const VIGNETTES = [
     lang: 'fr',
     titre: cle(fr, 'heroTitle'),
     accent: cle(fr, 'heroEmphasis'),
-    // Liste d'offre, sans portee de positionnement : conservee telle quelle
-    // depuis la vignette d'origine, sur arbitrage du fondateur. Seul l'accent
-    // manquant de "developpement" est retabli, coquille de l'image d'origine.
-    sous: 'Suites SaaS, conseil IT, RH et Finance, développement sur mesure.',
+    sous: cle(fr, 'ogSubtitle'),
   },
   {
     fichier: 'public/og-image-en.png',
     lang: 'en',
     titre: cle(en, 'heroTitle'),
     accent: cle(en, 'heroEmphasis'),
-    sous: 'SaaS platforms, IT, HR and finance consulting, custom development.',
+    sous: cle(en, 'ogSubtitle'),
   },
 ];
+
+/* --- La geometrie du diamant, lue et non recopiee ------------------------- */
+/* `public/assets/favicon.svg` est la seule forme autonome du logomark dans le
+   depot : meme geometrie que Logo.astro, mais en couleurs litterales et sans
+   expression Astro. On en extrait le contenu plutot que de le retranscrire, de
+   sorte que le script ne puisse pas repeindre une geometrie perimee le jour ou
+   la marque bouge. Une copie en dur ici aurait rendu fausse l'instruction
+   "relancer apres tout changement de logomark". */
+const faviconSvg = readFileSync('public/assets/favicon.svg', 'utf8');
+const formesDiamant = faviconSvg.match(/<svg[^>]*>([\s\S]*?)<\/svg>/)?.[1]?.trim();
+if (!formesDiamant || !formesDiamant.includes('polygon')) {
+  console.error('Geometrie du logomark illisible dans public/assets/favicon.svg.');
+  process.exit(1);
+}
+const viewBoxDiamant = faviconSvg.match(/viewBox="([^"]+)"/)?.[1] ?? '-1 0 78 72';
 
 /* --- Le gabarit ----------------------------------------------------------- */
 /* Reprend la composition de la vignette d'origine sans la rejouer : logo en
    haut a gauche, titre Cormorant, ligne d'accent en italique doree, sous-titre
    discret, liseré doré en pied, trame de fond. Seuls le logomark et la copie
-   changent. Les couleurs sont les valeurs de tokens.css, ecrites en clair ici
-   parce que ce fichier est rendu hors du pipeline Astro et n'a pas acces aux
-   variables CSS du site. */
+   changent.
+
+   Les couleurs sont recopiees de tokens.css, ce fichier etant rendu hors du
+   pipeline Astro et n'ayant donc pas acces aux variables CSS. Elles doivent
+   correspondre a ce que le site peint sur fond sombre, ce qui n'etait pas le
+   cas de la premiere version : --gold-light et non --gold sur "LABS" et sur
+   l'italique du titre, comme Logo.astro et global.css les posent, et --muted
+   et non une valeur inventee sur le sous-titre. */
+const OR = '#c8922a'; // --gold
+const OR_CLAIR = '#e5b55a'; // --gold-light, texte dore sur fond sombre
+const OR_PROFOND = '#8b5e1b'; // --gold-deeper
+const IVOIRE = '#faf7f2'; // --ivory
+const ATTENUE = '#9aa7be'; // --muted, corps de texte sur fond sombre
+const MARINE = '#07111e'; // --navy-deep
+
 const echapper = (s) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -93,12 +119,12 @@ const gabarit = ({ titre, accent, sous }) => `<!doctype html>
 <html><head><meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=block" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     width: 1200px; height: 630px; overflow: hidden; position: relative;
-    background: #07111E;
+    background: ${MARINE};
     font-family: 'DM Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
   }
@@ -118,11 +144,11 @@ const gabarit = ({ titre, accent, sous }) => `<!doctype html>
   .mot { display: flex; flex-direction: column; line-height: 1; }
   .altarys {
     font-family: 'DM Sans', sans-serif; font-weight: 600;
-    font-size: 31px; letter-spacing: 6.2px; color: #FAF7F2;
+    font-size: 31px; letter-spacing: 6.2px; color: ${IVOIRE};
   }
   .labs {
     font-family: 'Space Mono', monospace; font-weight: 700;
-    font-size: 12px; letter-spacing: 8.3px; color: #C8922A; margin-top: 7px;
+    font-size: 12px; letter-spacing: 8.3px; color: ${OR_CLAIR}; margin-top: 7px;
   }
 
   /* --- Titre --- */
@@ -130,38 +156,28 @@ const gabarit = ({ titre, accent, sous }) => `<!doctype html>
     margin-top: 74px;
     font-family: 'Cormorant Garamond', Georgia, serif;
     font-weight: 300; font-size: 63px; line-height: 1.16;
-    color: #FAF7F2; letter-spacing: .002em;
+    color: ${IVOIRE}; letter-spacing: .002em;
     max-width: 830px;
   }
   .accent {
-    display: block; font-style: italic; color: #C8922A;
+    display: block; font-style: italic; color: ${OR_CLAIR};
   }
   .sous {
     margin-top: 40px;
-    font-size: 19px; font-weight: 400; color: #7C8AA3; letter-spacing: .005em;
+    font-size: 19px; font-weight: 400; color: ${ATTENUE}; letter-spacing: .005em;
   }
 
   /* Liseré doré en pied, degrade comme sur la vignette d'origine. */
   .liseré {
     position: absolute; left: 0; right: 0; bottom: 0; height: 6px;
-    background: linear-gradient(to right, #C8922A, #E5B55A 45%, #8B5E1B);
+    background: linear-gradient(to right, ${OR}, ${OR_CLAIR} 45%, ${OR_PROFOND});
   }
 </style></head>
 <body>
   <div class="trame"></div>
   <div class="contenu">
     <div class="logo">
-      <svg width="72" height="66" viewBox="0 0 76 70" fill="none">
-        <polygon points="38,4 74,37 38,68 2,37" fill="none" stroke="#C8922A" stroke-width="2"/>
-        <polygon points="38,15 59,37 38,57 17,37" fill="#C8922A" opacity="0.15"/>
-        <line x1="26" y1="57" x2="38" y2="17" stroke="#C8922A" stroke-width="3" stroke-linecap="round"/>
-        <line x1="50" y1="57" x2="38" y2="17" stroke="#C8922A" stroke-width="3" stroke-linecap="round"/>
-        <line x1="29" y1="46" x2="47" y2="46" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"/>
-        <circle cx="38" cy="4" r="3" fill="#C8922A"/>
-        <circle cx="74" cy="37" r="3" fill="#C8922A"/>
-        <circle cx="38" cy="68" r="3" fill="#C8922A"/>
-        <circle cx="2" cy="37" r="3" fill="#C8922A"/>
-      </svg>
+      <svg width="72" height="66" viewBox="${viewBoxDiamant}" fill="none">${formesDiamant}</svg>
       <span class="mot">
         <span class="altarys">ALTARYS</span>
         <span class="labs">LABS</span>
@@ -252,15 +268,38 @@ for (const v of VIGNETTES) {
   // meme fichier, la vignette francaise partant parfois en police de repli sur
   // un glyphe accentue. Un generateur non deterministe rend son mode --check
   // inutilisable, puisqu'il signale une derive a chaque appel.
-  const pretes = await envoyer('Runtime.evaluate', {
-    expression: 'document.fonts.ready.then(() => document.fonts.status)',
+  //
+  // On n'interroge PAS `document.fonts.status`, qui vaut 'loaded' des que le
+  // chargement est termine, qu'il ait reussi ou echoue. Avec l'hote Google Fonts
+  // injoignable, une garde fondee dessus laissait passer un rendu en Times et
+  // Helvetica, ecrasait les deux PNG et sortait en 0 : exactement la vignette
+  // silencieusement fausse que ce script existe pour supprimer. On verifie donc
+  // qu'une fonte effectivement chargee existe pour chacune des trois familles.
+  const controle = await envoyer('Runtime.evaluate', {
+    expression: `document.fonts.ready.then(() => {
+      const requises = ['Cormorant Garamond', 'DM Sans', 'Space Mono'];
+      const chargees = [...document.fonts]
+        .filter((f) => f.status === 'loaded')
+        .map((f) => f.family.replace(/^["']|["']$/g, ''));
+      return JSON.stringify({
+        manquantes: requises.filter((r) => !chargees.includes(r)),
+        total: chargees.length,
+      });
+    })`,
     awaitPromise: true,
     returnByValue: true,
   });
-  if (pretes?.result?.value !== 'loaded') {
-    console.error(`Polices non chargees pour ${v.lang} : rendu abandonne.`);
+
+  const bilan = JSON.parse(controle?.result?.value ?? '{"manquantes":["lecture impossible"]}');
+  if (bilan.manquantes.length > 0) {
+    console.error(
+      `Polices non chargees pour ${v.lang} : ${bilan.manquantes.join(', ')}.\n` +
+        `Rendu abandonne, les vignettes existantes ne sont PAS ecrasees.\n` +
+        `Cause la plus probable : fonts.googleapis.com injoignable.`,
+    );
     ws.close();
     chrome.kill();
+    rmSync(profil, { recursive: true, force: true, maxRetries: 20, retryDelay: 100 });
     process.exit(1);
   }
   // Une frame de plus pour que le premier rendu avec les vraies polices soit

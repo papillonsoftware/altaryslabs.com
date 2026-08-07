@@ -110,6 +110,12 @@ export const fr = {
     heroPrimary: 'Contactez notre équipe commerciale',
     heroSecondary: 'Découvrir nos produits',
 
+    /* Sous-titre de la vignette de partage, rendue par `bin/og_images`.
+       Il vit ici et non dans le gabarit du script pour la meme raison que le
+       titre : une vignette ne doit pas pouvoir affirmer ce que le site ne dit
+       pas. C'est le defaut trouve par la ronde 2 d'UI-004. Voir D101. */
+    ogSubtitle: 'Suites SaaS, conseil IT, RH et Finance, développement sur mesure.',
+
     productsLabel: 'Nos produits',
     productsTitle: "Trois suites SaaS pensées pour l'OHADA et le CIMA",
 

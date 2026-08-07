@@ -19,7 +19,8 @@ This is a **static bilingual marketing site**, not an application. There is no b
 3. Read the reference documents relevant to the work item:
    - `docs/vitrine/refonte/PROMPT_altaryslabs-com-refonte.md` - **the primary spec** for the rebuild: sitemap, editorial tone, constraints
    - `docs/vitrine/refonte/BRIEF_claude-design_altaryslabs-com.md` - the brief handed to claude.ai/design
-   - `docs/vitrine/altarys-brand-identity-v3.1.html` - CSS variables, fonts, SVG logomarks (reuse as-is, never redraw)
+   - `src/styles/tokens.css` - the palette and type scales, the only source of colour values
+   - `src/components/Logo.astro` and `public/assets/favicon.svg` - the logomark, geometry of D086. **Never** `docs/vitrine/altarys-brand-identity-v3.1.html`, obsolete in full since D102
    - `docs/vitrine/platform-vision-prd.md` - product descriptions, personas, differentiators
    - `docs/vitrine/platform-saas-blueprint.md` - architecture content used for technical credibility
    - `docs/vitrine/prompt-vitrine-altaryslabs-v2.md` - the legacy one-page spec, kept for history only. Do not build from it.

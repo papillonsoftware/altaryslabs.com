@@ -65,7 +65,7 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
 5. Read the relevant context:
    - `CLAUDE.md` - the authoritative contract
    - `docs/vitrine/refonte/PROMPT_altaryslabs-com-refonte.md` - the primary spec for the rebuild
-   - `docs/vitrine/altarys-brand-identity-v3.1.html` - brand identity
+   - `src/styles/tokens.css` - palette and type scales. **Not** `docs/vitrine/altarys-brand-identity-v3.1.html`, obsolete in full since D102
    - `docs/DECISIONS.md` - the D-rows relevant to this item
    - `src/i18n/routes.ts`, `src/i18n/fr.ts`, `src/i18n/en.ts` for anything touching routing or copy
 6. **Generic correctness sweep via the `code-review` skill.** Invoke it by its **fully qualified name**, `code-review:code-review`, passing the PR number, to catch what the domain checklist does not enumerate.

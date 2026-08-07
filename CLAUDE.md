@@ -86,9 +86,16 @@ and the design project for the form.
 
 **The two share images are generated, not hand-drawn.** `bin/og_images` renders
 `public/og-image.png` and `og-image-en.png` through headless Chrome from the
-real fonts and the D086 logomark, and reads its copy from `fr.ts` and `en.ts` so
-a share preview cannot contradict the home page. Re-run it after any change to
-the logomark or to the home hero. See D101.
+real Google fonts. **Nothing that can drift is written in the script**: the copy
+is read from `home.heroTitle`, `home.heroEmphasis` and `home.ogSubtitle` in
+`fr.ts` and `en.ts`, and the diamond geometry from `public/assets/favicon.svg`.
+A share preview therefore cannot contradict the home page, nor repaint a stale
+logomark.
+
+Re-run it after changing the home hero copy or the logomark, and commit the two
+PNGs. `bin/og_images --check` re-renders without writing and exits non-zero on
+any drift. It refuses to write at all when a font failed to load, rather than
+shipping a preview silently set in Times. See D101.
 
 **A dated snapshot of its 15 root prototypes lives in
 `docs/vitrine/refonte/prototypes/`** (13 pages plus `Header` and `Footer`, taken
