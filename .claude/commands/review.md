@@ -47,11 +47,15 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
 
 1. Read the item doc if it exists, to understand the intended scope, the acceptance criteria and what was declared out of scope.
 2. Find the branch: `git branch -a | grep -i <slug>`, or `gh pr view <num> --json headRefName`.
-3. **Create a worktree FROM THE WORK ITEM'S BRANCH (MANDATORY)**, so the review commit lands on that branch and ships with the code under review:
+3. **Create a worktree on a dedicated review branch, forked from the work item's branch (MANDATORY)**, so the review commit ships to that branch without detaching:
    ```
-   git worktree add .claude/worktrees/review-<ID> <branch>
+   git fetch origin
+   git worktree add .claude/worktrees/review-<ID> -b review-<id-lowercase> origin/<branch> \
+     || { echo "worktree add failed, stop"; exit 1; }
+   git -C .claude/worktrees/review-<ID> symbolic-ref -q HEAD >/dev/null \
+     || { echo "detached HEAD, stop"; exit 1; }
    ```
-   **All subsequent work MUST happen inside `.claude/worktrees/review-<ID>/`.** Use absolute paths. You are **read-only on source**: never modify a source file, never fix a defect yourself. You report; the author fixes.
+   Checking out `<branch>` directly (the old form) fails silently into a detached HEAD whenever the author's own worktree still holds it, which is the common case during a review; the loss only surfaces at step 11, when the push has no branch to update. The two guards above turn that into a loud failure here instead: the first catches `git worktree add` itself failing (for instance because `review-<id-lowercase>` already exists from a prior round that was not torn down, see step 13), the second catches a detachment if the add somehow succeeds without landing on a branch. Chaining them with `||` on the same command they check, rather than as an unconditional next line, is what stops the second guard from firing against a worktree that was never created. **All subsequent work MUST happen inside `.claude/worktrees/review-<ID>/`.** Use absolute paths. You are **read-only on source**: never modify a source file, never fix a defect yourself. You report; the author fixes.
 4. `git diff origin/refonte-multipages...<branch> --stat`, then read every changed file. The base is `refonte-multipages`, the integration branch, never `main`.
 5. Read the relevant context:
    - `CLAUDE.md` - the authoritative contract
@@ -87,13 +91,22 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
     - Determine N by counting existing `## Round` headings and adding 1.
     - Use the round format from `.claude/personalities/REVIEWER.md`.
     - Delegate the write itself to the `file-writer` subagent once the content is final, per the personality's token-efficiency rule.
-11. Commit the review file on that branch, message in French:
+11. Commit the review file, message in French, and push it explicitly onto the work item's branch, since the review worktree sits on its own `review-<id-lowercase>` branch, not on `<branch>`, and a bare `git push` would have no upstream to update:
     ```
     git add docs/reviews/<ID>-review.md
     git commit -m "docs(review): ajouter la revue <ID> round <N>"
-    git push
+    git push origin HEAD:<branch>
     ```
 12. Post the verdict plus a short summary as a PR comment: `gh pr comment <PR-number> --body-file <temp-summary-file>`. **Never open a separate review PR.**
+13. **Tear down the review worktree and its branch (MANDATORY, do this before the round ends), from the repository's main checkout, never from inside the worktree you are about to remove:**
+    ```
+    cd ../../..   # back out of .claude/worktrees/review-<ID>/ to the repository root
+    git worktree remove .claude/worktrees/review-<ID> --force
+    git branch -D review-<id-lowercase>
+    ```
+    `git worktree remove` deletes its own working directory; a shell whose cwd no longer exists cannot run the next command, so `git branch -D` fails with "Unable to read current working directory" and the branch survives (verified). This is why the `cd` above comes first, not why it can be skipped.
+
+    `review-<id-lowercase>` is disposable: its only job was to carry the review commit without detaching, and that commit already lives on `<branch>` since step 11. Leaving it behind makes `git worktree add -b review-<id-lowercase> ...` fail on the very next round of this same item, since git refuses to recreate a branch that already exists - the round-2 failure mode step 3's guard cannot itself detect, because it happens one command earlier. If this step is somehow skipped and a stale `review-<id-lowercase>` is found at the start of a later round, delete it before step 3 rather than working around it.
 
 ---
 
