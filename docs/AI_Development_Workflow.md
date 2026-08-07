@@ -197,6 +197,7 @@ A superseded clause in an existing D-row is **not** a defect. A D-row is a dated
 - **Never work in the main checkout.** Every work item gets its own worktree: `git worktree add -b <type>/<slug> .claude/worktrees/<slug> refonte-multipages`
 - **Never commit on `main`, and never target `main` in a PR.**
 - **`main` still serves the legacy one-page site through GitHub Pages**, and the rebuild deletes `CNAME`. `refonte-multipages` is merged into `main` only once the rebuild is complete and validated on the Cloudflare preview URL. That merge is a founder decision, made once, deliberately.
+- **A review round gets its own disposable branch, `review-<id-lowercase>`, forked from the work item's branch.** The reviewer's worktree checks out this branch rather than the item's own, which would otherwise silently detach whenever the author's worktree still holds it. The review commit is pushed onto the item's branch by explicit refspec (`git push origin HEAD:<branch>`), then the `review-<id-lowercase>` branch and its worktree are torn down before the round ends. See `docs/work-items/SITE-FIX-002.md` and D054.
 
 ---
 
