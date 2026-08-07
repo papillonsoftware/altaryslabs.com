@@ -22,10 +22,17 @@ html {
   scroll-padding-top: calc(var(--nav-h) + 16px);
 }
 
+/* UI-002 bascule le fond par defaut du document vers le clair (D028, D055).
+   Les sections qui restent sombres portent desormais leur propre couleur de
+   texte explicite : elles ne peuvent plus compter sur celle du body. Pour
+   `.section--deep`, `.section--navy` et `.section--cta`, la regle `color`
+   est ci-dessous, a cote de leur `background`. Le Hero de l'accueil est
+   l'exception : sa couleur vit dans son propre style scope, Hero.astro,
+   puisqu'il n'utilise aucun de ces modificateurs. */
 body {
   font-family: var(--font-body);
-  background: var(--navy-deep);
-  color: var(--ivory);
+  background: var(--cream);
+  color: var(--slate-body);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -50,22 +57,31 @@ a {
   border-radius: 2px;
 }
 
+/* Le remplissage or seul ne vaut que 2.47:1 sur le corps de page devenu creme
+   (UI-002) : meme correctif que .nav-cta et .btn-primary, D039. Le lien est
+   hors de .nav et de toute .section--light, donc son propre focus-visible
+   doit reprendre --gold-deep plutot que le --gold global. */
 .skip-link {
   position: absolute;
   left: -9999px;
   top: 0;
   z-index: 200;
   background: var(--gold);
+  border: 1px solid var(--gold-deep);
   color: var(--navy-deep);
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
-  padding: 12px 20px;
+  padding: 11px 19px;
   border-radius: 0 0 var(--radius-sm) 0;
 }
 
 .skip-link:focus {
   left: 0;
+}
+
+.skip-link:focus-visible {
+  outline-color: var(--gold-deep);
 }
 
 .visually-hidden {
@@ -110,20 +126,18 @@ a {
 
 .section--deep {
   background: var(--navy-deep);
+  color: var(--ivory);
 }
 
 .section--navy {
   background: var(--navy);
-}
-
-/* Fond des sections alternees, un cran plus clair que le fond principal. */
-.section--alt {
-  background: var(--navy-alt);
+  color: var(--ivory);
 }
 
 /* Bandeau d'appel a l'action de fin de page. */
 .section--cta {
   background: linear-gradient(135deg, var(--navy-mid), var(--navy));
+  color: var(--ivory);
   padding: 80px 0;
   text-align: center;
 }
@@ -426,8 +440,9 @@ h3 {
    redefinit ses couleurs sous `.section--light` : le balisage et les classes
    des composants ne changent pas, seule la surface qui les porte change.
 
-   Aucune page n'utilise encore cette classe. La bascule du fond par defaut et
-   la conversion des pages appartiennent a UI-002. Voir D028.
+   UI-002 bascule le fond par defaut du body sur creme et applique cette
+   classe a chaque section qui doit rester claire, page par page. Voir D028
+   et D055.
 
    POURQUOI `.section--light.section--light` PARTOUT. La classe est repetee
    volontairement, ce qui ajoute un cran de specificite sans changer ce que le
@@ -437,8 +452,8 @@ h3 {
    place les styles scopes tantot avant tantot apres le bundle global selon la
    route : `ProductCard` passe avant global sur /produits et apres sur /,
    `CtaBanner` avant sur /a-propos et apres sur seize autres pages. Le peritexte
-   gagnait donc par chance. Il doit gagner par construction, puisque UI-002 va
-   etendre tout le site sur cette fondation. Le doublement porte les regles de
+   gagnait donc par chance. Il doit gagner par construction, puisque UI-002
+   etend tout le site sur cette fondation. Le doublement porte les regles de
    base a (0,3,0) et celles d'etat a (0,4,0), au-dessus des `.card:hover` scopes
    de `ProductCard` et `ServiceCard` qui valent (0,3,0). Voir D036.
    -------------------------------------------------------------------------- */
@@ -535,13 +550,13 @@ h3 {
 
 /* --- Classes propres aux composants sur surface claire ---------------------
    Le peritexte ci-dessus ne couvre que les primitives globales. Les composants
-   de page portent leurs propres classes, restees sur les jetons de surface
-   sombre : mesurees de 1.02:1 a 2.91:1 une fois la fondation reveillee. Une
-   fondation qui n'en couvrirait qu'une partie forcerait UI-002 a les
-   redecouvrir page par page, ce qui est exactement ce qu'elle doit eviter.
+   de page portent leurs propres classes : chacune ci-dessous a ete mesuree
+   entre 1.02:1 et 2.91:1 avant sa correction, restee sur les jetons de
+   surface sombre alors que la page qui la porte est desormais claire.
 
    Regle pour la suite : toute nouvelle classe de composant portant une couleur
-   doit etre ajoutee ici en meme temps qu'elle est ecrite. Voir D040.
+   doit etre ajoutee ici en meme temps qu'elle est ecrite, pour ne pas avoir a
+   la redecouvrir page par page. Voir D040.
    -------------------------------------------------------------------------- */
 .section--light.section--light .about-text,
 .section--light.section--light .leadership-name {
@@ -578,7 +593,10 @@ h3 {
   box-shadow: var(--shadow-card);
 }
 
-.section--light.section--light .module p,
+/* `.module` porte son libelle en texte direct, sans `<p>` : la regle ne peut
+   pas viser `.module p`, qui ne correspond a rien et laissait le texte sur
+   --ink-80, presque blanc sur la carte blanche. */
+.section--light.section--light .module,
 .section--light.section--light .feature-title {
   color: var(--navy-text);
 }

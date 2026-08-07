@@ -23,7 +23,7 @@ interface Props {
 const { label, modules, spacedTop = false } = Astro.props;
 ---
 
-<section class:list={['section', 'module-section', { 'is-spaced': spacedTop }]}>
+<section class:list={['section', 'section--light', 'module-section', { 'is-spaced': spacedTop }]}>
   <div class="container">
     <p class="module-label mono">{label}</p>
     <ul class="module-grid fade-in">

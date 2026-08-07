@@ -21,7 +21,7 @@ interface Props {
 const { label, title, intro, align = 'center', badge } = Astro.props;
 ---
 
-<section class="section page-header">
+<section class="section section--light page-header">
   <div class:list={['container', 'page-header-inner', `is-${align}`]}>
     {
       badge ? (
