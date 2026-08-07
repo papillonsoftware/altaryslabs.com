@@ -113,7 +113,7 @@ Your implementation contract is the work item you just wrote. If something is mi
 - **`src/i18n/routes.ts` is the single source of truth for routing.** French sits at the root (`/produits`), English is prefixed with translated slugs (`/en/products`). Because slugs are translated, no URL can be derived from the other one: hreflang, the language switcher and the footer all depend on `ROUTES`. Never hardcode a cross-language URL.
 - **The `Dictionary` type is derived from `fr.ts`.** A missing English key fails the build. That is the safety net for parity; do not weaken it.
 - No new dependency without justification in the plan.
-- Read existing components before writing a new one. `PageScaffold`, `BaseLayout`, `Header`, `Footer`, `LangSwitcher`, `Logo` already exist.
+- Read existing components before writing a new one. `BaseLayout`, `Header`, `Footer`, `LangSwitcher`, `Logo` already exist.
 
 ### Language rules (from CLAUDE.md, restated because they are violated most often)
 

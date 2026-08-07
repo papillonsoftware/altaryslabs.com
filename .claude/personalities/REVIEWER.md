@@ -115,7 +115,7 @@ The visual reference for the rebuild is the claude.ai/design project `53d1c228-d
 
 ### Code quality
 
-- [ ] Existing components reused rather than duplicated. `PageScaffold`, `BaseLayout`, `Header`, `Footer`, `LangSwitcher` and `Logo` already exist.
+- [ ] Existing components reused rather than duplicated. `BaseLayout`, `Header`, `Footer`, `LangSwitcher` and `Logo` already exist.
 - [ ] No copy duplicated across FR pages that should live in a dictionary
 - [ ] No new dependency without justification recorded in the work item
 - [ ] Code comments and commit messages are in French per the repository language rule; specs and documentation are in English; user-facing strings are in the page's language

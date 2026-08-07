@@ -22,6 +22,20 @@
 
   // Variables d'environnement a definir dans le dashboard Cloudflare Pages
   // (Settings > Environment variables), jamais en dur dans ce fichier :
-  //   CONTACT_NOTIFY_EMAIL   adresse de notification des demandes entrantes
-  //   TURNSTILE_SECRET_KEY   cle secrete anti-spam Turnstile
+  //
+  //   Variables d'execution, lues par la fonction Pages :
+  //     CONTACT_NOTIFY_EMAIL   adresse de notification des demandes entrantes
+  //     TURNSTILE_SECRET_KEY   cle secrete anti-spam Turnstile
+  //
+  //   Variable de BUILD, lue par Astro a la compilation :
+  //     PUBLIC_TURNSTILE_SITE_KEY   cle publique du widget Turnstile
+  //
+  //   La distinction n'est pas cosmetique. Le site est en sortie statique, donc
+  //   `import.meta.env.PUBLIC_*` est fige dans le HTML au moment du build : la
+  //   poser comme variable d'execution ne change rien, et il faut relancer un
+  //   build apres l'avoir definie. En son absence le composant Contact se
+  //   replie silencieusement sur un emplacement vide, si bien qu'une fois
+  //   FORM-001 livre, un build fait sans elle rend un formulaire parfait qui
+  //   perd tous les messages. FORM-001 devra faire echouer le build plutot que
+  //   se replier. Voir D065.
 }

@@ -6,8 +6,12 @@ read. Item details live in `docs/work-items/`; decisions in `docs/DECISIONS.md`.
 
 ## Where the rebuild stands
 
-26 pages built, bilingual, `npm run check` clean. Every page is final except the
-two Contact pages, which are still `PageScaffold` placeholders.
+26 pages built, bilingual, `npm run check` clean. **Every page is final.**
+`PAGE-002` delivered the two Contact pages and deleted `PageScaffold.astro`, the
+provisional scaffold, which no longer exists in the tree.
+
+What is not final is the contact form's **submission**: the markup ships inert
+behind a guard script, and `FORM-001` makes it actually send. See D064.
 
 **The site is light.** The July 2026 handoff turns it into an alternation of
 cream and navy. `UI-001` installed that foundation dormant and `UI-002` threw
@@ -28,6 +32,7 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | `OPS-001` | Duplicate Cloudflare Pages project deleted, step 1 of 1 |
 | `UI-002` | Light-surface switch across the whole site, five-column footer |
 | `I18N-001` | The handoff copy deltas: both heroes, the consulting service name, the English leadership role |
+| `PAGE-002` | Contact pages FR and EN, inert form, three states, `PageScaffold` deleted |
 
 ## Open, in dependency order
 
@@ -37,18 +42,22 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | 0 | `SITE-CHR-002` | nothing | `docs/work-items/SITE-CHR-002.md` |
 | 1 | `I18N-FIX-001` | `I18N-001` | `docs/work-items/I18N-FIX-001.md` |
 | 1 | `UI-FIX-001` | nothing | `docs/work-items/UI-FIX-001.md` |
-| 3 | `PAGE-002` | nothing, `UI-002` has merged | `docs/work-items/PAGE-002.md` |
 | 3 | `UI-FIX-002` | nothing, `UI-002` has merged | `docs/work-items/UI-FIX-002.md` |
 | 3 | `UI-REF-001` | nothing, `UI-002` has merged | `docs/work-items/UI-REF-001.md` |
 | 4 | `FORM-001` | `PAGE-002` | `docs/work-items/FORM-001.md` |
 | 5 | `OPS-002` | everything above | `docs/work-items/OPS-002.md` |
 
 `I18N-FIX-001` and `UI-FIX-001` touch dictionaries and `LegalPage.astro`
-respectively. `UI-002` has merged, so its collision warning no longer applies;
-what remains is that **`I18N-FIX-001` and `PAGE-002` both edit `fr.ts` and
-`en.ts`**. Their hunks are far apart, the footer keys against the Contact keys,
-so the merge stays automatic, but the second of the two to land should rebase
-rather than assume.
+respectively. `UI-002` has merged, so its collision warning no longer applies,
+and `PAGE-002` has landed its `contact` block, so the `fr.ts` collision it was
+warned about is resolved: `I18N-FIX-001` now rebases onto a `fr.ts` that already
+carries those keys, far from the footer keys it edits.
+
+**Next up, not yet written as an item**: the footer reorganisation. The updated
+`Footer.dc.html` moves the contact details into their own column, sends `About`
+down to Legal, and finally publishes an email and a phone number. That unblocks
+D069, whose error state and no-JavaScript fallback on the Contact page are still
+worded for a site that publishes no channel at all.
 
 `I18N-FIX-001` cannot start until its replacement wording is approved by the
 founder. It is blocked on a decision, not on code.
