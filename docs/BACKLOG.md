@@ -28,6 +28,7 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | `OPS-001` | Duplicate Cloudflare Pages project deleted, step 1 of 1 |
 | `UI-002` | Light-surface switch across the whole site, five-column footer |
 | `I18N-001` | The handoff copy deltas: both heroes, the consulting service name, the English leadership role |
+| `I18N-FIX-001` | The residual-string sweep: ten values still carrying the pre-handoff positioning, plus a stale comment |
 
 ## Open, in dependency order
 
@@ -35,23 +36,31 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 |---|---|---|---|
 | 0 | `SITE-FIX-002` | nothing, and see below | `docs/work-items/SITE-FIX-002.md` |
 | 0 | `SITE-CHR-002` | nothing | `docs/work-items/SITE-CHR-002.md` |
-| 1 | `I18N-FIX-001` | `I18N-001` | `docs/work-items/I18N-FIX-001.md` |
+| 0 | `SITE-FIX-007` | nothing | `docs/work-items/SITE-FIX-007.md` |
 | 1 | `UI-FIX-001` | nothing | `docs/work-items/UI-FIX-001.md` |
+| 1 | `SEO-FIX-001` | `I18N-FIX-001`, merged | `docs/work-items/SEO-FIX-001.md` |
 | 3 | `PAGE-002` | nothing, `UI-002` has merged | `docs/work-items/PAGE-002.md` |
 | 3 | `UI-FIX-002` | nothing, `UI-002` has merged | `docs/work-items/UI-FIX-002.md` |
 | 3 | `UI-REF-001` | nothing, `UI-002` has merged | `docs/work-items/UI-REF-001.md` |
 | 4 | `FORM-001` | `PAGE-002` | `docs/work-items/FORM-001.md` |
 | 5 | `OPS-002` | everything above | `docs/work-items/OPS-002.md` |
 
-`I18N-FIX-001` and `UI-FIX-001` touch dictionaries and `LegalPage.astro`
-respectively. `UI-002` has merged, so its collision warning no longer applies;
-what remains is that **`I18N-FIX-001` and `PAGE-002` both edit `fr.ts` and
-`en.ts`**. Their hunks are far apart, the footer keys against the Contact keys,
-so the merge stays automatic, but the second of the two to land should rebase
-rather than assume.
+**`SITE-FIX-007` is order 0 for the same reason `SITE-FIX-002` is.** It corrects
+two lines of `REVIEWER.md` that contradict `CLAUDE.md`, one of which tells every
+reviewer that Services come before Products. Until it lands, each round can raise
+a blocker against a correct site, and an unattended round has nobody to catch it.
+Run it before the next review, not after.
 
-`I18N-FIX-001` cannot start until its replacement wording is approved by the
-founder. It is blocked on a decision, not on code.
+**`SEO-FIX-001` waits on nothing technical**, only on the copy: the two Open Graph
+thumbnails must carry the wording `I18N-FIX-001` settled, so they are exported
+after it merges. It needs a founder ruling on the line each thumbnail carries.
+
+**Watch the D-numbers.** Three unmerged branches currently claim overlapping
+rows: `feat/page-contact` reserves D064 to D069, `fix/procedure-de-revue` D064 to
+D066 and `fix/worktree-de-revue-r3` D064 to D065. Whoever merges second has to
+renumber. Grep every branch before reserving, as the header of `DECISIONS.md`
+already says, and do not assume the highest row on `refonte-multipages` is the
+highest row that exists.
 
 **Order 0 touches no page and no token.** `SITE-FIX-002` edits the review
 procedure, `SITE-CHR-002` edits a review file. Both are safe at any moment and
