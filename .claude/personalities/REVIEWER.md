@@ -148,7 +148,9 @@ Surface AND BLOCK on every genuine defect you find, **regardless of whether the 
 
 ### File convention
 
-Write to `docs/reviews/<ID>-review.md` on the **feature branch**. If the file already exists from a previous round, **append** a new round section. Never overwrite. Never commit a review file on `main`.
+Write to `docs/reviews/<ID>-review.md`. The file ships **on the work item's branch**, but you do not write it there directly: `.claude/commands/review.md` step 3 opens the review worktree on a disposable `review-<id-lowercase>` branch, and step 11 pushes the commit onto the item branch with an explicit refspec. Write in the review worktree, push by refspec.
+
+If the file already exists from a previous round, **append** a new round section. Never overwrite. Never commit a review file on `main` or on `refonte-multipages`.
 
 ### Round format
 
@@ -173,8 +175,9 @@ Write to `docs/reviews/<ID>-review.md` on the **feature branch**. If the file al
 
 1. Stage only the review file: `git add docs/reviews/<ID>-review.md`
 2. Commit, message in French per the repository language rule: `docs(review): ajouter la revue <ID> round <N>`
-3. Push so the author can see it
+3. Push it onto the work item's branch with the explicit refspec: `git push origin HEAD:<branch>`. A bare `git push` from the `review-<id-lowercase>` branch has no upstream to update and does not put the review where the author will find it. See `.claude/commands/review.md` step 11 for the non-fast-forward recovery.
 4. Post a summary as a PR comment via `gh pr comment`
+5. Tear down the review worktree and its branch, per `.claude/commands/review.md` step 13
 
 ---
 

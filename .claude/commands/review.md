@@ -47,7 +47,11 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
 
 1. Read the item doc if it exists, to understand the intended scope, the acceptance criteria and what was declared out of scope.
 2. Find the branch: `git branch -a | grep -i <slug>`, or `gh pr view <num> --json headRefName`.
-3. **Create a worktree on a dedicated review branch, forked from the work item's branch (MANDATORY)**, so the review commit ships to that branch without detaching:
+3. **Create a worktree on a dedicated review branch, forked from the work item's branch (MANDATORY),** so the review commit ships to that branch without detaching.
+
+   *Why.* Checking out `<branch>` directly (the old form) fails silently into a detached HEAD whenever the author's own worktree still holds it, which is the common case during a review; the loss only surfaces at step 11, when the push has no branch to update. The two guards below turn that into a loud failure here instead. The first catches `git worktree add` itself failing, for instance because `review-<id-lowercase>` already exists from a prior round that was not torn down (see step 13). The second catches a detachment if the add somehow succeeds without landing on a branch. Chaining them with `||` on the same command they check, rather than as an unconditional next line, is what stops the second guard from firing against a worktree that was never created.
+
+   *Do this:*
    ```
    git fetch origin
    git worktree add .claude/worktrees/review-<ID> -b review-<id-lowercase> origin/<branch> \
@@ -55,8 +59,8 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
    git -C .claude/worktrees/review-<ID> symbolic-ref -q HEAD >/dev/null \
      || { echo "detached HEAD, stop"; exit 1; }
    ```
-   Checking out `<branch>` directly (the old form) fails silently into a detached HEAD whenever the author's own worktree still holds it, which is the common case during a review; the loss only surfaces at step 11, when the push has no branch to update. The two guards above turn that into a loud failure here instead: the first catches `git worktree add` itself failing (for instance because `review-<id-lowercase>` already exists from a prior round that was not torn down, see step 13), the second catches a detachment if the add somehow succeeds without landing on a branch. Chaining them with `||` on the same command they check, rather than as an unconditional next line, is what stops the second guard from firing against a worktree that was never created. **All subsequent work MUST happen inside `.claude/worktrees/review-<ID>/`.** Use absolute paths. You are **read-only on source**: never modify a source file, never fix a defect yourself. You report; the author fixes.
-4. `git diff origin/refonte-multipages...<branch> --stat`, then read every changed file. The base is `refonte-multipages`, the integration branch, never `main`.
+   **All subsequent work MUST happen inside `.claude/worktrees/review-<ID>/`.** Use absolute paths. You are **read-only on source**: never modify a source file, never fix a defect yourself. You report; the author fixes.
+4. `git diff origin/refonte-multipages...origin/<branch> --stat`, then read every changed file. The base is `refonte-multipages`, the integration branch, never `main`. Diff `origin/<branch>`, the same ref step 3 forked the review worktree from, not the local `<branch>`: the two coincide almost always, and reviewing one content while diffing another is exactly the class of silent divergence this procedure exists to remove.
 5. Read the relevant context:
    - `CLAUDE.md` - the authoritative contract
    - `docs/vitrine/refonte/PROMPT_altaryslabs-com-refonte.md` - the primary spec for the rebuild
@@ -86,7 +90,7 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
    - **Code quality** - components reused, copy in the dictionaries, French comments, no dead code
    - **Deployment** - static output, Functions under `/functions`, D1 binding still commented out, no secret, PR targets `refonte-multipages`
    - **Maximal bar** - block on every verified defect whatever its origin
-10. Write the review to `docs/reviews/<ID>-review.md` **on the work item's branch**:
+10. Write the review to `docs/reviews/<ID>-review.md` **in the review worktree, on the `review-<id-lowercase>` branch step 3 created**. Step 11 is what puts it on the work item's branch, by refspec:
     - If the file already exists from a previous round, **append** a new `## Round N` section. Never overwrite.
     - Determine N by counting existing `## Round` headings and adding 1.
     - Use the round format from `.claude/personalities/REVIEWER.md`.
@@ -97,16 +101,26 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
     git commit -m "docs(review): ajouter la revue <ID> round <N>"
     git push origin HEAD:<branch>
     ```
+    If that push is rejected as non-fast-forward, the author pushed to `<branch>` during the round. Do not force. Replay the branch tip under the review commit, then push again:
+    ```
+    git fetch origin
+    git rebase origin/<branch>
+    git push origin HEAD:<branch>
+    ```
+    Re-read the incoming commits before pushing: if they change the code under review, the round's findings may already be stale, and saying so in the round is part of the verdict.
 12. Post the verdict plus a short summary as a PR comment: `gh pr comment <PR-number> --body-file <temp-summary-file>`. **Never open a separate review PR.**
-13. **Tear down the review worktree and its branch (MANDATORY, do this before the round ends), from the repository's main checkout, never from inside the worktree you are about to remove:**
-    ```
-    cd ../../..   # back out of .claude/worktrees/review-<ID>/ to the repository root
-    git worktree remove .claude/worktrees/review-<ID> --force
-    git branch -D review-<id-lowercase>
-    ```
-    `git worktree remove` deletes its own working directory; a shell whose cwd no longer exists cannot run the next command, so `git branch -D` fails with "Unable to read current working directory" and the branch survives (verified). This is why the `cd` above comes first, not why it can be skipped.
+13. **Tear down the review worktree and its branch (MANDATORY, do this before the round ends).**
 
-    `review-<id-lowercase>` is disposable: its only job was to carry the review commit without detaching, and that commit already lives on `<branch>` since step 11. Leaving it behind makes `git worktree add -b review-<id-lowercase> ...` fail on the very next round of this same item, since git refuses to recreate a branch that already exists - the round-2 failure mode step 3's guard cannot itself detect, because it happens one command earlier. If this step is somehow skipped and a stale `review-<id-lowercase>` is found at the start of a later round, delete it before step 3 rather than working around it.
+    *Why.* `review-<id-lowercase>` is disposable: its only job was to carry the review commit without detaching, and that commit already lives on `<branch>` since step 11. Left behind, it makes `git worktree add -b review-<id-lowercase> ...` fail on the very next round of this same item, since git refuses to recreate a branch that already exists. That failure is caught, loudly, by step 3's first guard, which stops on "worktree add failed, stop"; what the teardown buys is a next round that starts at all, not a blind spot in the guards. If a stale `review-<id-lowercase>` is nonetheless found at the start of a later round, delete it before step 3 rather than working around it.
+
+    *Where from.* Run these **from the directory the round started in**, which is where step 3 created the review worktree, and **never from inside the worktree being removed**: `git worktree remove` deletes its own working directory, and a shell whose current directory no longer exists cannot run the next command, so `git branch -D` fails with "Unable to read current working directory" and the branch survives (verified). That starting directory is the root of the work item's own worktree, since `bin/reviewer` and `bin/autonomous_reviewer` are invoked from there (see D058) and both `cd` to their containing checkout before launching. Worktree and branch operations reach the whole repository from any of its worktrees, so `-C` plus absolute paths keep these two commands correct wherever the shell happens to sit.
+
+    *Do this*, substituting that starting directory for `<START_DIR>` (`git rev-parse --show-toplevel`, run there, gives it):
+    ```
+    git -C <START_DIR> worktree remove <START_DIR>/.claude/worktrees/review-<ID>
+    git -C <START_DIR> branch -D review-<id-lowercase>
+    ```
+    If the first command refuses because the worktree is dirty, **stop and look**: on a review worktree the only thing that can be uncommitted is a review file that step 11 failed to commit, which is precisely the state worth rescuing. Push it, then remove. Add `--force` only once you have confirmed nothing is unsaved.
 
 ---
 
@@ -114,7 +128,7 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
 
 1. `git diff origin/refonte-multipages...HEAD --stat` to see the branch's changes.
 2. Infer the ID from the branch name, the PR title or the changed paths.
-3. Follow steps 5 to 12 above.
+3. Follow steps 5 to 13 above, with three of them inapplicable on this path rather than merely skipped by a step number: **steps 3, 4 and 13 do not apply.** This path reviews the branch already checked out, so no review worktree is opened and there is nothing to tear down. Step 11 is unchanged and still uses the explicit refspec, which works as written from the checked-out branch.
 
 ---
 

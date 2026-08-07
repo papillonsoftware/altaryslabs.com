@@ -1,9 +1,9 @@
 # SITE-FIX-002 - The review worktree lands on a detached HEAD
 
-**Type** FIX | **Status** OPEN, not started | **Branch to create** `fix/worktree-de-revue`
+**Type** FIX | **Status** OPEN, second delivery in review | **Branches** `fix/worktree-de-revue` (merged, PR #21), then `fix/worktree-de-revue-r3` (closing round 3)
 **Base** `refonte-multipages`
 
-**Decisions** D052 in `docs/DECISIONS.md`.
+**Decisions** D052, D054, D064 and D065 in `docs/DECISIONS.md`.
 
 **Observed on** the R1 round of `PAGE-001`, 31 July 2026.
 
@@ -79,3 +79,51 @@ The guard is the part that actually matters. It converts a silent failure at ste
 3. `.claude/reviewer-append.txt` describes the same procedure as `review.md`. They cannot diverge: both reviewer launchers read the append file, and a divergence between an attended and an unattended round is exactly the drift the shared file exists to prevent.
 4. The chosen option is recorded as a D-row, with the rejected one named.
 5. Verified by actually running a round, not by reading. A procedure defect that was invisible to reading is what created this item.
+
+---
+
+## Second delivery: closing round 3 (branch `fix/worktree-de-revue-r3`)
+
+PR #21 shipped Option A and was merged on 7 August with round 3 still at CHANGES
+REQUESTED. The remaining findings are closed on a follow-up branch rather than by
+reopening the merged PR. Rounds 1 to 3 stay exactly as written in
+`docs/reviews/SITE-FIX-002-review.md`; a merged record is annotated, never
+rewritten (D053).
+
+Round 3's blocker, step 6 mandating a `code-review` skill that D033 had retired,
+**closed itself**: SITE-FIX-004 reinstated the skill in both files (D056, D057)
+and was merged into the base. No action was owed on it.
+
+What this delivery changes:
+
+| Round 3 finding | Fix |
+|---|---|
+| IMPORTANT, step 13 claimed a residual branch escapes step 3's guards | The clause is deleted. The first guard does catch it, verified by replay; what the teardown buys is a next round that starts at all |
+| IMPORTANT, "steps 5 to 12" excluded the mandatory step 13 | The no-ID path now names steps 3, 4 and 13 inapplicable and says why. See D065 |
+| IMPORTANT, three documents disagreed on where the review file lives | `review.md` step 10 and `REVIEWER.md` file-convention and commit sections all now describe the review worktree plus the refspec push. Acceptance criterion 3 holds across all three |
+| IMPORTANT, step 13 opened on `cd`, absent from the autonomous allowlist | Rewritten with `git -C` and absolute paths, no `cd` at all. The allowlist is left untouched: adding an entry for a command the procedure no longer contains would put back the dead entry SITE-FIX-001 deliberately removed |
+| IMPORTANT, launchers seed the reviewer from a possibly stale tree | `bin/lib/fraicheur.sh`, sourced by both launchers. See D064 |
+| SUGGESTION, relative path in step 13 | Closed by the `git -C` rewrite |
+| SUGGESTION, `--force` masks an uncommitted review file | Plain remove first; force only after confirming nothing is unsaved |
+| SUGGESTION, no exit from a non-fast-forward push | Step 11 documents the rebase recovery, and warns that incoming commits may have staled the round's findings |
+| SUGGESTION, step 4 diffed the local ref, step 3 forked the remote one | Step 4 now diffs `origin/<branch>` |
+| SUGGESTION, rationale fused with instruction | Steps 3 and 13 split into why, where from, and do this |
+| SUGGESTION, `CLAUDE.md` hero lines | Out of scope, tracked by `I18N-001` |
+
+Two latent bugs were found and fixed while writing the guard, neither reported by
+any round: both launchers resolved `$(dirname "$0")` **after** `cd`, which breaks
+on a relative `$0`; and the guard's own first draft inherited that shape.
+
+### Verification actually run
+
+- Step 3 nominal, in the exact D052 scenario: `refs/heads/review-test-r4`, no detachment.
+- Step 3 collision, `review-test-r4` pre-existing: `fatal: a branch named 'review-test-r4' already exists`, non-zero exit, first guard fires. This is what makes the corrected step 13 wording true.
+- Step 13 as written, `git -C` plus absolute paths, no `--force`: worktree and branch both gone, no residue.
+- Freshness guard, three cases: current tree passes; tree 27 commits behind exits 1 with the remediation printed; non-git directory exits 1.
+
+### Not covered here
+
+The autonomous allowlist entry `Bash(npm ci:*)` does not match the compound form
+(`cd <worktree> && npm ci`) a reviewer naturally writes for step 7. Rounds 1 to 3
+ran regardless, so the harness tolerates it. Flagged, not changed: it is a
+pre-existing shape and outside this item's scope.

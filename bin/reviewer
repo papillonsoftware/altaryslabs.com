@@ -12,7 +12,15 @@
 #
 # Le reviewer ne fusionne jamais et ne modifie jamais la source.
 set -euo pipefail
-cd "$(dirname "$0")/.."
+# Racine resolue en absolu AVANT le cd : apres, un $0 relatif ne resout plus.
+RACINE="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$RACINE"
+
+# Refuse de demarrer si cet arbre est en retard sur origin/refonte-multipages :
+# les instructions du relecteur seraient perimees. Voir bin/lib/fraicheur.sh.
+. "$RACINE/bin/lib/fraicheur.sh"
+verifier_fraicheur
+
 claude --system-prompt-file .claude/personalities/REVIEWER.md \
        --append-system-prompt "$(cat .claude/reviewer-append.txt)" \
        --model opus "$@"
