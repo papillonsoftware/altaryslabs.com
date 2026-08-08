@@ -48,14 +48,28 @@ export const LOCALE_LABEL: Record<Locale, string> = {
  * sans que deux rondes de revue le voient. Les composants lisent cette table,
  * indexee par la langue de la page.
  *
- * LE MOTIF EST PLUS REPANDU QU'IL N'EN A L'AIR, et il se lit mal a la source.
- * La ronde 1 de cet item a trouve une troisieme occurrence que ma recherche
- * avait manquee, `LegalPage.astro`, et le rebalayage qui a suivi en a trouve
- * deux autres dans l'autre sens, `ProductCard.astro` et `ServiceCard.astro`,
- * qui servaient un deux-points colle en francais. Un grep de la source ne les
- * voit pas toutes : elles ne sont pas toutes dans un litteral gabarit, ni
- * toutes dans un `aria-label`. **Le balayage qui fait foi se fait sur le HTML
- * produit, dans les deux langues.** Voir D124 et la fiche I18N-FIX-003.
+ * LE MOTIF SE LIT MAL A LA SOURCE, ET PAS MIEUX DANS LE HTML PRODUIT. Deux
+ * rondes de revue ont ete necessaires pour l'etablir, chacune en demolissant la
+ * methode de verification de la precedente.
+ *
+ * La ronde 1 a trouve une occurrence qu'un grep de la source avait manquee,
+ * `LegalPage.astro`, parce que les occurrences ne partagent aucune forme
+ * syntaxique : litteral gabarit ici, texte de balisage nu la, premier caractere
+ * d'un span ailleurs.
+ *
+ * La ronde 2 a montre que le HTML produit ne fait pas foi non plus des qu'il
+ * s'agit d'un NOM ACCESSIBLE. Un nom calcule depuis les descendants n'est pas
+ * le texte du balisage : Chrome insere une espace a la frontiere entre elements
+ * en ligne quand le texte accumule n'en finit pas deja par une. Le HTML disait
+ * `>Learn more<span>: Papillon...`, et le navigateur annoncait
+ * "Learn more : Papillon...". Douze liens anglais etaient donc encore faux
+ * apres un correctif qui semblait juste dans `dist/`, et deux "defauts"
+ * francais diagnostiques a la ronde 1 n'avaient jamais existe.
+ *
+ * **LE BALAYAGE QUI FAIT FOI MESURE LES NOMS ACCESSIBLES CALCULES**, par
+ * `Accessibility.getFullAXTree` sur le site servi, et non le texte de `dist/`.
+ * Ce dernier reste l'autorite pour le texte visible, et pour lui seul.
+ * Voir D124, D133 et la fiche I18N-FIX-003.
  */
 export const LABEL_SEPARATOR: Record<Locale, string> = {
   fr: ' : ',

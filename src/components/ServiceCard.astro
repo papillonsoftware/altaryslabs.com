@@ -12,9 +12,10 @@ import { LABEL_SEPARATOR, type Locale } from '../i18n/config';
 interface Props {
   name: string;
   /**
-   * Langue de la page, pour le seul separateur du nom accessible du lien.
-   * Le deux-points y etait ecrit en dur, donc colle dans les deux langues, ce
-   * que le francais ne fait pas. Voir D124.
+   * Langue de la page, pour le separateur du nom accessible du lien.
+   * Meme raison que dans `ProductCard.astro`, ou elle est expliquee : le nom
+   * est un `aria-label` plat parce qu'un nom calcule depuis les descendants se
+   * voit inserer une espace a la frontiere des elements en ligne. Voir D133.
    */
   locale: Locale;
   text: string;
@@ -33,9 +34,9 @@ const Heading = `h${headingLevel}` as 'h2' | 'h3';
 <article class:list={['card', large ? 'card--prominent card--large' : 'card--service']}>
   <Heading class="card-title">{name}</Heading>
   <p class="card-text">{text}</p>
-  <a class="link-arrow" href={href}>
+  {/* Nom accessible PLAT, et non compose de descendants. Voir D133. */}
+  <a class="link-arrow" href={href} aria-label={`${linkLabel}${LABEL_SEPARATOR[locale]}${name}`}>
     {linkLabel}
-    <span class="visually-hidden">{LABEL_SEPARATOR[locale]}{name}</span>
   </a>
 </article>
 
