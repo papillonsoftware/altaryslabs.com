@@ -777,3 +777,288 @@ PR a livre `SITE-FIX-007` et redige cinq D-rows sans relire ce qu'elle laissait
 autour, si bien que D127 ne rend pas comme une ligne de tableau, que le backlog
 annonce encore le formulaire de contact comme un travail a faire, et que la
 ligne meme qui impose le « Suite » le laisse tomber a sa seconde mention.
+
+## Round 4 - 2026-08-08
+**Verdict**: CHANGES REQUESTED
+
+Ronde conduite sur la **PR #39**, branche `fix/commentaire-en-ts`, base
+`origin/refonte-multipages`, HEAD `5edc74f`. Worktree de revue
+`.claude/worktrees/review-I18N-FIX-002`, non detache, sur la branche jetable
+`review-i18n-fix-002` forkee de `origin/fix/commentaire-en-ts`. Reviewer
+independant, session fraiche, aucune continuite de contexte avec les rondes
+precedentes.
+
+Un seul commit est arrive depuis la ronde 3, `5edc74f`, qui traite ses six
+constats et deux de ses trois suggestions. Diff mesure contre l'integration :
+**18 fichiers, 1165 insertions, 51 suppressions**. Trois valeurs de
+dictionnaire, deux PNG, un commentaire de code, le reste documentaire. Aucun
+fichier de page, de composant, de style, de configuration ou de fonction n'est
+touche.
+
+### Les constats de la ronde 3, verifies un par un
+
+- **Constat 1, D127 hors tableau** : leve. La ligne est remontee juste apres
+  D123 et les deux paragraphes de reserve restent en dessous. Verifie non pas
+  en comptant des barres mais en passant le fichier entier au rendu reel :
+  `gh api -X POST /markdown -f mode=gfm` sur `docs/DECISIONS.md` donne
+  **zero ligne `<p>| D`**. Toutes les D-rows sont des cellules.
+- **Constat 2, `docs/BACKLOG.md`** : leve, et au-dela du constat. `FORM-001`
+  sort des ouverts, sept items fusionnes entrent aux livres (`SITE-FIX-007`,
+  `SEO-FIX-001`, `UI-003`, `UI-004`, `UI-FIX-003`, `UI-005`, `FORM-001`,
+  `FORM-FIX-001`, `SITE-FIX-010`), `SITE-FIX-012` et `SITE-FIX-013` entrent aux
+  ouverts, la date de tete passe au 8 aout et le paragraphe sur le formulaire
+  inerte est remplace par l'etat reel. La fiche `UI-002` passe a DONE. Les sept
+  hachages cites ont ete verifies ancetres de `origin/refonte-multipages`.
+- **Constat 3, `REVIEWER.md:61`** : leve. La phrase porte
+  « Papillon Corporate Finance Suite » sur ses **deux** mentions.
+- **Constat 4, citation desaccentuee d'`UI-FIX-004`** : leve. Les deux chaines
+  sont a nouveau greppables :
+  `grep -c "Société par Actions Simplifiée Unipersonnelle" dist/en/legal-notice/index.html`
+  donne 1, et `Derrière la pharmacie Rédemption` donne 1 egalement.
+- **Constat 5, saut D124 a D126** : leve. La note existe, sur le modele des deux
+  autres, et elle est exacte : `origin/fix/typographie-des-libelles-anglais`
+  detient bien D124, D125, D126, D128 et D133, et saute D127.
+- **Constat 6, plage de lignes fausse de `PAGE-003`** : leve par retrait plutot
+  que par correction. La citation reste verbatim et donc greppable.
+- **Suggestion 1, le garde du `node -e`** : traitee. Le garde a ete execute sur
+  ses deux chemins : avec `</head>` il renvoie exactement les quatre pages de
+  corps, sans `</head>` il leve `Error: no </head> in <fichier>` au lieu de
+  sortir zero page en silence.
+- **Suggestion 2, le compte de reecritures d'`I18N-FIX-001.md`** : traitee.
+- **Suggestion 3, la langue du commentaire d'en-tete** : non traitee. Reprise
+  ci-dessous, et **reclassee**, voir l'important 4.
+
+### Sur les deux points laisses ouverts par l'auteur
+
+- **La plage de lignes fausse laissee dans la ronde 1 de ce fichier.** Le
+  raisonnement tient et cette ronde le confirme. Une revue est un enregistrement
+  date : la corriger a posteriori efface la trace de ce que la ronde a
+  reellement ecrit, et le depot pratique deja l'annotation plutot que la
+  reecriture, `I18N-FIX-001-review.md` ayant recu un bloc `Continuite` ajoute
+  au-dessus de sa ronde 1 sans que son texte bouge. L'erreur est de surcroit
+  neutralisee la ou elle pouvait nuire : la ronde 3 la mesure et publie la
+  plage exacte, et `PAGE-003` ne porte plus de plage du tout. Aucun lecteur ne
+  peut plus etre induit en erreur sans lire aussi sa correction.
+- **Le commentaire d'en-tete de `src/i18n/en.ts`.** Chaque phrase falsifiable du
+  bloc a ete testee une par une, commande par commande, contre le `dist/` de ce
+  worktree. **Aucune n'est fausse.** Le detail est sous « Ce qui a ete verifie
+  et qui passe ». Il n'y a pas de cinquieme forme du defaut : la classe est
+  morte, l'auteur ayant change de mode grammatical plutot que de formulation.
+  Ce qui reste est la langue du bloc, et c'est un autre sujet, traite comme tel
+  a l'important 4.
+
+### Ce qui a ete verifie et qui passe
+
+- **Build**, relance independamment dans le worktree de revue apres `npm ci` :
+  `npm run build` sort **26 pages**, `npm run check` sort **0 erreur, 0
+  avertissement, 0 indice**. Aucun `any`, aucun `@ts-ignore`, `en.ts` importe
+  toujours `Dictionary` depuis `./fr`.
+- **Parite FR/EN mesuree cle par cle** en important les deux dictionnaires et en
+  aplatissant les objets : **176 feuilles de chaque cote, ensemble vide dans les
+  deux sens**, aucune divergence de type, aucune longueur de tableau
+  differente. Les sept valeurs vides sont les `pageTagline.*` des pages sans
+  tagline, vides des deux cotes. Les dix-neuf valeurs identiques d'une langue a
+  l'autre ont ete ouvertes une par une : ce sont des noms propres, des noms de
+  produits et des mots identiques dans les deux langues (`Services`, `Contact`,
+  `Message`, `Email`, `Abidjan, Côte d'Ivoire`). Aucune fuite de francais dans
+  une page anglaise ni l'inverse.
+- **Chaque phrase falsifiable du commentaire d'en-tete d'`en.ts`, testee
+  separement** sur le `dist/` de ce worktree :
+  `find dist/en -name index.html | wc -l` donne **13** ;
+  `grep -rl "business-law zone"` renvoie `about`, `index`, `products`,
+  `products/papillon-hr-suite` ; `grep -rl "insurance zone"` renvoie `about`,
+  `index`, `products`, `products/pcs` ; les deux moities ne voyagent donc pas
+  ensemble, exactement comme le bloc l'annonce. Le `node -e` renvoie les quatre
+  memes pages de corps et exclut PCS. Sur `dist/en/products/pcs/index.html`,
+  `insurance zone` apparait **3 fois avant `</head>` et 0 fois apres**, ce qui
+  est mot pour mot ce que le bloc et D119 decrivent. `Available Q3 2026`
+  n'existe qu'a `src/i18n/en.ts:62`, aucun literal ne le repete.
+- **Vignettes de partage** : `bin/og_images --check` sort **0**, deux
+  `inchangee`. Les valeurs livrees correspondent a la citation de D122,
+  `collections` au pluriel cote anglais, point final present des deux cotes.
+- **Surface reellement touchee**, le menu deroulant de l'en-tete, mesuree par le
+  protocole DevTools a 1440 px sur `/en`, panneau blanc de **288 px** :
+  `Premium and instalment collection in the CIMA zone` tient en **2 lignes**,
+  `Budgeting aligned with the SYSCOHADA accounting standard` aussi, en
+  `rgb(91, 100, 114)` soit `--slate-body`, **contraste 5,98:1 sur `#FFFFFF`**,
+  AA tenu a 11,5 px. Aucun debordement.
+- **Rendu verifie dans le navigateur**, sur le `dist/` de ce worktree.
+  `astro preview` a glisse jusqu'au port **4323**, 4321 et 4322 etant pris par
+  d'autres worktrees ; propriete confirmee par
+  `lsof -a -p 29981 -d cwd`, qui donne bien
+  `.claude/worktrees/review-I18N-FIX-002`. 18 captures produites par
+  `bin/review_shots` a 360, 768 et 1440 px sur `/`, `/produits`,
+  `/produits/pcs`, `/en`, `/en/products`, `/en/products/pcs`, plusieurs ouvertes
+  a l'oeil pour ecarter le defaut `SITE-FIX-009` : ce sont bien les pages
+  attendues, aucune 404 d'Astro.
+- **Fidelite a la maquette** : prototypes relus a la RACINE du projet de design
+  `53d1c228`, jamais dans `design_handoff_altaryslabs_refonte/`. Rien n'est
+  copie d'un `.dc.html` ni de `support.js` ; la PR ne touche d'ailleurs aucun
+  composant. Non-regression visuelle constatee sur les six pages capturees.
+- **Garde-fous editoriaux** : aucun prix, aucun nom de client ou de partenaire,
+  aucune date exacte, aucune figure inventee, aucun temoignage. Trois produits,
+  « Papillon Corporate Finance Suite » avec sa « Suite » partout dans le rendu,
+  aucune mention d'ALTARYS ENTERPRISE hors du commentaire de `tokens.css` qui
+  explique son retrait.
+- **Marque** : aucun hex en dur ajoute dans `src/`, aucun violet, aucun ambre,
+  aucun teal. Produits avant Services verifie sur les deux accueils a 1440 px.
+- **SEO** : rien n'est sorti de `BaseLayout.astro`, les deux `og:image` pointent
+  sur deux fichiers presents dans `public/`, sitemap et `robots.txt`
+  inchanges.
+- **Deploiement** : sortie statique, aucun adaptateur, `wrangler.jsonc`,
+  `astro.config.mjs`, `package.json` et `functions/` absents du diff, aucun
+  secret. La PR vise bien `refonte-multipages`.
+- **Typographie** : aucun cadratin, aucun point median, ni dans les lignes
+  ajoutees du diff ni dans les messages de commit.
+
+### Blockers
+
+Aucun. Le site est propre a tous les postes mesures ci-dessus, et le
+commentaire qui a porte quatre versions fausses n'en porte plus aucune. Ce qui
+suit bloque neanmoins la ronde : la barre maximale du depot bloque sur tout
+defaut verifie, quelle qu'en soit l'origine.
+
+### Important
+
+- [ ] **[IMPORTANT]** `docs/work-items/UI-002.md:6-7` - **La fiche se contredit
+  a une ligne d'intervalle.** La ligne 3 lit « merged on 2026-08-07 as
+  `1291501` », ce qui est exact ; la ligne 6 ajoute que le statut est reste
+  « OPEN, not started » jusqu'a la ronde 3 d'`I18N-FIX-002`, **« a month after
+  the branch shipped »**. Mesure : `1291501` est date du **2026-08-07**, le
+  commit qui livre `UI-002`, `79dcce8`, du **2026-08-05**, et `5edc74f`, qui
+  corrige le statut, du **2026-08-08**. L'ecart est de moins de 21 heures
+  depuis la fusion, de 3 jours depuis la livraison. Le mois n'existe pas. Le
+  defaut est neuf, la phrase entiere etant ecrite par `5edc74f`, et il s'agit
+  exactement de la matiere que ce fil combat : une affirmation chiffree posee
+  a l'indicatif, dans un document, sans mesure.
+  -> Ecrire « the day after the branch merged », ou retirer la duree et ne
+  garder que les deux dates, qui sont deja dans le fichier.
+
+- [ ] **[IMPORTANT]** `docs/DECISIONS.md:134` - **Le compte de versions de D119
+  s'est incremente et la D-row ne l'a pas suivi.** Elle lit « Counted from
+  `git log` on `src/i18n/en.ts`, **four versions preceded the current one** :
+  `12025d9`, `5873c71`, `1818413` and `2678c6f` ». Mesure par extraction du bloc
+  de commentaire de tete a chaque commit touchant `src/i18n/en.ts`, puis
+  comparaison des blocs deux a deux : il existe **six textes distincts**, de 16,
+  27, 36, 40, 44 et 45 lignes, produits par `12025d9`, `5873c71`, `1818413`,
+  `2678c6f`, `c7cc75f` et `5edc74f`. **Cinq versions precedent donc l'actuelle,
+  et `c7cc75f` manque a l'enumeration.** L'enonce etait juste quand `c7cc75f`
+  l'a ecrit, `c7cc75f` etant alors l'actuelle ; `5edc74f` a modifie le
+  commentaire pour y poser le garde du `node -e` et a laisse le compte derriere
+  lui. C'est mot pour mot ce que D119 elle-meme reproche a un compte, « a claim
+  that increments itself », applique cette fois a la ligne qui le dit. Mesure
+  reproduite deux fois de facon independante pendant cette ronde.
+  -> Soit ajouter `c7cc75f` et lire « five versions », soit supprimer le compte
+  et ne garder que l'enumeration des versions **fausses**, qui elle ne bouge
+  plus : `12025d9`, `5873c71`, `1818413`, `2678c6f`. La seconde voie est celle
+  que D119 recommande partout ailleurs.
+
+- [ ] **[IMPORTANT]** `docs/BACKLOG.md:104` et `docs/work-items/UI-002.md:8` -
+  **`SITE-FIX-014` est nomme deux fois comme le remede, et n'existe nulle part
+  dans l'arbre.** `ls docs/work-items/ | grep SITE-FIX-014` ne renvoie rien,
+  `grep -n "SITE-FIX-014" docs/DECISIONS.md` ne renvoie rien, et l'item n'est
+  dans aucun des deux tableaux du backlog. Ses deux freres `SITE-FIX-012` et
+  `SITE-FIX-013`, ajoutes par cette PR meme, ont l'un et l'autre leur fiche,
+  leur D-row et leur ligne dans « Open ». D113, deja fusionnee dans cette
+  branche, enonce la regle et nomme ce motif : « The repository rule is that an
+  out-of-scope defect materialises as a work item **plus** a D-row [...] Both
+  were abandonments wearing the costume of a follow-up, and both were caught by
+  review. » L'item existe reellement, sur `origin/fix/docs-check`, mais rien ne
+  le dit ici, alors que le fichier sait parfaitement le dire pour les reserves
+  de numeros : « D115 to D118 are reserved by `SITE-FIX-011` on branch [...],
+  not yet merged ». Le backlog est justement le fichier dont la ligne 3 declare
+  qu'il existe pour qu'une session fraiche n'ait pas a reconstruire l'etat.
+  -> Ajouter la meme mention qu'aux reserves de numeros, « held by another
+  session on branch `fix/docs-check`, not yet merged », aux deux endroits ; ou
+  inscrire `SITE-FIX-014` dans « Open » avec son renvoi de branche.
+
+- [ ] **[IMPORTANT]** `src/i18n/en.ts:3-47` - **Le commentaire d'en-tete est en
+  anglais, et cette ronde le reclasse en important.** `CLAUDE.md`, section
+  « Critical Rules > Language », ecrit : « **All specs, documentation, code
+  comments and commit messages** : French for comments and commits on this repo,
+  English for specs ». La regle ne menage aucune exception, et le fichier
+  lui-meme demontre la convention : les deux commentaires voisins, celui
+  d'`availability` aux lignes 57 a 60 et celui d'`ogSubtitle` a la ligne 144,
+  sont en francais. Le bloc n'est pas du code preexistant intouche : cette PR en
+  est l'auteur, ses versions 3, 4 et 5 ayant toutes ete ecrites sous cet item.
+  **Pourquoi la regle tranche, alors que trois rondes l'ont laisse en
+  suggestion.** Une suggestion couvre le gout et l'incertain ; ici il n'y a ni
+  l'un ni l'autre. La phrase de `CLAUDE.md` est explicite, le constat est
+  verifie, et le qualifier d'ambigu une quatrieme fois revient a le declasser
+  sans le dire, ce que la barre maximale interdit au reviewer. Le vrai defaut
+  n'est d'ailleurs plus la langue : c'est qu'une question posee trois fois n'a
+  toujours pas de reponse ecrite, si bien qu'une cinquieme ronde la reposera.
+  -> Deux issues, et une seule est a exclure, celle de ne rien ecrire. Soit
+  traduire le bloc en francais, soit ouvrir une D-row qui acte l'exemption et
+  sa raison, par exemple qu'un bloc citant des chaines anglaises et prescrivant
+  des greps anglais se lit mieux dans cette langue. Dans les deux cas la
+  question est close pour de bon. Seul le fondateur peut trancher, et le bloc
+  du merge est le sien a lever.
+
+### Suggestions
+
+- **[SUGGESTION]** `docs/work-items/I18N-FIX-001.md:66` - La phrase ajoutee par
+  `5edc74f` porte la ligne a **105 caracteres** alors que tout le fichier tient
+  a 80. Rien ne l'impose mecaniquement, mais la coupure est visible en revue
+  diff. -> Rehabiller le paragraphe sur trois lignes.
+
+### Correctness (code-review skill)
+
+Passe generique executee via `code-review:code-review` sur la PR #39, nom
+pleinement qualifie, sans option (D082). Controle d'eligibilite : PR ouverte,
+non brouillon, non triviale, sans commentaire de revue automatique anterieur du
+greffon ; la passe est allee jusqu'a son etape 8 et a publie son propre
+commentaire sur la PR, distinct du commentaire consolide de cette ronde.
+
+Cinq agents de revue en parallele : conformite `CLAUDE.md`, balayage de defauts
+sur le diff seul, contexte d'historique `git`, commentaires des PR anterieures,
+et guidance portee par les commentaires de code.
+
+Constats retenus apres verification contre le code, tous deja portes ci-dessus
+et non dupliques :
+
+- **[IMPORTANT]** `docs/work-items/UI-002.md:6` - « a month » contredit `git` et
+  contredit la ligne 3 du meme fichier. Leve independamment par deux agents.
+- **[IMPORTANT]** `docs/DECISIONS.md:134` - compte de versions de D119 en
+  retard d'une unite. Leve par l'agent d'historique, avec la meme mesure que
+  celle conduite en direct.
+- **[IMPORTANT]** `docs/BACKLOG.md:104` - `SITE-FIX-014` sans fiche ni D-row,
+  contre D113. Leve independamment par deux agents.
+- **[IMPORTANT]** `src/i18n/en.ts:3-47` - commentaire d'en-tete en anglais
+  contre la regle de langue de `CLAUDE.md`. Leve par l'agent de conformite.
+
+Constats remontes par la passe puis **ecartes** apres verification, pour que le
+prochain lecteur n'ait pas a les reinstruire :
+
+- « `pageTagline.productsPcs` porte `CIMA` nu et non la forme maison » :
+  **ecarte**. Le bloc exempte nommement « a column too narrow to hold it », et
+  la mesure DevTools montre un panneau de 288 px ou la valeur actuelle tient
+  deja en deux lignes ; la forme developpee en ajouterait une troisieme. C'est
+  precisement le cas d'exemption decrit.
+- « `IT consulting` dans `home.ogSubtitle` n'apparait verbatim sur aucune page
+  anglaise » : **ecarte**. Le libelle rendu est
+  `IT, HR & Corporate Finance Consulting` ; la vignette paraphrase un service
+  reel, elle n'en invente pas. La regle de D101 interdit d'affirmer ce que le
+  site ne dit pas, pas de resumer ce qu'il dit.
+- « Des constats de rondes anterieures resteraient ouverts » : **ecarte**.
+  Les six constats et deux des trois suggestions de la ronde 3 ont ete
+  reverifies un par un contre l'arbre, et non contre les messages de commit ;
+  tous sont leves. Les rondes 1 et 2, ainsi que les revues d'`I18N-001` et
+  d'`I18N-FIX-001`, portent sur des versions du commentaire et de la tagline
+  qui n'existent plus.
+- « Une affirmation du commentaire d'en-tete serait encore fausse » :
+  **ecarte, et c'est le resultat principal de cette ronde**. Chaque phrase
+  falsifiable a ete testee separement, y compris le garde du `node -e` sur ses
+  deux chemins ; aucune n'est fausse.
+
+### Summary
+
+Le commentaire qui a porte quatre versions fausses n'en porte plus aucune :
+chaque phrase falsifiable a ete testee une par une et tient, le garde ajoute
+fonctionne sur ses deux chemins, et il n'y a pas de cinquieme forme du defaut.
+Le site reste propre a tous les postes mesures, build vert a 26 pages, parite
+exacte a 176 cles, palette, garde-fous, SEO, accessibilite et fidelite visuelle.
+Ce qui bloque est de nouveau entierement documentaire, et de nouveau de la meme
+famille : `5edc74f` a corrige six affirmations fausses et en a ecrit une
+nouvelle, « a month » la ou il y a un jour, tout en laissant le compte de D119
+vieillir d'un cran en modifiant le fichier qu'il compte.
