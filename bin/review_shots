@@ -1,0 +1,157 @@
+#!/usr/bin/env node
+// ALTARYS LABS - altaryslabs.com
+// Captures de controle visuel pour une ronde de revue.
+//
+// Une SEULE instance de Chrome pour tous les rendus, pilotee par le protocole
+// DevTools. Relancer Chrome a chaque capture coutait plusieurs secondes par
+// rendu, et c'etait le premier poste de temps d'une ronde, devant npm ci.
+//
+// Le protocole DevTools est aussi le seul moyen d'obtenir un vrai viewport
+// mobile : `--window-size` de Chrome headless plafonne la fenetre a 500px de
+// large, si bien qu'une capture demandee a 360px rend en realite a 500px et
+// se contente d'en rogner la gauche. Emulation.setDeviceMetricsOverride ne
+// souffre pas de cette limite.
+//
+// `prefers-reduced-motion: reduce` est force : sans cela les blocs en
+// apparition au defilement restent invisibles sur une capture pleine page.
+//
+// Usage : bin/review_shots <base-url> <dossier-sortie> <chemin> [<chemin>...]
+//   ex. : bin/review_shots http://localhost:4321 /tmp/revue / /a-propos /en/about
+//
+// Produit un PNG par couple chemin x largeur, aux trois largeurs de la
+// Definition of Done : 360, 768 et 1440 px.
+
+import { spawn } from 'node:child_process';
+import { existsSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
+const WIDTHS = [360, 768, 1440];
+
+const CHROME =
+  process.env.CHROME ||
+  [
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/usr/bin/google-chrome',
+    '/usr/bin/chromium',
+  ].find((p) => existsSync(p));
+
+const [baseUrl, outDir, ...paths] = process.argv.slice(2);
+
+if (!baseUrl || !outDir || paths.length === 0) {
+  console.error('Usage : bin/review_shots <base-url> <dossier-sortie> <chemin> [<chemin>...]');
+  process.exit(2);
+}
+if (!CHROME) {
+  console.error('Chrome introuvable. Definir la variable CHROME.');
+  process.exit(2);
+}
+
+mkdirSync(outDir, { recursive: true });
+
+const port = 9400 + (process.pid % 500);
+// Hors du dossier de sortie : le reviewer ne doit y trouver que des captures.
+const profile = join(tmpdir(), `altarys-review-chrome-${process.pid}`);
+
+const chrome = spawn(
+  CHROME,
+  [
+    '--headless=new',
+    '--disable-gpu',
+    '--hide-scrollbars',
+    `--remote-debugging-port=${port}`,
+    `--user-data-dir=${profile}`,
+  ],
+  { stdio: 'ignore' },
+);
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Chrome met un instant a ouvrir son port de debogage.
+let ready = false;
+for (let i = 0; i < 60; i++) {
+  try {
+    await fetch(`http://127.0.0.1:${port}/json/version`);
+    ready = true;
+    break;
+  } catch {
+    await sleep(250);
+  }
+}
+if (!ready) {
+  chrome.kill();
+  console.error('Chrome n a pas ouvert son port de debogage.');
+  process.exit(1);
+}
+
+const tab = await (await fetch(`http://127.0.0.1:${port}/json/new?about:blank`, { method: 'PUT' })).json();
+const ws = new WebSocket(tab.webSocketDebuggerUrl);
+let id = 0;
+const pending = new Map();
+
+ws.addEventListener('message', (ev) => {
+  const msg = JSON.parse(ev.data);
+  if (msg.id && pending.has(msg.id)) {
+    pending.get(msg.id)(msg.result);
+    pending.delete(msg.id);
+  }
+});
+
+await new Promise((r) => ws.addEventListener('open', r));
+
+const send = (method, params = {}) =>
+  new Promise((resolve) => {
+    const n = ++id;
+    pending.set(n, resolve);
+    ws.send(JSON.stringify({ id: n, method, params }));
+  });
+
+await send('Page.enable');
+await send('Emulation.setEmulatedMedia', {
+  features: [{ name: 'prefers-reduced-motion', value: 'reduce' }],
+});
+
+const written = [];
+
+for (const path of paths) {
+  for (const width of WIDTHS) {
+    await send('Emulation.setDeviceMetricsOverride', {
+      width,
+      height: 900,
+      deviceScaleFactor: 1,
+      mobile: width < 700,
+    });
+    await send('Page.navigate', { url: `${baseUrl}${path}` });
+    await sleep(1800);
+
+    const { data } = await send('Page.captureScreenshot', {
+      format: 'png',
+      captureBeyondViewport: true,
+    });
+
+    const slug = (path === '/' ? 'home' : path.replace(/^\//, '').replace(/\//g, '-')) + `-${width}`;
+    const file = `${outDir}/${slug}.png`;
+    writeFileSync(file, Buffer.from(data, 'base64'));
+    written.push(file);
+    console.log(file);
+  }
+}
+
+ws.close();
+chrome.kill();
+
+// Chrome ecrit encore dans son profil au moment ou il reçoit le signal :
+// supprimer immediatement echoue avec ENOTEMPTY. On attend sa sortie, et le
+// nettoyage ne doit jamais faire echouer un script dont le travail est fait.
+await new Promise((resolve) => {
+  chrome.once('exit', resolve);
+  setTimeout(resolve, 3000);
+});
+try {
+  rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+} catch {
+  // Profil temporaire laisse en place, sans consequence.
+}
+
+console.error(`${written.length} captures dans ${outDir}`);
+process.exit(0);

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0; background:#F6F2E9;}
+  a{color:#B8791E;}
+  a:hover{color:#8B5E1B;}
+</style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif;">
+  <dc-import name="Header" active="home" lang="{{ lang }}" onSetLang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+  <section style="padding:120px 64px 100px; text-align:center; position:relative; overflow:hidden; background:#07111E;">
+    <div style="position:absolute; inset:0; background: repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(200,146,42,.03) 79px, rgba(200,146,42,.03) 80px), repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(200,146,42,.03) 79px, rgba(200,146,42,.03) 80px);"></div>
+    <div style="position:relative; max-width:920px; margin:0 auto;">
+      <a href="produits-pcs.dc.html" style="display:inline-flex; align-items:center; gap:10px; background:rgba(200,146,42,.1); border:1px solid rgba(200,146,42,.25); padding:8px 18px; border-radius:100px; text-decoration:none; margin-bottom:36px;">
+        <span style="width:6px; height:6px; border-radius:50%; background:#C8922A;"></span>
+        <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; color:#E5B55A;">{{ t.badge }}</span>
+      </a>
+      <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(38px,5vw,64px); color:#FAF7F2; line-height:1.15; margin:0 0 28px;">
+        {{ t.heroLine1 }}<br>
+        <em style="color:#E5B55A; font-style:italic;">{{ t.heroLine2 }}</em>
+      </h1>
+      <p style="font-size:17px; color:#9AA7BE; line-height:1.7; max-width:660px; margin:0 auto 44px;">{{ t.heroSub }}</p>
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+        <a href="contact.dc.html" style="background:#C8922A; color:#07111E; padding:15px 28px; border-radius:5px; text-decoration:none; font-weight:600; font-size:15px;">{{ t.ctaContact }}</a>
+        <a href="produits.dc.html" style="border:1px solid rgba(200,146,42,.4); color:#E5B55A; padding:15px 28px; border-radius:5px; text-decoration:none; font-weight:500; font-size:15px;">{{ t.ctaProduits }}</a>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:96px 64px; background:#F6F2E9;">
+    <div style="max-width:1400px; margin:0 auto;">
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.35em; color:#B8791E; text-transform:uppercase; margin-bottom:12px;">{{ t.produitsLabel }}</p>
+      <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(26px,3vw,38px); color:#1A2740; margin:0 0 48px;">{{ t.produitsTitle }}</h2>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+        <div style="background:#FFFFFF; border-radius:8px; padding:36px 32px; border:1px solid rgba(26,39,64,.08); display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(26,39,64,.04);">
+          <span style="display:inline-block; align-self:flex-start; font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.1em; color:#07111E; background:#E5B55A; padding:4px 12px; border-radius:100px; margin-bottom:20px;">{{ t.pcsTag }}</span>
+          <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:24px; color:#1A2740; margin:0 0 12px;">Papillon Collection Solution</h3>
+          <p style="font-size:13.5px; color:#5B6472; line-height:1.7; margin:0 0 24px; flex:1;">{{ t.pcsDesc }}</p>
+          <a href="produits-pcs.dc.html" style="color:#B8791E; text-decoration:none; font-size:13.5px; font-weight:500;">{{ t.more }} &#8594;</a>
+        </div>
+        <div style="background:#FFFFFF; border-radius:8px; padding:36px 32px; border:1px solid rgba(26,39,64,.08); display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(26,39,64,.04);">
+          <span style="display:inline-block; align-self:flex-start; font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.1em; color:#B8791E; background:rgba(200,146,42,.12); padding:4px 12px; border-radius:100px; margin-bottom:20px;">{{ t.hrTag }}</span>
+          <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:24px; color:#1A2740; margin:0 0 12px;">Papillon HR Suite</h3>
+          <p style="font-size:13.5px; color:#5B6472; line-height:1.7; margin:0 0 24px; flex:1;">{{ t.hrDesc }}</p>
+          <a href="produits-hr.dc.html" style="color:#B8791E; text-decoration:none; font-size:13.5px; font-weight:500;">{{ t.more }} &#8594;</a>
+        </div>
+        <div style="background:#FFFFFF; border-radius:8px; padding:36px 32px; border:1px solid rgba(26,39,64,.08); display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(26,39,64,.04);">
+          <span style="display:inline-block; align-self:flex-start; font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.1em; color:#B8791E; background:rgba(200,146,42,.12); padding:4px 12px; border-radius:100px; margin-bottom:20px;">{{ t.cfTag }}</span>
+          <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:24px; color:#1A2740; margin:0 0 12px;">Papillon Corporate Finance</h3>
+          <p style="font-size:13.5px; color:#5B6472; line-height:1.7; margin:0 0 24px; flex:1;">{{ t.cfDesc }}</p>
+          <a href="produits-cf.dc.html" style="color:#B8791E; text-decoration:none; font-size:13.5px; font-weight:500;">{{ t.more }} &#8594;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:96px 64px; background:#07111E;">
+    <div style="max-width:1400px; margin:0 auto;">
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.35em; color:rgba(200,146,42,.65); text-transform:uppercase; margin-bottom:12px;">{{ t.servicesLabel }}</p>
+      <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(26px,3vw,38px); color:#E5B55A; margin:0 0 48px;">{{ t.servicesTitle }}</h2>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+        <div style="background:#101d30; border-radius:8px; padding:36px 32px; border:1px solid rgba(255,255,255,.06);">
+          <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:22px; color:#FAF7F2; margin:0 0 12px;">{{ t.conseilTitle }}</h3>
+          <p style="font-size:13.5px; color:#8B98AF; line-height:1.7; margin:0 0 20px;">{{ t.conseilDesc }}</p>
+          <a href="services-conseil.dc.html" style="color:#E5B55A; text-decoration:none; font-size:13.5px; font-weight:500;">{{ t.discover }} &#8594;</a>
+        </div>
+        <div style="background:#101d30; border-radius:8px; padding:36px 32px; border:1px solid rgba(255,255,255,.06);">
+          <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:22px; color:#FAF7F2; margin:0 0 12px;">{{ t.devTitle }}</h3>
+          <p style="font-size:13.5px; color:#8B98AF; line-height:1.7; margin:0 0 20px;">{{ t.devDesc }}</p>
+          <a href="services-dev.dc.html" style="color:#E5B55A; text-decoration:none; font-size:13.5px; font-weight:500;">{{ t.discover }} &#8594;</a>
+        </div>
+        <div style="background:#101d30; border-radius:8px; padding:36px 32px; border:1px solid rgba(255,255,255,.06);">
+          <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:22px; color:#FAF7F2; margin:0 0 12px;">{{ t.iaTitle }}</h3>
+          <p style="font-size:13.5px; color:#8B98AF; line-height:1.7; margin:0 0 20px;">{{ t.iaDesc }}</p>
+          <a href="services-ia.dc.html" style="color:#E5B55A; text-decoration:none; font-size:13.5px; font-weight:500;">{{ t.discover }} &#8594;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:96px 64px; background:#F6F2E9;">
+    <div style="max-width:900px; margin:0 auto; text-align:center;">
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.35em; color:#B8791E; text-transform:uppercase; margin-bottom:16px;">ALTARYS LABS</p>
+      <p style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(22px,2.6vw,30px); color:#1A2740; line-height:1.5; margin:0 0 20px;">{{ t.institutional }}</p>
+    </div>
+  </section>
+
+  <section style="padding:80px 64px; background:linear-gradient(135deg, #1A2740, #0F1724); text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(24px,2.8vw,34px); color:#FAF7F2; margin:0 0 28px;">{{ t.finalCta }}</h2>
+    <a href="contact.dc.html" style="background:#C8922A; color:#07111E; padding:16px 32px; border-radius:5px; text-decoration:none; font-weight:600; font-size:15px;">{{ t.ctaContact }}</a>
+  </section>
+
+  <dc-import name="Footer" lang="{{ lang }}" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const T = {
+  fr: {
+    badge: "Papillon Collection Solution, disponible T3 2026",
+    heroLine1: "Votre partenaire technologique pour les entreprises Africaines.",
+    heroLine2: "Zone OHADA et CIMA",
+    heroSub: "Ressources humaines, finance d'entreprise et recouvrement de créances, trois domaines où nos suites logicielles et notre expertise conseil accompagnent la croissance des entreprises.",
+    ctaContact: "Contactez notre équipe commerciale",
+    ctaProduits: "Découvrir nos produits",
+    produitsLabel: "Nos produits",
+    produitsTitle: "Trois suites SaaS pensées pour l'OHADA et le CIMA",
+    pcsTag: "T3 2026", hrTag: "SaaS RH & Paie", cfTag: "SaaS Finance",
+    pcsDesc: "Automatise le renouvellement de contrats et la relance de primes des assureurs et courtiers de la zone CIMA, par SMS, WhatsApp et email.",
+    hrDesc: "Ressources humaines et paie conformes OHADA, pensée pour les PME de 2 à 350 employés, offline-first et mobile-first.",
+    cfDesc: "Budgétisation conforme SYSCOHADA pour les directions financières des PME de la zone OHADA, dépenses et engagements.",
+    more: "En savoir plus",
+    servicesLabel: "Nos services",
+    servicesTitle: "Une expertise sectorielle au service de vos projets",
+    conseilTitle: "Conseil IT, RH & Corporate Finance",
+    conseilDesc: "Accompagnement des entreprises OHADA sur leurs systèmes d'information, leurs processus RH et leur gestion financière.",
+    devTitle: "Développement sur mesure",
+    devDesc: "Applications web et mobiles, intégrations et architectures cloud-native conçues pour vos besoins métier.",
+    iaTitle: "IA souveraine",
+    iaDesc: "Solutions d'aide à la décision alimentées par une IA souveraine, hébergée et opérée en Afrique.",
+    discover: "Découvrir",
+    institutional: "Une SASU de droit ivoirien, active sur les zones OHADA et CIMA, portée par une équipe d'experts techniques et fonctionnels expérimentés en banque, en assurance et dans la mise en oeuvre de systèmes métiers complexes et sécurisés.",
+    finalCta: "Discutons de votre projet",
+  },
+  en: {
+    badge: "Papillon Collection Solution, available Q3 2026",
+    heroLine1: "Technology solutions for businesses across Africa.",
+    heroLine2: "OHADA and CIMA regions",
+    heroSub: "Human resources, corporate finance and receivables collection, three domains where our software suites and consulting expertise support business growth.",
+    ctaContact: "Talk to our sales team",
+    ctaProduits: "Discover our products",
+    produitsLabel: "Our products",
+    produitsTitle: "Three SaaS suites built for OHADA and CIMA",
+    pcsTag: "Q3 2026", hrTag: "HR & Payroll SaaS", cfTag: "Finance SaaS",
+    pcsDesc: "Automates policy renewals and premium reminders for insurers and brokers across the CIMA region, via SMS, WhatsApp and email.",
+    hrDesc: "OHADA-compliant HR and payroll, built for SMEs of 2 to 350 employees, offline-first and mobile-first.",
+    cfDesc: "SYSCOHADA-compliant budgeting for finance departments of OHADA SMEs, expenses and commitments.",
+    more: "Learn more",
+    servicesLabel: "Our services",
+    servicesTitle: "Sector expertise serving your projects",
+    conseilTitle: "IT, HR & Corporate Finance Consulting",
+    conseilDesc: "Supporting OHADA businesses on their information systems, HR processes and financial management.",
+    devTitle: "Custom Development",
+    devDesc: "Web and mobile applications, integrations and cloud-native architectures built for your business needs.",
+    iaTitle: "Sovereign AI",
+    iaDesc: "Decision support solutions powered by sovereign AI, hosted and operated in Africa.",
+    discover: "Discover",
+    institutional: "A single-shareholder company under Ivorian law, active across the OHADA and CIMA regions, driven by a team of technical and functional experts experienced in banking, insurance, and the delivery of complex, secure business systems.",
+    finalCta: "Let's talk about your project",
+  },
+};
+class Component extends DCLogic {
+  state = { lang: (typeof localStorage !== 'undefined' && localStorage.getItem('altarys-lang')) || 'fr' };
+  setLang = (l) => {
+    this.setState({ lang: l });
+    try { localStorage.setItem('altarys-lang', l); } catch (e) {}
+  };
+  renderVals() {
+    return { lang: this.state.lang, setLang: this.setLang, t: T[this.state.lang] };
+  }
+}
+</script>
+</body>
+</html>

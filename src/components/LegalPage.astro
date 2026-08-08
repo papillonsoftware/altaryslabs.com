@@ -1,0 +1,158 @@
+---
+/**
+ * Mise en page des pages legales.
+ *
+ * Le texte juridique vit directement dans les pages, une par langue, et non
+ * dans les dictionnaires : c'est un document, pas une interface, et le
+ * decouper en centaines de cles rendrait toute relecture par un avocat
+ * impraticable.
+ *
+ * Colonne etroite, pas de carte, pas d'accent dore : ces pages doivent se lire,
+ * pas se vendre.
+ */
+import PageHeader from './PageHeader.astro';
+import { LABEL_SEPARATOR, type Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/utils';
+import type { PageKey } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  pageKey: PageKey;
+  /** Phrase d'introduction affichee sous le titre. */
+  intro?: string;
+}
+
+const { locale, pageKey, intro } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<PageHeader
+  label={t.legal.sectionLabel}
+  title={t.pageName[pageKey]}
+  intro={intro}
+  align="left"
+/>
+
+<section class="section section--light legal-section">
+  <div class="container">
+    <div class="legal-body">
+      {/* Separateur lu dans la langue, jamais ecrit ici : cette ligne servait
+          "Last updated : 30 July 2026" sur les deux pages legales anglaises, et
+          c'est du texte visible, non un libelle accessible. Voir D124. */}
+      <p class="legal-updated mono">{t.legal.lastUpdated}{LABEL_SEPARATOR[locale]}{t.legal.updatedOn}</p>
+
+      {
+        /* La version anglaise est fournie a titre informatif. Le dire est
+           necessaire : une traduction non certifiee ne peut pas faire foi. */
+        locale === 'en' && (
+          <p class="legal-prevails">
+            This English version is provided for information only. In the event of any discrepancy,
+            the French version prevails.
+          </p>
+        )
+      }
+
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .legal-section {
+    padding-top: 0;
+    padding-bottom: 96px;
+  }
+
+  .legal-body {
+    max-width: 820px;
+  }
+
+  /* ATTENTION : ces deux regles sont actuellement SANS EFFET sur la couleur et
+     la taille. `.legal-body :global(p)` plus bas a une specificite superieure
+     et les ecrase, si bien que les deux paragraphes s'affichent en --muted a
+     14.5px. Le contraste reel est donc bon, par accident.
+     Les valeurs passent quand meme de --ink-25 et --ink-40 a --ink-60 : le jour
+     ou la collision de specificite sera corrigee, la regle ne doit pas se
+     reveiller a 2.09:1. La collision elle-meme est hors perimetre de UI-001,
+     elle est signalee a la porte de fin. D029. */
+  .legal-updated {
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--ink-60);
+    margin-bottom: 40px;
+  }
+
+  .legal-prevails {
+    font-size: 13px;
+    color: var(--ink-60);
+    line-height: 1.7;
+    border-left: 2px solid var(--gold-30);
+    padding-left: 16px;
+    margin-bottom: 40px;
+  }
+
+  /* Styles appliques au contenu passe en slot, donc non scope. */
+  .legal-body :global(h2) {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--gold-light);
+    margin-top: 44px;
+    margin-bottom: 14px;
+  }
+
+  .legal-body :global(h3) {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ivory);
+    margin-top: 28px;
+    margin-bottom: 10px;
+  }
+
+  .legal-body :global(p) {
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+
+  .legal-body :global(ul) {
+    list-style: none;
+    margin-bottom: 16px;
+  }
+
+  .legal-body :global(li) {
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.8;
+    padding-left: 18px;
+    position: relative;
+  }
+
+  .legal-body :global(li::before) {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 5px;
+    height: 5px;
+    border: 1px solid var(--gold);
+    transform: rotate(45deg);
+  }
+
+  .legal-body :global(a) {
+    color: var(--gold-light);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .legal-body :global(a:hover) {
+    color: var(--gold);
+  }
+
+  .legal-body :global(strong) {
+    color: var(--ink-100);
+    font-weight: 500;
+  }
+</style>

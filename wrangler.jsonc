@@ -1,0 +1,70 @@
+{
+  // Configuration Cloudflare Pages pour altaryslabs.com
+  // Le build Astro produit ./dist ; les Pages Functions vivent dans ./functions
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Doit correspondre EXACTEMENT au nom du projet Cloudflare Pages, verifie le
+  // 2026-08-07 par l'API : `altaryslabscom`, sous-domaine altaryslabscom.pages.dev,
+  // branche de production `refonte-multipages`. Le build depuis Git ne lit pas ce
+  // champ, mais toute commande wrangler lancee a la main le suit : desynchronise,
+  // un `wrangler pages deploy` cree un second projet au lieu de viser celui-ci.
+  // C'est l'incident du 31 juillet 2026, dont le doublon a ete supprime sans que
+  // personne ait note ce qu'il contenait. Voir D099.
+  "name": "altaryslabscom",
+  "compatibility_date": "2026-07-30",
+  "pages_build_output_dir": "./dist",
+
+  // Base D1 des demandes du formulaire de contact.
+  // Creee le 2026-08-07 : npx wrangler d1 create altaryslabs-contact, region WEUR.
+  // Schema dans ./migrations, applique par :
+  //   npx wrangler d1 migrations apply altaryslabs-contact --remote
+  //
+  // Le "database_id" n'est pas un secret, mais un bloc portant un identifiant
+  // factice fait echouer le build Cloudflare Pages et pas seulement le binding
+  // local : ne jamais laisser ici une valeur de remplacement. Et ne jamais
+  // oublier la virgule apres "pages_build_output_dir".
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "altaryslabs-contact",
+      "database_id": "fa214f09-2b7c-40e4-8695-32e39622cf0a"
+    }
+  ]
+
+  // VARIABLES DU FORMULAIRE DE CONTACT. Leur liste, leur caractere obligatoire
+  // ou facultatif et le comportement en leur absence sont enumeres a un seul
+  // endroit : l'interface "Env" de functions/api/contact.ts. Ce fichier n'en
+  // porte volontairement ni la liste ni le compte, qui ont deja diverge deux
+  // fois du code. Voir D110.
+  //
+  // Ce qui appartient en propre a ce fichier, et ne se trouve nulle part
+  // ailleurs :
+  //
+  //   - Les variables se posent dans le dashboard Cloudflare Pages
+  //     (Settings > Variables and Secrets), sur Production ET Preview, jamais en
+  //     dur ici.
+  //   - Les cles se posent avec le type "Secret", et jamais "Text". Un secret en
+  //     clair est lisible par quiconque ouvre l'ecran, et se retrouve dans la
+  //     premiere capture partagee pour demander de l'aide.
+  //   - Une variable de type "Text" est INERTE sur ce projet, pour la raison
+  //     expliquee juste en dessous. Ne pas en creer une en croyant qu'elle sera
+  //     lue : c'est ce qui a coute trois demandes de contact sans notification.
+  //     Voir D100 et D106.
+  //
+  // IL N'Y A PLUS AUCUNE VARIABLE DE BUILD, et c'est delibere. La cle de site
+  // Turnstile vit desormais dans src/i18n/config.ts. Le piege qui a impose ce
+  // choix, et qui explique aussi l'inertie annoncee plus haut : des lors que ce
+  // fichier porte "pages_build_output_dir", il devient la source de verite de la
+  // configuration du projet, et AUCUNE VARIABLE EN CLAIR DU DASHBOARD N'ATTEINT
+  // PLUS LE PROJET, NI AU BUILD NI A L'EXECUTION. Seuls les secrets y restent
+  // gerables.
+  //
+  // Au build, le journal l'annonce : "Build environment variables: (none found)"
+  // alors que la variable est bien posee dans les deux environnements, ce qui
+  // envoie chercher l'erreur du mauvais cote pendant longtemps. A l'execution il
+  // n'y a aucun journal du tout, la fonction lit simplement undefined.
+  //
+  // NE PAS REPETER LA FORME COURTE de cette regle ("Cloudflare cesse de lire les
+  // variables du dashboard pour le build") : elle est vraie, incomplete, et
+  // laisse croire que l'execution, elle, fonctionne. Voir D115, qui complete
+  // D100.
+}

@@ -1,0 +1,103 @@
+---
+/**
+ * Vagues de deploiement d'un produit.
+ *
+ * Le lisere superieur s'eclaircit d'une vague a l'autre : ce qui est le plus
+ * proche est le plus affirme. Les libelles sont exprimes en annee ou en
+ * charniere d'annees, jamais en date precise, conformement a la regle qui
+ * interdit toute deadline interne sur une page publique.
+ */
+interface Wave {
+  label: string;
+  text: string;
+}
+
+interface Props {
+  sectionLabel: string;
+  title: string;
+  intro: string;
+  waves: readonly Wave[];
+}
+
+const { sectionLabel, title, intro, waves } = Astro.props;
+---
+
+<section class="section section--deep">
+  <div class="container">
+    <p class="section-label">{sectionLabel}</p>
+    <h2 class="roadmap-title">{title}</h2>
+    <p class="roadmap-intro">{intro}</p>
+
+    <ol class="roadmap-grid fade-in">
+      {
+        waves.map((wave, index) => (
+          <li class:list={['wave', `wave-${index + 1}`]}>
+            <p class="wave-label mono">{wave.label}</p>
+            <p class="wave-text">{wave.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .roadmap-title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 34px);
+    font-weight: 300;
+    color: var(--gold-light);
+    margin-bottom: 20px;
+  }
+
+  .roadmap-intro {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.75;
+    max-width: 760px;
+    margin-bottom: 40px;
+  }
+
+  .roadmap-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    list-style: none;
+  }
+
+  .wave {
+    background: var(--navy-mid);
+    border-radius: var(--radius-card);
+    padding: 28px;
+    border-top: 2px solid var(--gold-25);
+  }
+
+  /* Le lisere s'affirme a mesure que l'echeance se rapproche. */
+  .wave-1 {
+    border-top-color: var(--gold);
+  }
+
+  .wave-2 {
+    border-top-color: var(--gold-40);
+  }
+
+  .wave-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 10px;
+  }
+
+  .wave-text {
+    font-size: 14px;
+    color: var(--ink-80);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 900px) {
+    .roadmap-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;}
+  a{color:#C8922A;}
+  a:hover{color:#E5B55A;}
+</style>
+</helmet>
+<footer style="background:#040C16; border-top:1px solid rgba(255,255,255,.06); padding:64px 64px 28px; font-family:'DM Sans',sans-serif;">
+  <div style="display:grid; grid-template-columns:1.3fr .9fr .9fr .7fr .9fr; gap:32px; max-width:1400px; margin:0 auto 48px;">
+    <div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+        <svg width="28" height="26" viewBox="0 0 76 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="38,4 74,37 38,68 2,37" fill="none" stroke="#C8922A" stroke-width="2"></polygon>
+          <line x1="26" y1="57" x2="38" y2="17" stroke="#C8922A" stroke-width="3" stroke-linecap="round"></line>
+          <line x1="50" y1="57" x2="38" y2="17" stroke="#C8922A" stroke-width="3" stroke-linecap="round"></line>
+          <line x1="29" y1="46" x2="47" y2="46" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"></line>
+        </svg>
+        <span style="font-family:'DM Sans',sans-serif; font-weight:700; font-size:14.5px; letter-spacing:2.5px; color:#FAF7F2;">ALTARYS <span style="color:#E5B55A; font-family:'Space Mono',monospace; font-weight:700; font-size:10px; letter-spacing:3px;">LABS</span></span>
+      </div>
+      <p style="font-size:13px; color:#6B7A96; line-height:1.75; max-width:280px;">{{ t.tagline }}</p>
+    </div>
+    <div>
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.2em; color:#C8922A; text-transform:uppercase; margin-bottom:18px;">{{ t.produits }}</p>
+      <div style="display:flex; flex-direction:column; gap:11px;">
+        <a href="produits-pcs.dc.html" style="color:#9AA7BE; text-decoration:none; font-size:13.5px;">Papillon Collection Solution</a>
+        <a href="produits-hr.dc.html" style="color:#9AA7BE; text-decoration:none; font-size:13.5px;">Papillon HR Suite</a>
+        <a href="produits-cf.dc.html" style="color:#9AA7BE; text-decoration:none; font-size:13.5px;">Papillon Corporate Finance</a>
+      </div>
+    </div>
+    <div>
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.2em; color:#C8922A; text-transform:uppercase; margin-bottom:18px;">{{ t.services }}</p>
+      <div style="display:flex; flex-direction:column; gap:11px;">
+        <a href="services-conseil.dc.html" style="color:#9AA7BE; text-decoration:none; font-size:13.5px;">{{ t.conseil }}</a>
+        <a href="services-dev.dc.html" style="color:#9AA7BE; text-decoration:none; font-size:13.5px;">{{ t.dev }}</a>
+        <a href="services-ia.dc.html" style="color:#9AA7BE; text-decoration:none; font-size:13.5px;">{{ t.ia }}</a>
+      </div>
+    </div>
+    <div>
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.2em; color:#C8922A; text-transform:uppercase; margin-bottom:18px;">{{ t.entreprise }}</p>
+      <div style="display:flex; flex-direction:column; gap:11px;">
+        <a href="mailto:contact@altaryslabs.com" style="color:#9AA7BE; text-decoration:none; font-size:13.5px;">{{ t.emailLabel }} contact@altaryslabs.com</a>
+        <a href="tel:+2250720522269" style="color:#9AA7BE; text-decoration:none; font-size:13.5px; white-space:nowrap;">{{ t.phoneLabel }}<br></br>+225 07 20 52 22 69</a>
+        <a href="contact.dc.html" style="color:#9AA7BE; text-decoration:none; font-size:13.5px;">{{ t.contactForm }}</a>
+      </div>
+    </div>
+    <div>
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.2em; color:#C8922A; text-transform:uppercase; margin-bottom:18px;">{{ t.legal }}</p>
+      <div style="display:flex; flex-direction:column; gap:11px;">
+        <a href="mentions-legales.dc.html" style="color:#9AA7BE; text-decoration:none; font-size:13.5px;">{{ t.mentions }}</a>
+        <a href="confidentialite.dc.html" style="color:#9AA7BE; text-decoration:none; font-size:13.5px;">{{ t.confidentialite }}</a>
+        <a href="a-propos.dc.html" style="color:#9AA7BE; text-decoration:none; font-size:13.5px;">{{ t.apropos }}</a>
+      </div>
+    </div>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,.05); padding-top:22px; max-width:1400px; margin:0 auto; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+    <p style="font-family:'Space Mono',monospace; font-size:10.5px; color:rgba(255,255,255,.25); letter-spacing:.03em;">{{ t.rccm }}</p>
+    <p style="font-family:'Space Mono',monospace; font-size:10.5px; color:rgba(255,255,255,.25);">Abidjan, Côte d'Ivoire, 2026</p>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:300},&quot;lang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;fr&quot;,&quot;options&quot;:[&quot;fr&quot;,&quot;en&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+const T = {
+  fr: { tagline: "Solutions technologiques pour les entreprises d'Afrique OHADA et CIMA.", produits:'Produits', services:'Services', entreprise:'Contact', apropos:'À propos', contact:'Contact', conseil:'Conseil IT, RH & Finance', dev:'Développement sur mesure', ia:'IA souveraine', legal:'Légal', mentions:'Mentions légales', confidentialite:'Confidentialité', rccm:'ALTARYS LABS, SASU de droit ivoirien, RCCM CI-ABI-03-2026-B17-00070', emailLabel:'E-mail:', phoneLabel:'Téléphone:', contactForm:'Formulaire de contact' },
+  en: { tagline:'Technology solutions for businesses across OHADA and CIMA Africa.', produits:'Products', services:'Services', entreprise:'Contact', apropos:'About', contact:'Contact', conseil:'IT, HR & Finance Consulting', dev:'Custom Development', ia:'Sovereign AI', legal:'Legal', mentions:'Legal notice', confidentialite:'Privacy', rccm:'ALTARYS LABS, single-shareholder company under Ivorian law, RCCM CI-ABI-03-2026-B17-00070', emailLabel:'E-mail:', phoneLabel:'Phone:', contactForm:'Contact form' },
+};
+class Component extends DCLogic {
+  renderVals() {
+    return { t: T[this.props.lang || 'fr'] };
+  }
+}
+</script>
+</body>
+</html>

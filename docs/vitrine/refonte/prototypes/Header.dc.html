@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;}
+  a{color:#B8791E;}
+  a:hover{color:#8B5E1B;}
+</style>
+</helmet>
+<header style="position:sticky; top:0; z-index:50; background:rgba(251,249,244,0.94); backdrop-filter:blur(10px); border-bottom:1px solid rgba(26,39,64,.08); display:flex; align-items:center; justify-content:space-between; padding:18px 64px; font-family:'DM Sans',sans-serif;">
+  <a href="index.dc.html" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+    <svg width="30" height="28" viewBox="0 0 76 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="38,4 74,37 38,68 2,37" fill="none" stroke="#C8922A" stroke-width="2"/>
+      <polygon points="38,15 59,37 38,57 17,37" fill="#C8922A" opacity="0.15"/>
+      <line x1="26" y1="57" x2="38" y2="17" stroke="#C8922A" stroke-width="3" stroke-linecap="round"/>
+      <line x1="50" y1="57" x2="38" y2="17" stroke="#C8922A" stroke-width="3" stroke-linecap="round"/>
+      <line x1="29" y1="46" x2="47" y2="46" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="38" cy="4" r="3" fill="#C8922A"></circle>
+      <circle cx="74" cy="37" r="3" fill="#C8922A"></circle>
+      <circle cx="38" cy="68" r="3" fill="#C8922A"></circle>
+      <circle cx="2" cy="37" r="3" fill="#C8922A"></circle>
+    </svg>
+    <span style="display:flex; flex-direction:column; line-height:1;">
+      <span style="font-family:'DM Sans',sans-serif; font-weight:700; font-size:15px; letter-spacing:3px; color:#1A2740;">ALTARYS</span>
+      <span style="font-family:'Space Mono',monospace; font-weight:700; font-size:9.5px; letter-spacing:4px; color:#8B5E1B; margin-top:3px;">LABS</span>
+    </span>
+  </a>
+  <nav style="display:flex; align-items:center; gap:34px;">
+    <div style="position:relative; padding:8px 0;" onMouseEnter="{{ openProduits }}" onMouseLeave="{{ closeMenu }}">
+      <a href="produits.dc.html" style="color:{{ produitsColor }}; text-decoration:none; font-size:14.5px;">{{ t.produits }}</a>
+      <sc-if value="{{ produitsOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; top:34px; left:0; background:#FFFFFF; border:1px solid rgba(26,39,64,.1); border-radius:6px; min-width:250px; padding:8px; box-shadow:0 20px 50px rgba(26,39,64,.14);">
+          <a href="produits-pcs.dc.html" style="display:block; padding:10px 14px; color:#1A2740; text-decoration:none; font-size:13.5px; border-radius:4px;">Papillon Collection Solution</a>
+          <a href="produits-hr.dc.html" style="display:block; padding:10px 14px; color:#1A2740; text-decoration:none; font-size:13.5px; border-radius:4px;">Papillon HR Suite</a>
+          <a href="produits-cf.dc.html" style="display:block; padding:10px 14px; color:#1A2740; text-decoration:none; font-size:13.5px; border-radius:4px;">Papillon Corporate Finance</a>
+        </div>
+      </sc-if>
+    </div>
+    <div style="position:relative; padding:8px 0;" onMouseEnter="{{ openServices }}" onMouseLeave="{{ closeMenu }}">
+      <a href="services.dc.html" style="color:{{ servicesColor }}; text-decoration:none; font-size:14.5px;">{{ t.services }}</a>
+      <sc-if value="{{ servicesOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; top:34px; left:0; background:#FFFFFF; border:1px solid rgba(26,39,64,.1); border-radius:6px; min-width:250px; padding:8px; box-shadow:0 20px 50px rgba(26,39,64,.14);">
+          <a href="services-conseil.dc.html" style="display:block; padding:10px 14px; color:#1A2740; text-decoration:none; font-size:13.5px; border-radius:4px;">{{ t.conseil }}</a>
+          <a href="services-dev.dc.html" style="display:block; padding:10px 14px; color:#1A2740; text-decoration:none; font-size:13.5px; border-radius:4px;">{{ t.dev }}</a>
+          <a href="services-ia.dc.html" style="display:block; padding:10px 14px; color:#1A2740; text-decoration:none; font-size:13.5px; border-radius:4px;">{{ t.ia }}</a>
+        </div>
+      </sc-if>
+    </div>
+    <a href="a-propos.dc.html" style="color:{{ aproposColor }}; text-decoration:none; font-size:14.5px;">{{ t.apropos }}</a>
+    <a href="contact.dc.html" style="color:{{ contactColor }}; text-decoration:none; font-size:14.5px;">{{ t.contact }}</a>
+  </nav>
+  <div style="display:flex; align-items:center; gap:18px;">
+    <div style="display:flex; align-items:center; border:1px solid rgba(26,39,64,.15); border-radius:100px; padding:3px;">
+      <button onClick="{{ setFr }}" style="background:{{ frBg }}; color:{{ frColor }}; border:none; border-radius:100px; padding:5px 11px; font-family:'Space Mono',monospace; font-size:11px; cursor:pointer;">FR</button>
+      <button onClick="{{ setEn }}" style="background:{{ enBg }}; color:{{ enColor }}; border:none; border-radius:100px; padding:5px 11px; font-family:'Space Mono',monospace; font-size:11px; cursor:pointer;">EN</button>
+    </div>
+    <a href="contact.dc.html" style="background:#C8922A; color:#07111E; padding:11px 22px; border-radius:4px; text-decoration:none; font-weight:600; font-size:13.5px;">{{ t.cta }}</a>
+  </div>
+</header>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:90},&quot;active&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;home&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;produits&quot;,&quot;services&quot;,&quot;apropos&quot;,&quot;contact&quot;],&quot;tsType&quot;:&quot;string&quot;},&quot;lang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;fr&quot;,&quot;options&quot;:[&quot;fr&quot;,&quot;en&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+const NAV = {
+  fr: { produits:'Produits', services:'Services', apropos:'À propos', contact:'Contact', cta:'Discutons', conseil:'Conseil IT, RH & Finance', dev:'Développement sur mesure', ia:'IA souveraine' },
+  en: { produits:'Products', services:'Services', apropos:'About', contact:'Contact', cta:"Let's talk", conseil:'IT, HR & Finance Consulting', dev:'Custom Development', ia:'Sovereign AI' },
+};
+class Component extends DCLogic {
+  state = { openMenu: null };
+  renderVals() {
+    const active = this.props.active || 'home';
+    const lang = this.props.lang || 'fr';
+    const colorFor = (key) => active === key ? '#B8791E' : '#3A4256';
+    return {
+      t: NAV[lang],
+      produitsOpen: this.state.openMenu === 'produits',
+      servicesOpen: this.state.openMenu === 'services',
+      openProduits: () => this.setState({ openMenu: 'produits' }),
+      openServices: () => this.setState({ openMenu: 'services' }),
+      closeMenu: () => this.setState({ openMenu: null }),
+      produitsColor: colorFor('produits'),
+      servicesColor: colorFor('services'),
+      aproposColor: colorFor('apropos'),
+      contactColor: colorFor('contact'),
+      setFr: () => this.props.onSetLang && this.props.onSetLang('fr'),
+      setEn: () => this.props.onSetLang && this.props.onSetLang('en'),
+      frBg: lang === 'fr' ? '#C8922A' : 'transparent',
+      frColor: lang === 'fr' ? '#07111E' : '#8A93A6',
+      enBg: lang === 'en' ? '#C8922A' : 'transparent',
+      enColor: lang === 'en' ? '#07111E' : '#8A93A6',
+    };
+  }
+}
+</script>
+</body>
+</html>

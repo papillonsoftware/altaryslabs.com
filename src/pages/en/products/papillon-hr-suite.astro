@@ -1,0 +1,11 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ProductHrContent from '~/components/ProductHrContent.astro';
+
+const locale = 'en' as const;
+const pageKey = 'productsHr' as const;
+---
+
+<BaseLayout locale={locale} pageKey={pageKey}>
+  <ProductHrContent locale={locale} />
+</BaseLayout>

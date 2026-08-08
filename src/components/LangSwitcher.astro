@@ -1,0 +1,87 @@
+---
+import { LOCALE_LABEL, HTML_LANG, LABEL_SEPARATOR, type Locale } from '../i18n/config';
+import { localizedPath, otherLocale, useTranslations } from '../i18n/utils';
+import type { PageKey } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  pageKey: PageKey;
+}
+
+const { locale, pageKey } = Astro.props;
+const t = useTranslations(locale);
+const target = otherLocale(locale);
+
+// Le selecteur pointe vers la traduction exacte de la page courante, jamais
+// vers l'accueil : la table ROUTES garantit la correspondance des slugs.
+const href = localizedPath(pageKey, target);
+
+// DEUX LANGUES SE CROISENT DANS CE LIBELLE, et elles ne s'indexent pas pareil.
+// La phrase est une phrase de la page, donc dans la langue de la page
+// (`locale`) : sa typographie, separateur compris, suit `locale`. Seul le nom
+// de la langue visee est dans la langue cible (`target`), par definition. Sur
+// une page anglaise on lit donc "Change language: Français", ponctue en
+// anglais. Indexer le separateur sur `target` reintroduirait le defaut que
+// D124 corrige, a l'envers.
+//
+// D'OU LA FORME DU LIEN, QUI N'EST PAS UN `aria-label`. Un `aria-label` est une
+// chaine plate : impossible d'y declarer que "Français" est le seul mot
+// francais d'une phrase anglaise. L'ancre portait donc `lang` sur la langue
+// CIBLE, ce qui declarait toute la phrase dans la mauvaise langue et la faisait
+// annoncer avec les mauvais phonemes. `lang` decrit le contenu de l'element, y
+// compris le texte de ses attributs ; `hreflang` decrit la destination du lien
+// et lui reste juste. Le nom accessible vient donc du contenu, en deux morceaux
+// visuellement caches, et `lang` ne balise que le nom de langue. Le code visible
+// `FR` / `EN` reste `aria-hidden` : il double le libelle sans rien y ajouter.
+// Voir D124 et D128.
+---
+
+<a class="lang-switcher" href={href} hreflang={HTML_LANG[target]}>
+  <span class="visually-hidden">{t.common.switchLanguage}{LABEL_SEPARATOR[locale]}</span>
+  <span class="visually-hidden" lang={HTML_LANG[target]}>{LOCALE_LABEL[target]}</span>
+  <span aria-hidden="true">{target.toUpperCase()}</span>
+</a>
+
+<style>
+  /* Toujours posee sur le header clair (UI-002, D055) : couleurs fixees ici,
+     independantes de toute section defilee derriere. */
+  .lang-switcher {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    min-height: 32px;
+    padding: 0 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--slate-nav);
+    text-decoration: none;
+    border: 1px solid var(--navy-10);
+    border-radius: var(--radius-sm);
+    transition: color var(--ease), border-color var(--ease), background var(--ease);
+  }
+
+  .lang-switcher:hover {
+    color: var(--gold-deeper);
+    border-color: var(--gold-deep);
+    background: var(--gold-06);
+  }
+
+  /* Header.astro pose .nav :focus-visible pour ce meme correctif, mais le
+     scopage Astro ne traverse pas la frontiere d'un composant enfant : la
+     regle ne peut pas atteindre ce lien, qui retombait sur le --gold global,
+     2.47:1 sur le header creme. */
+  .lang-switcher:focus-visible {
+    outline-color: var(--gold-deep);
+  }
+
+  /* 40x32 sous les 44px requis. Header.astro dimensionne deja .nav-disclosure
+     a 44x44 au meme point de rupture : meme regle ici. */
+  @media (max-width: 900px) {
+    .lang-switcher {
+      min-width: 44px;
+      min-height: 44px;
+    }
+  }
+</style>

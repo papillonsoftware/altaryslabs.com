@@ -1,0 +1,54 @@
+---
+/**
+ * Corps de la fiche Papillon HR Suite, partage par les deux langues.
+ * C'est la page la plus dense du site : arguments, vagues de deploiement,
+ * modules.
+ */
+import PageHeader from './PageHeader.astro';
+import FeatureGrid from './FeatureGrid.astro';
+import RoadmapWaves from './RoadmapWaves.astro';
+import ModuleGrid from './ModuleGrid.astro';
+import CtaBanner from './CtaBanner.astro';
+import type { Locale } from '../i18n/config';
+import { localizedPath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const contact = localizedPath('contact', locale);
+---
+
+<PageHeader
+  label={t.product.label}
+  title={t.pageName.productsHr}
+  intro={t.productHr.intro}
+  align="left"
+>
+  <div class="header-actions" slot="actions">
+    <a class="btn-primary" href={contact}>{t.product.ctaDemo}</a>
+    <a class="btn-secondary" href={contact}>{t.product.ctaSales}</a>
+  </div>
+</PageHeader>
+
+<FeatureGrid features={t.productHr.features} />
+
+<RoadmapWaves
+  sectionLabel={t.productHr.deploymentLabel}
+  title={t.productHr.deploymentTitle}
+  intro={t.productHr.deploymentText}
+  waves={t.productHr.waves}
+/>
+
+{/* spacedTop : la grille suit une section a fond alterne, il faut l'en detacher. */}
+<ModuleGrid label={t.productHr.modulesLabel} modules={t.productHr.modules} spacedTop />
+
+<CtaBanner
+  title={t.productHr.ctaTitle}
+  label={t.product.ctaDemo}
+  href={contact}
+  secondary={{ label: t.product.ctaSales, href: contact }}
+/>

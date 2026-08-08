@@ -1,0 +1,11 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ContactContent from '~/components/ContactContent.astro';
+
+const locale = 'fr' as const;
+const pageKey = 'contact' as const;
+---
+
+<BaseLayout locale={locale} pageKey={pageKey}>
+  <ContactContent locale={locale} />
+</BaseLayout>

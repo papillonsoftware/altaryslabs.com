@@ -1,0 +1,82 @@
+---
+/**
+ * Carte produit. Utilisee sur l'accueil et sur le hub Produits, avec le meme
+ * contenu : une seule source, pas de divergence possible entre les deux pages.
+ */
+import { LABEL_SEPARATOR, type Locale } from '../i18n/config';
+
+interface Props {
+  name: string;
+  /**
+   * Langue de la page, pour le separateur du nom accessible du lien.
+   *
+   * Le nom du lien est un `aria-label` PLAT et non une composition de
+   * descendants, et ce n'est pas un detail de style : quand un nom se calcule
+   * a partir des descendants, Chrome insere une espace a la frontiere entre
+   * elements en ligne des que le texte accumule n'en finit pas deja par une.
+   * Un separateur pose en tete d'un span voisin ne peut donc JAMAIS produire
+   * "Learn more: X" : le navigateur rend "Learn more : X" quoi qu'on ecrive
+   * dans le HTML. Le libelle et le nom etant ici dans la meme langue, rien
+   * n'oblige a composer depuis le contenu, contrairement au selecteur de
+   * langue de D128. Voir D133.
+   */
+  locale: Locale;
+  /** Etiquette courte : disponibilite pour PCS, categorie pour les autres. */
+  badge: string;
+  /** Badge plein, reserve au produit le plus saillant du moment. */
+  badgeSolid?: boolean;
+  text: string;
+  href: string;
+  linkLabel: string;
+  /** Variante aeree du hub, ou la carte est le contenu principal. */
+  large?: boolean;
+  /**
+   * Niveau du titre. 3 sur l'accueil, ou un h2 porte deja le titre de section ;
+   * 2 sur le hub, ou le h1 est le titre de page.
+   */
+  headingLevel?: 2 | 3;
+}
+
+const {
+  name,
+  locale,
+  badge,
+  badgeSolid = false,
+  text,
+  href,
+  linkLabel,
+  large = false,
+  headingLevel = 3,
+} = Astro.props;
+
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
+---
+
+<article class:list={['card', { 'card--large': large }]}>
+  <span class:list={['badge', badgeSolid ? 'badge--solid' : 'badge--soft']}>{badge}</span>
+  <Heading class="card-title">{name}</Heading>
+  <p class="card-text">{text}</p>
+  {/* Nom accessible PLAT, et non compose de descendants. Voir D133. */}
+  <a class="link-arrow" href={href} aria-label={`${linkLabel}${LABEL_SEPARATOR[locale]}${name}`}>
+    {linkLabel}
+  </a>
+</article>
+
+<style>
+  .card {
+    transition: border-color var(--ease), transform var(--ease);
+  }
+
+  .card:hover {
+    border-color: var(--gold-30);
+    transform: translateY(-2px);
+  }
+
+  .badge {
+    margin-bottom: 20px;
+  }
+
+  .card--large .badge {
+    margin-bottom: 22px;
+  }
+</style>

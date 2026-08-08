@@ -1,0 +1,160 @@
+#!/usr/bin/env node
+// ALTARYS LABS - altaryslabs.com
+// Balayage de contraste WCAG AA, fondation claire EN PLACE.
+//
+// Mesure chaque element porteur de texte contre son fond effectif, tel qu'il
+// rend reellement, en remontant les ancetres jusqu'au premier fond opaque et
+// en composant les couleurs semi-transparentes. Seuils : 4.5:1, ou 3:1 pour le
+// grand texte au sens de SC 1.4.3.
+//
+// Jusqu'a UI-002, aucune page n'utilisait encore `.section--light` : l'outil
+// l'injectait sur chaque <section> pour mesurer une fondation autrement
+// inutilisee. UI-002 bascule le site sur cette fondation pour de vrai, section
+// par section, sombre ou claire selon le prototype : injecter forcerait les
+// sections restees sombres en clair et masquerait leurs propres echecs.
+// L'outil mesure desormais le rendu reel, sans rien poser dessus.
+//
+// Pourquoi cet outil existe. Trois rondes de revue consecutives ont trouve des
+// classes de composants restees sur des jetons de surface sombre, parce que je
+// les cherchais a la lecture. Une fondation qui pretend couvrir des classes
+// qu'elle ne couvre pas est pire qu'une fondation qui ne pretend rien : le trou
+// est ferme dans le journal et ouvert dans le code. Cet outil mesure au lieu
+// d'enumerer. Voir D048 et D055.
+//
+// Usage : bin/contrast_sweep <base-url> <chemin> [<chemin>...]
+//   ex. : bin/contrast_sweep http://localhost:4321 / /a-propos /mentions-legales
+//
+// Pour balayer tout le site depuis un `npm run preview`, lance depuis la
+// racine du depot (le `cd dist` reste dans le sous-shell des parentheses,
+// bin/contrast_sweep se resout donc bien depuis la racine) :
+//   (cd dist && find . -name index.html | sed 's|^\.||; s|/index.html$||; s|^$|/|') \
+//     | xargs bin/contrast_sweep http://localhost:4321
+//
+// PAS de `PAGES=$(...)` puis `$PAGES` non guillemete : sous zsh (le shell de
+// cette machine), une expansion de parametre non guillemetee n'est PAS
+// decoupee en mots. Les chemins arrivent alors en un seul argv, le sweep
+// navigue vers une URL concatenee unique, atterrit sur la 404 d'Astro, et
+// rend un balayage vert qui n'a mesure qu'une page absente. `xargs` decoupe
+// depuis l'entree standard, independamment du shell.
+import { spawn } from 'node:child_process';
+
+const [, , base, ...paths] = process.argv;
+// Meme si la recette ci-dessus n'est pas suivie, un chemin contenant un saut
+// de ligne signale a coup sur l'expansion non decoupee : echouer bruyamment
+// plutot que de balayer une URL cassee en silence.
+for (const p of paths) {
+  if (p.includes('\n')) {
+    console.error(`chemin invalide (saut de ligne) : "${p.slice(0, 40)}...". Les chemins n'ont pas ete decoupes par le shell ; voir la recette xargs en tete de fichier.`);
+    process.exit(1);
+  }
+}
+const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const port = 9500 + (process.pid % 400);
+
+const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu',
+  `--remote-debugging-port=${port}`, `--user-data-dir=/tmp/sweep-${process.pid}`], { stdio: 'ignore' });
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+for (let i = 0; i < 60; i++) { try { await fetch(`http://127.0.0.1:${port}/json/version`); break; } catch { await sleep(250); } }
+
+const tab = await (await fetch(`http://127.0.0.1:${port}/json/new?about:blank`, { method: 'PUT' })).json();
+const ws = new WebSocket(tab.webSocketDebuggerUrl);
+let id = 0; const pending = new Map();
+let onLoad = null;
+ws.addEventListener('message', (e) => {
+  const m = JSON.parse(e.data);
+  if (m.id && pending.has(m.id)) { pending.get(m.id)(m.result); pending.delete(m.id); }
+  if (m.method === 'Page.loadEventFired' && onLoad) { const f = onLoad; onLoad = null; f(); }
+});
+await new Promise((r) => ws.addEventListener('open', r));
+const send = (method, params = {}) => new Promise((res) => { const n = ++id; pending.set(n, res); ws.send(JSON.stringify({ id: n, method, params })); });
+await send('Page.enable');
+/* Un sleep fixe ne garantit rien : sur un balayage de 26 pages a la suite, une
+   page plus lourde peut se faire evaluer avant que son CSS ne soit applique,
+   ce qui silencieusement re-ouvre le trou que le compteur skipped ci-dessous
+   ferme. Page.loadEventFired attend le vrai chargement, page par page.
+   Le delai de secours evite qu'une page qui ne charge jamais bloque le
+   balayage entier sans un mot d'explication. */
+const waitForLoad = () => Promise.race([
+  new Promise((res) => { onLoad = res; }),
+  new Promise((_, rej) => setTimeout(() => rej(new Error('timeout au chargement')), 15000)),
+]);
+
+const EXPR = `(() => {
+  const lum = (c) => { const [r,g,b] = c; const f = v => { v/=255; return v<=0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055,2.4); };
+    return 0.2126*f(r)+0.7152*f(g)+0.0722*f(b); };
+  const parse = (s) => { const m = s.match(/rgba?\\(([^)]+)\\)/); if(!m) return null;
+    const p = m[1].split(',').map(Number); return {c:[p[0],p[1],p[2]], a: p.length>3?p[3]:1}; };
+  /* backgroundColor seul ne voit pas un degrade : background:linear-gradient(...)
+     pose backgroundImage et laisse backgroundColor transparent. Sans ce garde,
+     l'ascendance continuait au-dela d'un bandeau degrade jusqu'au fond du body,
+     et mesurait le texte contre une couleur qui n'est pas la sienne. Un null
+     fait sauter la mesure plutot que la fausser : ce script ne sait pas
+     echantillonner un degrade, mieux vaut ne rien dire que dire faux. */
+  const bgOf = (el) => { let n = el;
+    while (n) { const cs = getComputedStyle(n);
+      if (cs.backgroundImage && cs.backgroundImage !== 'none') return null;
+      const b = parse(cs.backgroundColor); if (b && b.a > 0.5) return b.c; n = n.parentElement; }
+    return [246,242,233]; };
+  const out = [];
+  let skipped = 0;
+  for (const el of document.querySelectorAll('*')) {
+    if (!el.childNodes.length) continue;
+    const hasText = [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim());
+    if (!hasText) continue;
+    const st = getComputedStyle(el);
+    // Un texte SVG se rend par fill, jamais par color : color n'y est qu'une
+    // valeur heritee sans effet visuel, et la mesurer donnait un faux echec
+    // des que le body a cesse d'heriter une couleur qui, par hasard,
+    // contrastait aussi bien sur fond sombre que sur fond clair.
+    const isSvgText = el.namespaceURI === 'http://www.w3.org/2000/svg';
+    const fg = parse(isSvgText ? st.fill : st.color); if (!fg) continue;
+    // Un fond en degrade ne peut pas etre mesure (voir bgOf) : l'element est
+    // exclu du calcul, pas compte comme un succes. Sans ce compteur, un
+    // degrade qui cache un vrai echec se rendrait indiscernable d'une page
+    // reellement conforme.
+    const bg = bgOf(el); if (!bg) { skipped++; continue; }
+    const mix = fg.a < 1 ? fg.c.map((v,i) => v*fg.a + bg[i]*(1-fg.a)) : fg.c;
+    const l1 = lum(mix), l2 = lum(bg);
+    const ratio = (Math.max(l1,l2)+0.05)/(Math.min(l1,l2)+0.05);
+    const size = parseFloat(st.fontSize);
+    const large = size >= 24 || (size >= 18.66 && parseInt(st.fontWeight) >= 700);
+    const need = large ? 3 : 4.5;
+    if (ratio < need) out.push({ cls: (el.className && el.className.baseVal === undefined ? el.className : '') || el.tagName,
+      ratio: +ratio.toFixed(2), need, size });
+  }
+  const seen = new Map();
+  for (const o of out) { const k = o.cls.split(' ')[0] + '|' + o.ratio; if (!seen.has(k)) seen.set(k, o); }
+  // Garde-fou de sanite : une page du site rend toujours au moins une
+  // .section. Sans elle (404, page vide, mauvais port), le balayage ne doit
+  // pas se taire en rendant zero echec sur zero contenu mesure.
+  const empty = document.querySelectorAll('.section').length === 0;
+  return JSON.stringify({ fails: [...seen.values()], skipped, empty });
+})()`;
+
+let total = 0;
+let totalSkipped = 0;
+for (const p of paths) {
+  const loaded = waitForLoad();
+  const nav = await send('Page.navigate', { url: base + p });
+  // Page.loadEventFired se declenche aussi sur une page d'erreur : errorText
+  // est le seul signal que la navigation elle-meme a echoue (port ferme, DNS,
+  // etc.), avant meme d'atteindre une 404 applicative.
+  if (nav.errorText) {
+    console.error(`\nechec de navigation vers ${p} : ${nav.errorText}`);
+    ws.close(); chrome.kill(); process.exit(1);
+  }
+  await loaded;
+  await sleep(150);
+  const r = await send('Runtime.evaluate', { expression: EXPR, returnByValue: true });
+  const { fails, skipped, empty } = JSON.parse(r.result.value || '{"fails":[],"skipped":0,"empty":true}');
+  if (empty) {
+    console.error(`\n${p} : aucune .section trouvee (404, page vide, ou mauvais port). Le balayage s'arrete plutot que de compter cette page comme conforme.`);
+    ws.close(); chrome.kill(); process.exit(1);
+  }
+  totalSkipped += skipped;
+  if (fails.length) { total += fails.length; console.log(`\n${p}`); fails.forEach(f => console.log(`  ${f.ratio}:1 (min ${f.need})  ${f.size}px  ${f.cls}`)); }
+}
+console.log(total === 0 ? '\nAUCUN ECHEC AA, fondation en place' : `\n${total} echecs`);
+if (totalSkipped > 0) console.log(`NON MESURE (${totalSkipped}) : fond en degrade, hors de portee de cet outil`);
+ws.close(); chrome.kill(); process.exit(0);

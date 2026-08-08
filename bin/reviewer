@@ -1,0 +1,26 @@
+#!/bin/bash
+# ALTARYS LABS - altaryslabs.com
+# Reviewer INTERACTIF (session fraiche ; le fondateur reste dans la boucle).
+#
+# La procedure de revue stable (suivre .claude/commands/review.md, forker un worktree
+# depuis la branche de l'item, etapes obligatoires, commentaire de PR) est portee par
+# --append-system-prompt depuis .claude/reviewer-append.txt, partage avec
+# bin/autonomous_reviewer. L'appel ne passe donc que "<ID> (PR #<num>)".
+#
+# Usage : bin/reviewer "<ID> (PR #<num>)"      (depuis la racine du depot)
+#   ex. : bin/reviewer "PAGE-004 (PR #17)"
+#
+# Le reviewer ne fusionne jamais et ne modifie jamais la source.
+set -euo pipefail
+# Racine du checkout, resolue en absolu pour pouvoir sourcer bin/lib apres le cd.
+RACINE="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$RACINE"
+
+# Refuse de demarrer si cet arbre est en retard sur origin/refonte-multipages :
+# les instructions du relecteur seraient perimees. Voir bin/lib/fraicheur.sh.
+. "$RACINE/bin/lib/fraicheur.sh"
+verifier_fraicheur
+
+claude --system-prompt-file .claude/personalities/REVIEWER.md \
+       --append-system-prompt "$(cat .claude/reviewer-append.txt)" \
+       --model opus "$@"

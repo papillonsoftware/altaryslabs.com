@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0; background:#F6F2E9;}
+  a{color:#B8791E;}
+  a:hover{color:#8B5E1B;}
+</style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif;">
+  <dc-import name="Header" active="services" lang="{{ lang }}" onSetLang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+  <section style="padding:96px 64px 64px; background:#F6F2E9;">
+    <div style="max-width:820px; margin:0 auto;">
+      <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.35em; color:#B8791E; text-transform:uppercase; margin-bottom:16px;">{{ t.label }}</p>
+      <h1 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(32px,4vw,48px); color:#1A2740; margin:0 0 22px;">{{ t.title }}</h1>
+      <p style="font-size:17px; color:#5B6472; line-height:1.8;">{{ t.intro }}</p>
+    </div>
+  </section>
+
+  <section style="padding:0 64px 90px; background:#F6F2E9;">
+    <div style="max-width:1000px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+      <div style="background:#FFFFFF; border-radius:8px; padding:32px; border:1px solid rgba(26,39,64,.08); box-shadow:0 1px 3px rgba(26,39,64,.04);">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:20px; color:#1A2740; margin:0 0 12px;">{{ t.c1Title }}</h3>
+        <p style="font-size:14px; color:#5B6472; line-height:1.75; margin:0;">{{ t.c1Desc }}</p>
+      </div>
+      <div style="background:#FFFFFF; border-radius:8px; padding:32px; border:1px solid rgba(26,39,64,.08); box-shadow:0 1px 3px rgba(26,39,64,.04);">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:20px; color:#1A2740; margin:0 0 12px;">{{ t.c2Title }}</h3>
+        <p style="font-size:14px; color:#5B6472; line-height:1.75; margin:0;">{{ t.c2Desc }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:80px 64px; background:linear-gradient(135deg, #1A2740, #0F1724); text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(24px,2.8vw,34px); color:#FAF7F2; margin:0 0 28px;">{{ t.ctaTitle }}</h2>
+    <a href="contact.dc.html" style="background:#C8922A; color:#07111E; padding:16px 32px; border-radius:5px; text-decoration:none; font-weight:600; font-size:15px;">{{ t.ctaTitle }}</a>
+  </section>
+
+  <dc-import name="Footer" lang="{{ lang }}" hint-size="100%,300px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const T = {
+  fr: {
+    label: 'Service', title: 'IA souveraine',
+    intro: "Notre expertise couvre la conception de solutions d'aide à la décision alimentées par une IA souveraine, hébergée et opérée en Afrique, pensée pour répondre aux enjeux de souveraineté des données des entreprises OHADA.",
+    c1Title: 'Souveraineté des données', c1Desc: 'Hébergement et opération en Afrique, pour répondre aux exigences réglementaires locales.',
+    c2Title: 'Aide à la décision', c2Desc: 'Des solutions conçues pour éclairer les décisions financières, RH et opérationnelles de vos équipes.',
+    ctaTitle: 'Discutons de votre besoin',
+  },
+  en: {
+    label: 'Service', title: 'Sovereign AI',
+    intro: 'Our expertise covers the design of decision support solutions powered by sovereign AI, hosted and operated in Africa, built to address the data sovereignty concerns of OHADA businesses.',
+    c1Title: 'Data sovereignty', c1Desc: 'Hosted and operated in Africa, to meet local regulatory requirements.',
+    c2Title: 'Decision support', c2Desc: "Solutions designed to inform your teams' financial, HR and operational decisions.",
+    ctaTitle: "Let's talk about your needs",
+  },
+};
+class Component extends DCLogic {
+  state = { lang: (typeof localStorage !== 'undefined' && localStorage.getItem('altarys-lang')) || 'fr' };
+  setLang = (l) => { this.setState({ lang: l }); try { localStorage.setItem('altarys-lang', l); } catch (e) {} };
+  renderVals() { return { lang: this.state.lang, setLang: this.setLang, t: T[this.state.lang] }; }
+}
+</script>
+</body>
+</html>

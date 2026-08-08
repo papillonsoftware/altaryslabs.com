@@ -1,0 +1,11 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ProductFinanceContent from '~/components/ProductFinanceContent.astro';
+
+const locale = 'fr' as const;
+const pageKey = 'productsFinance' as const;
+---
+
+<BaseLayout locale={locale} pageKey={pageKey}>
+  <ProductFinanceContent locale={locale} />
+</BaseLayout>

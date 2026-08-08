@@ -1,0 +1,11 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ServiceConsultingContent from '~/components/ServiceConsultingContent.astro';
+
+const locale = 'fr' as const;
+const pageKey = 'servicesConsulting' as const;
+---
+
+<BaseLayout locale={locale} pageKey={pageKey}>
+  <ServiceConsultingContent locale={locale} />
+</BaseLayout>

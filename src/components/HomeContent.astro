@@ -1,0 +1,130 @@
+---
+/**
+ * Corps de la page d'accueil, partage par les deux langues.
+ *
+ * Les deux pages `/` et `/en` appellent ce meme composant : la structure ne
+ * peut pas diverger d'une langue a l'autre, seul le dictionnaire change.
+ */
+import Hero from './Hero.astro';
+import SectionHeader from './SectionHeader.astro';
+import ProductCard from './ProductCard.astro';
+import ServiceCard from './ServiceCard.astro';
+import CtaBanner from './CtaBanner.astro';
+import type { Locale } from '../i18n/config';
+import { localizedPath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const href = (key: Parameters<typeof localizedPath>[0]) => localizedPath(key, locale);
+
+// "Disponible T3 2026" devient "disponible T3 2026" une fois enchaine au nom du
+// produit. La disponibilite reste lue depuis `availability`, source unique.
+const availability = t.availability.pcs;
+const heroBadgeLabel = `${t.home.heroBadge}, ${availability.charAt(0).toLowerCase()}${availability.slice(1)}`;
+---
+
+<Hero
+  badge={{ label: heroBadgeLabel, href: href('productsPcs') }}
+  title={t.home.heroTitle}
+  emphasis={t.home.heroEmphasis}
+  subtitle={t.home.heroSubtitle}
+  primary={{ label: t.home.heroPrimary, href: href('contact') }}
+  secondary={{ label: t.home.heroSecondary, href: href('products') }}
+/>
+
+<section class="section section--light">
+  <div class="container">
+    <SectionHeader label={t.home.productsLabel} title={t.home.productsTitle} />
+
+    <div class="grid-3 fade-in">
+      <ProductCard
+        name={t.pageName.productsPcs}
+        badge={availability}
+        badgeSolid
+        text={t.cards.products.productsPcs.text}
+        href={href('productsPcs')}
+        linkLabel={t.common.learnMore}
+        locale={locale}
+      />
+      <ProductCard
+        name={t.pageName.productsHr}
+        badge={t.cards.products.productsHr.badge}
+        text={t.cards.products.productsHr.text}
+        href={href('productsHr')}
+        linkLabel={t.common.learnMore}
+        locale={locale}
+      />
+      <ProductCard
+        name={t.pageName.productsFinance}
+        badge={t.cards.products.productsFinance.badge}
+        text={t.cards.products.productsFinance.text}
+        href={href('productsFinance')}
+        linkLabel={t.common.learnMore}
+        locale={locale}
+      />
+    </div>
+  </div>
+</section>
+
+<section class="section section--deep">
+  <div class="container">
+    <SectionHeader label={t.home.servicesLabel} title={t.home.servicesTitle} />
+
+    <div class="grid-3 fade-in">
+      <ServiceCard
+        name={t.pageName.servicesConsulting}
+        text={t.cards.services.servicesConsulting.text}
+        href={href('servicesConsulting')}
+        linkLabel={t.common.discover}
+        locale={locale}
+      />
+      <ServiceCard
+        name={t.pageName.servicesDev}
+        text={t.cards.services.servicesDev.text}
+        href={href('servicesDev')}
+        linkLabel={t.common.discover}
+        locale={locale}
+      />
+      <ServiceCard
+        name={t.pageName.servicesAi}
+        text={t.cards.services.servicesAi.text}
+        href={href('servicesAi')}
+        linkLabel={t.common.discover}
+        locale={locale}
+      />
+    </div>
+  </div>
+</section>
+
+<section class="section section--light">
+  <div class="container about-block fade-in">
+    <p class="section-label">{t.home.aboutLabel}</p>
+    <p class="about-text">{t.home.aboutText}</p>
+  </div>
+</section>
+
+<CtaBanner title={t.home.ctaTitle} label={t.home.ctaLabel} href={href('contact')} />
+
+<style>
+  .about-block {
+    max-width: 900px;
+    text-align: center;
+  }
+
+  .about-block .section-label {
+    margin-bottom: 16px;
+  }
+
+  .about-text {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 2.6vw, 30px);
+    font-weight: 300;
+    color: var(--ivory);
+    line-height: 1.5;
+  }
+</style>

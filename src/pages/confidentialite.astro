@@ -1,0 +1,178 @@
+---
+/**
+ * Politique de confidentialite, version francaise. Adaptee de celle de
+ * papillon-collection.com, en tenant compte des differences reelles : ce site
+ * porte un formulaire de contact et non une demande de demonstration, et les
+ * donnees sont stockees chez Cloudflare en Europe, pas chez Systalink.
+ *
+ * Texte non encore relu par un avocat.
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import LegalPage from '~/components/LegalPage.astro';
+
+const locale = 'fr' as const;
+const pageKey = 'privacy' as const;
+
+const intro =
+  "La présente politique décrit la manière dont ALTARYS LABS traite les données à caractère personnel collectées sur le site altaryslabs.com.";
+---
+
+<BaseLayout locale={locale} pageKey={pageKey}>
+  <LegalPage locale={locale} pageKey={pageKey} intro={intro}>
+    <h2>1. Qui traite vos données</h2>
+    <p>
+      <strong>ALTARYS LABS</strong> est responsable du traitement des données collectées sur ce
+      site.
+    </p>
+    <ul>
+      <li>Forme juridique : Société par Actions Simplifiée Unipersonnelle (SASU)</li>
+      <li>
+        Siège social : Abidjan, Abobo Biabou, Derrière la pharmacie Rédemption, Lot 3108 Ilot 273,
+        Côte d'Ivoire
+      </li>
+      <li>RCCM : CI-ABJ-03-2026-B17-00070</li>
+      <li>Contact : <a href="mailto:contact@altaryslabs.com">contact@altaryslabs.com</a></li>
+    </ul>
+
+    <h2>2. Quelles données sont collectées</h2>
+    <p>
+      Ce site ne collecte de données que lorsque vous remplissez volontairement le formulaire de
+      contact. Sont alors collectés :
+    </p>
+    <ul>
+      <li>votre nom ;</li>
+      <li>le nom de votre entreprise ou organisation ;</li>
+      <li>votre adresse e-mail de contact ;</li>
+      <li>votre numéro de téléphone de contact ;</li>
+      <li>l'offre au sujet de laquelle vous nous écrivez ;</li>
+      <li>le contenu de votre message.</li>
+    </ul>
+    <p>
+      Le formulaire est protégé par <strong>Cloudflare Turnstile</strong>, un dispositif anti-robot.
+      À ce titre, Cloudflare traite des signaux techniques de votre navigateur, par exemple des
+      caractéristiques de l'appareil ou du comportement de navigation, afin de vérifier que la
+      soumission n'est pas automatisée.
+    </p>
+    <p>
+      Aucune autre donnée n'est collectée à votre insu sur ce site : il n'y a ni cookie de mesure
+      d'audience, ni traceur publicitaire.
+    </p>
+
+    <h2>3. Pourquoi ces données sont collectées</h2>
+    <p>Ces données servent exclusivement à traiter votre demande, c'est-à-dire à :</p>
+    <ul>
+      <li>vous recontacter ;</li>
+      <li>comprendre votre besoin et y répondre ;</li>
+      <li>assurer le suivi commercial de votre demande.</li>
+    </ul>
+    <p>Elles ne sont ni vendues, ni cédées, ni utilisées à des fins publicitaires.</p>
+
+    <h2>4. Base légale du traitement</h2>
+    <p>
+      Le traitement de vos données repose sur votre consentement, exprimé au moment où vous
+      remplissez volontairement le formulaire de contact, ainsi que, le cas échéant, sur
+      l'exécution de mesures précontractuelles prises à votre demande.
+    </p>
+
+    <h2>5. Combien de temps elles sont conservées</h2>
+    <p>
+      Vos données sont conservées pendant la durée strictement nécessaire au traitement de votre
+      demande et au suivi commercial qui en découle.
+    </p>
+    <p>
+      Conformément au principe de proportionnalité posé par l'article 35 de la loi n° 2013-450 du
+      19 juin 2013, qui impose l'effacement des données dès qu'elles ne sont plus nécessaires à la
+      finalité du traitement, ALTARYS LABS applique les durées suivantes :
+    </p>
+    <ul>
+      <li>
+        si votre demande aboutit à une relation commerciale, vos données sont conservées pendant
+        toute la durée de cette relation, puis pendant 3 ans à compter de sa fin ;
+      </li>
+      <li>
+        si votre demande n'aboutit pas à une relation commerciale, vos données sont conservées
+        pendant 3 ans à compter de votre dernière prise de contact avec ALTARYS LABS ;
+      </li>
+      <li>
+        les données techniques traitées par Cloudflare Turnstile sont conservées selon les durées
+        propres définies par Cloudflare pour ce service, généralement de courte durée.
+      </li>
+    </ul>
+    <p>
+      À l'issue de ces durées, vos données sont supprimées ou anonymisées, sauf obligation légale de
+      conservation plus longue, par exemple à des fins comptables ou en cas de contentieux.
+    </p>
+
+    <h2>6. Où sont hébergées vos données</h2>
+    <p>
+      Les données transmises par le formulaire de contact sont enregistrées dans une base de
+      données opérée par <strong>Cloudflare, Inc.</strong> et hébergée en <strong>Europe</strong>.
+      Elles sont donc transférées hors de Côte d'Ivoire.
+    </p>
+    <p>
+      Cloudflare est un sous-traitant présentant des garanties contractuelles de protection des
+      données. ALTARYS LABS étudie la relocalisation de cet hébergement sur le continent africain.
+    </p>
+
+    <h2>7. Qui y a accès</h2>
+    <p>
+      Seules les personnes habilitées d'ALTARYS LABS, en charge du suivi commercial, ont accès à vos
+      données.
+    </p>
+    <p>Les sous-traitants techniques suivants interviennent dans la stricte limite de leur mission :</p>
+    <ul>
+      <li>
+        <strong>Cloudflare, Inc.</strong> : hébergement du site, protection anti-robot Turnstile et
+        stockage des demandes ;
+      </li>
+      <li>
+        <strong>Resend</strong> : envoi des e-mails de notification des demandes entrantes.
+      </li>
+    </ul>
+    <p>
+      ALTARYS LABS s'assure que ces sous-traitants offrent des garanties suffisantes en matière de
+      protection des données et n'accèdent à vos données que dans la mesure nécessaire à
+      l'exécution de leur prestation.
+    </p>
+
+    <h2>8. Vos droits</h2>
+    <p>
+      Conformément à la <strong
+        >loi ivoirienne n° 2013-450 du 19 juin 2013 relative à la protection des données à caractère
+        personnel</strong
+      >, vous disposez d'un droit d'accès, de rectification, d'opposition et de suppression sur les
+      données vous concernant.
+    </p>
+    <p>
+      Pour exercer ces droits, vous pouvez écrire à{' '}
+      <a href="mailto:contact@altaryslabs.com">contact@altaryslabs.com</a>.
+    </p>
+    <p>
+      Vous pouvez également saisir l'<strong
+        >Autorité de Régulation des Télécommunications/TIC de Côte d'Ivoire (ARTCI)</strong
+      >, autorité de protection des données à caractère personnel de Côte d'Ivoire, si vous estimez
+      que vos droits ne sont pas respectés.
+    </p>
+
+    <h2>9. Cookies</h2>
+    <p>Ce site ne dépose ni cookie de mesure d'audience, ni cookie publicitaire.</p>
+    <p>
+      Seuls les cookies strictement nécessaires au fonctionnement du dispositif anti-robot
+      Cloudflare Turnstile peuvent être déposés lors de la soumission du formulaire de contact.
+    </p>
+
+    <h2>10. Modification de la présente politique</h2>
+    <p>
+      ALTARYS LABS se réserve le droit de modifier la présente politique à tout moment afin de tenir
+      compte de l'évolution du site, de ses services ou de la réglementation applicable. La version
+      en vigueur est celle publiée sur le site à la date de consultation.
+    </p>
+
+    <h2>11. Contact</h2>
+    <p>
+      Pour toute question relative à la présente politique ou au traitement de vos données
+      personnelles, vous pouvez écrire à{' '}
+      <a href="mailto:contact@altaryslabs.com">contact@altaryslabs.com</a>.
+    </p>
+  </LegalPage>
+</BaseLayout>

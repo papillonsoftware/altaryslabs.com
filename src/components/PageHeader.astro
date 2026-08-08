@@ -1,0 +1,103 @@
+---
+/**
+ * En-tete de page interieure : sur-titre, titre principal, chapo, actions.
+ *
+ * Deux alignements. Centre pour les hubs, ou le titre annonce une collection.
+ * A gauche pour les fiches produit, ou le chapo est un argumentaire a lire et
+ * non une accroche a contempler : une ligne longue centree se lit mal.
+ *
+ * Le design ne prevoit pas de fil d'Ariane sur ces pages. La navigation par le
+ * header suffit sur un site de onze pages.
+ */
+interface Props {
+  label: string;
+  title: string;
+  intro?: string;
+  align?: 'center' | 'left';
+  /** Badge plein affiche au-dessus du titre, a la place du sur-titre. */
+  badge?: string;
+}
+
+const { label, title, intro, align = 'center', badge } = Astro.props;
+---
+
+<section class="section section--light page-header">
+  <div class:list={['container', 'page-header-inner', `is-${align}`]}>
+    {
+      badge ? (
+        <span class="badge badge--solid page-badge">{badge}</span>
+      ) : (
+        <p class="section-label">{label}</p>
+      )
+    }
+
+    <h1 class="page-title">{title}</h1>
+
+    {intro && <p class="page-intro">{intro}</p>}
+
+    {/* Prolonge le chapo quand une page en demande plusieurs paragraphes. */}
+    <slot />
+
+    <slot name="actions" />
+  </div>
+</section>
+
+<style>
+  /* Moins d'air en bas qu'en haut : la section suivante enchaine. */
+  .page-header {
+    padding-bottom: 64px;
+  }
+
+  .page-header-inner.is-center {
+    max-width: 900px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  /* Ferre a gauche, et cale sur la gouttiere du conteneur plutot que centre.
+     La maquette centrait ce bloc de 820px dans une page de 1400px, ce qui
+     indentait le titre de pres de 400px par rapport aux grilles situees juste
+     dessous. Aligner les deux vaut mieux que reproduire ce decrochage. */
+  .page-header-inner.is-left {
+    max-width: calc(820px + 2 * var(--gutter));
+    margin-inline: 0;
+    text-align: left;
+  }
+
+  .page-header-inner :global(.section-label) {
+    margin-bottom: 16px;
+  }
+
+  .page-badge {
+    font-size: 11px;
+    padding: 6px 16px;
+    margin-bottom: 28px;
+  }
+
+  .page-title {
+    font-size: clamp(32px, 4vw, 48px);
+    margin-bottom: 22px;
+  }
+
+  .page-intro {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .is-center .page-intro {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .page-header-inner :global(.header-actions) {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 36px;
+  }
+
+  .is-center :global(.header-actions) {
+    justify-content: center;
+  }
+</style>

@@ -1,0 +1,178 @@
+---
+/**
+ * Logomark ALTARYS LABS.
+ *
+ * Le diamant vient du projet claude.ai/design, `Header.dc.html` et
+ * `Footer.dc.html`, qui fait desormais foi sur la marque graphique devant la
+ * charte v3.1 : traits epaissis pour tenir aux petites tailles. Voir D086.
+ *
+ * Le mot-marque n'est plus du <text> SVG mais du vrai texte HTML. L'ancien
+ * verrou tenait dans un viewBox de 300x72 affiche a 160px, donc toute valeur
+ * ecrite etait divisee par 0,53 : "LABS" sortait a 5px de haut, sous le seuil
+ * de lisibilite. En HTML la taille ecrite est la taille rendue. Voir D086.
+ *
+ * Le SVG est toujours `aria-hidden` : le mot-marque etant du texte, un <title>
+ * dedoublerait le nom accessible. Ce nom est porte par l'ancre appelante.
+ */
+interface Props {
+  /** `stacked` empile ALTARYS sur LABS, verrou du header. `inline` les pose sur
+   * une seule ligne, verrou du pied de page. Les deux viennent chacun de leur
+   * maquette et ne sont pas interchangeables. Voir D087. */
+  lockup?: 'stacked' | 'inline';
+  /** `full` porte les pastilles de sommet et le diamant interieur. `simple`
+   * s'en passe : le pied de page depouille la marque. */
+  detail?: 'full' | 'simple';
+  /** Surface qui porte le logo. Pilote la couleur du mot-marque, jamais celle
+   * du diamant, qui reste dore des deux cotes (marque graphique, hors exigence
+   * de contraste). */
+  surface?: 'dark' | 'light';
+  class?: string;
+}
+
+const {
+  lockup = 'stacked',
+  detail = 'full',
+  surface = 'dark',
+  class: className,
+} = Astro.props;
+---
+
+<span class:list={['logo', `logo--${lockup}`, `logo--${surface}`, className]}>
+  {/* viewBox de la maquette, repris tel quel. Les pastilles de sommet mordent
+      d'une unite sur trois cotes du cadre ; `overflow: visible` plus bas les
+      laisse peindre en entier sans qu'il faille retoucher l'echelle. Le
+      favicon, lui, n'a pas de CSS et elargit donc son viewBox a la place. */}
+  <svg class="logo-mark" viewBox="0 0 76 70" fill="none" aria-hidden="true">
+    <polygon points="38,4 74,37 38,68 2,37" fill="none" stroke="var(--gold)" stroke-width="2" />
+    {
+      detail === 'full' && (
+        <polygon points="38,15 59,37 38,57 17,37" fill="var(--gold)" opacity="0.15" />
+      )
+    }
+    <line x1="26" y1="57" x2="38" y2="17" stroke="var(--gold)" stroke-width="3" stroke-linecap="round" />
+    <line x1="50" y1="57" x2="38" y2="17" stroke="var(--gold)" stroke-width="3" stroke-linecap="round" />
+    <line x1="29" y1="46" x2="47" y2="46" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round" />
+    {
+      detail === 'full' && (
+        <>
+          <circle cx="38" cy="4" r="3" fill="var(--gold)" />
+          <circle cx="74" cy="37" r="3" fill="var(--gold)" />
+          <circle cx="38" cy="68" r="3" fill="var(--gold)" />
+          <circle cx="2" cy="37" r="3" fill="var(--gold)" />
+        </>
+      )
+    }
+  </svg>
+
+  {/* L'espace entre les deux mots est un vrai noeud de texte, pas une marge :
+      un lecteur d'ecran doit entendre "ALTARYS LABS" en deux mots. En verrou
+      empile le conteneur est une boite flex, qui ignore les noeuds de texte
+      vides, donc l'espace ne fabrique pas de troisieme ligne. */}
+  <span class="logo-word">
+    <span class="logo-altarys">ALTARYS</span>{' '}<span class="logo-labs">LABS</span>
+  </span>
+</span>
+
+<style>
+  /* `text-decoration: none` est ici en defense, pas en correctif : une
+     decoration se propage depuis l'ancetre et un descendant ne peut pas la
+     retirer. Elle n'agit donc que tant que `.logo` reste un inline atomique,
+     dans lequel la decoration ne se propage pas. Des que l'ancre appelante
+     passe en `flex`, ce que font nos deux appelants pour caler la ligne de
+     base, `.logo` devient un element flex, perd ce statut, et seule la regle
+     posee sur l'ancre elle-meme tient. C'est pourquoi les deux appelants la
+     portent aussi, et pourquoi la revue R1 avait raison sur le piege mais pas
+     sur l'endroit ou le desamorcer. */
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .logo-mark {
+    display: block;
+    flex-shrink: 0;
+    overflow: visible;
+  }
+
+  .logo--stacked .logo-mark {
+    width: 30px;
+    height: 28px;
+  }
+
+  .logo--inline .logo-mark {
+    width: 28px;
+    height: 26px;
+  }
+
+  .logo-word {
+    line-height: 1;
+  }
+
+  .logo--stacked .logo-word {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 600 et non 700, bien que les deux maquettes ecrivent 700 : le `<link>`
+     Google Fonts de `BaseLayout` ne charge DM Sans qu'en 300, 400, 500 et 600,
+     et les maquettes portent exactement le meme `<link>`. Un 700 y peint donc
+     deja avec la fonte 600, sans meme de graissage synthetique. Ecrire 600 ne
+     change pas un pixel du rendu valide par le fondateur ; ecrire 700 laissait
+     une declaration inatteignable, qui aurait change la graisse du logo sur
+     tout le site le jour ou quelqu'un ajoute `;700` au `<link>` sans toucher a
+     ce fichier. Voir D089. "LABS" garde son 700 : Space Mono, lui, le charge. */
+  .logo-altarys {
+    font-family: var(--font-body);
+    font-weight: 600;
+  }
+
+  .logo-labs {
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+
+  /* --- Verrou empile, header --- */
+  .logo--stacked .logo-altarys {
+    font-size: 15px;
+    letter-spacing: 3px;
+  }
+
+  .logo--stacked .logo-labs {
+    margin-top: 3px;
+    font-size: 9.5px;
+    letter-spacing: 4px;
+  }
+
+  /* --- Verrou en ligne, pied de page --- */
+  .logo--inline .logo-altarys {
+    font-size: 14.5px;
+    letter-spacing: 2.5px;
+  }
+
+  .logo--inline .logo-labs {
+    font-size: 10px;
+    letter-spacing: 3px;
+  }
+
+  /* --- Couleurs, pilotees par la surface et non par le verrou --- */
+  /* --gold ne passe pas 4.5:1 sur une surface claire (D029, D030) : "LABS" y
+     descend a --gold-deeper. Sur fond sombre il monte a --gold-light, comme
+     tout peritexte dore sur sombre. */
+  .logo--light .logo-altarys {
+    color: var(--navy-text);
+  }
+
+  .logo--light .logo-labs {
+    color: var(--gold-deeper);
+  }
+
+  .logo--dark .logo-altarys {
+    color: var(--ivory);
+  }
+
+  .logo--dark .logo-labs {
+    color: var(--gold-light);
+  }
+</style>

@@ -1,0 +1,72 @@
+---
+/**
+ * Carte "notre approche" de la page Developpement sur mesure.
+ *
+ * Les technologies sont nommees volontairement. Face a une DSI qui evalue un
+ * prestataire, citer Java, Spring Boot, React et TypeScript vaut mieux qu'un
+ * discours abstrait sur l'excellence technique : c'est verifiable.
+ */
+interface Props {
+  label: string;
+  text: string;
+  tags: readonly string[];
+}
+
+const { label, text, tags } = Astro.props;
+---
+
+<section class="section section--light approach-section">
+  <div class="container">
+    <div class="approach card fade-in">
+      <p class="approach-label mono">{label}</p>
+      <p class="approach-text">{text}</p>
+      <ul class="approach-tags">
+        {tags.map((tag) => <li class="approach-tag mono">{tag}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .approach-section {
+    padding-top: 0;
+    padding-bottom: 90px;
+  }
+
+  .approach {
+    max-width: 1000px;
+    padding: 40px;
+    border-color: var(--ink-06);
+  }
+
+  .approach-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    /* --gold-65 donnait 3.06:1 sur la carte. --gold-light : 7.87:1. D029. */
+    color: var(--gold-light);
+    margin-bottom: 16px;
+  }
+
+  .approach-text {
+    font-size: 15px;
+    color: var(--ink-80);
+    line-height: 1.85;
+    margin-bottom: 28px;
+  }
+
+  .approach-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    list-style: none;
+  }
+
+  .approach-tag {
+    font-size: 11px;
+    color: var(--gold-light);
+    background: var(--gold-10);
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+  }
+</style>

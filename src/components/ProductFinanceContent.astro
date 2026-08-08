@@ -1,0 +1,43 @@
+---
+/**
+ * Corps de la fiche Papillon Corporate Finance Suite, partage par les deux
+ * langues. Page volontairement plus sobre que celle de HR Suite : le produit
+ * couvre deux domaines, la page en montre deux.
+ */
+import PageHeader from './PageHeader.astro';
+import DomainGrid from './DomainGrid.astro';
+import CtaBanner from './CtaBanner.astro';
+import type { Locale } from '../i18n/config';
+import { localizedPath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const contact = localizedPath('contact', locale);
+---
+
+<PageHeader
+  label={t.product.label}
+  title={t.pageName.productsFinance}
+  intro={t.productFinance.intro}
+  align="left"
+>
+  <div class="header-actions" slot="actions">
+    <a class="btn-primary" href={contact}>{t.product.ctaDemo}</a>
+    <a class="btn-secondary" href={contact}>{t.product.ctaSales}</a>
+  </div>
+</PageHeader>
+
+{/* accent : bordure doree, ces cartes decrivent un produit. */}
+<DomainGrid domains={t.productFinance.cards} accent />
+
+<CtaBanner
+  title={t.productFinance.ctaTitle}
+  label={t.product.ctaDemo}
+  href={contact}
+  secondary={{ label: t.product.ctaSales, href: contact }}
+/>

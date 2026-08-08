@@ -1,0 +1,492 @@
+import { INTEREST_OTHER_FR, PAGE_NAMES_FR } from './page-names';
+import type { PageKey } from './routes';
+
+/**
+ * Dictionnaire français. C'est la langue de référence : le type Dictionary est
+ * dérivé de ce fichier, donc toute clé ajoutée ici devient obligatoire en
+ * anglais et le build échoue tant qu'elle manque.
+ */
+export const fr = {
+  common: {
+    skipToContent: 'Aller au contenu principal',
+    newTab: 'ouvre un nouvel onglet',
+    switchLanguage: 'Changer de langue',
+    learnMore: 'En savoir plus',
+    discover: 'Découvrir',
+  },
+
+  /**
+   * Disponibilité de Papillon Collection Solution, centralisée ici et nulle
+   * part ailleurs. Le jour du lancement, une seule ligne à changer pour passer
+   * à "Disponible". Jamais de date exacte sur une page publique.
+   */
+  availability: {
+    pcs: 'Disponible T3 2026',
+  },
+
+  nav: {
+    products: 'Produits',
+    services: 'Services',
+    about: 'À propos',
+    contact: 'Contact',
+    cta: 'Discutons',
+    openMenu: 'Ouvrir le menu',
+    closeMenu: 'Fermer le menu',
+    home: 'Accueil',
+  },
+
+  /**
+   * Libellé court de chaque page, utilisé en navigation et en fil d'Ariane.
+   *
+   * La table vit dans `page-names.ts` et non ici : la fonction Pages en a
+   * besoin pour nommer l'offre dans la notification interne, et l'importer
+   * depuis ce fichier tirait tout le dictionnaire dans le bundle du Worker.
+   * Une seule table, deux lecteurs. Voir D118.
+   */
+  pageName: PAGE_NAMES_FR,
+
+  /** Accroche courte de chaque page, affichée dans les menus déroulants. */
+  pageTagline: {
+    home: '',
+    products: '',
+    productsHr: 'SaaS RH et paie conforme OHADA',
+    productsFinance: 'Budgétisation conforme SYSCOHADA',
+    productsPcs: 'Recouvrement de primes en zone CIMA',
+    services: '',
+    servicesConsulting: "Systèmes d'information, RH et gestion financière",
+    servicesDev: 'Applications web, mobile et intégrations',
+    servicesAi: 'Aide à la décision et souveraineté des données',
+    about: '',
+    contact: '',
+    legalNotice: '',
+    privacy: '',
+  } satisfies Record<PageKey, string>,
+
+  /**
+   * Cartes produits et services. Une seule source pour l'accueil et pour les
+   * pages hub : les deux ne peuvent pas diverger.
+   */
+  cards: {
+    products: {
+      /* PCS n'a pas de badge propre : il porte sa disponibilité, lue dans
+         `availability.pcs` pour rester centralisée. */
+      productsPcs: {
+        text: "Automatise le renouvellement de contrats et la relance de primes des assureurs et courtiers de la zone CIMA, par SMS, WhatsApp et email.",
+      },
+      productsHr: {
+        badge: 'SaaS RH et paie',
+        text: "Ressources humaines et paie conformes OHADA, pensées pour les PME de 2 à 350 employés, offline-first et mobile-first.",
+      },
+      productsFinance: {
+        badge: 'SaaS Finance',
+        text: "Budgétisation conforme SYSCOHADA pour les directions financières des PME de la zone OHADA, dépenses et engagements.",
+      },
+    },
+    services: {
+      servicesConsulting: {
+        text: "Accompagnement des entreprises OHADA sur leurs systèmes d'information, leurs processus RH et leur gestion financière.",
+      },
+      servicesDev: {
+        text: "Applications web et mobiles, intégrations et architectures cloud-native conçues pour vos besoins métier.",
+      },
+      servicesAi: {
+        text: "Solutions d'aide à la décision alimentées par une IA souveraine, hébergée et opérée en Afrique.",
+      },
+    },
+  },
+
+  home: {
+    heroBadge: 'Papillon Collection Solution',
+    heroTitle: 'Votre partenaire technologique pour les entreprises Africaines.',
+    heroEmphasis: 'Zones OHADA et CIMA',
+    heroSubtitle:
+      "Ressources humaines, finance d'entreprise et recouvrement de créances, trois domaines où nos suites logicielles et notre expertise conseil accompagnent la croissance des entreprises.",
+    heroPrimary: 'Contactez notre équipe commerciale',
+    heroSecondary: 'Découvrir nos produits',
+
+    /* Sous-titre de la vignette de partage, rendue par `bin/og_images`.
+       Il vit ici et non dans le gabarit du script pour la meme raison que le
+       titre : une vignette ne doit pas pouvoir affirmer ce que le site ne dit
+       pas. C'est le defaut trouve par la ronde 2 d'UI-004. Voir D101. */
+    ogSubtitle:
+      'Logiciels SaaS en Assurance, Recouvrement, Corporate Finance et RH, Conseil IT, IA souveraine, projets logiciels sur mesure.',
+
+    productsLabel: 'Nos produits',
+    productsTitle: "Trois suites SaaS pensées pour l'OHADA et le CIMA",
+
+    servicesLabel: 'Nos services',
+    servicesTitle: 'Une expertise sectorielle au service de vos projets',
+
+    aboutLabel: 'ALTARYS LABS',
+    aboutText:
+      "Une SASU de droit ivoirien, active sur les zones OHADA et CIMA, portée par une équipe d'experts techniques et fonctionnels expérimentés en banque, en assurance et dans la mise en œuvre de systèmes métiers complexes et sécurisés.",
+
+    ctaTitle: 'Discutons de votre projet',
+    ctaLabel: 'Contactez notre équipe commerciale',
+  },
+
+  productsPage: {
+    label: 'Produits',
+    title: "Trois suites SaaS pour l'OHADA et le CIMA",
+    intro:
+      "Chacune répond aux exigences réglementaires et opérationnelles propres aux entreprises de la zone. Conformité, connectivité limitée et pluralité des pays sont traitées dès la conception, pas ajoutées après coup.",
+    ctaTitle: 'Une question sur nos produits ?',
+    ctaLabel: 'Contactez notre équipe commerciale',
+  },
+
+  servicesPage: {
+    label: 'Services',
+    title: 'Une expertise au service de vos projets',
+    intro:
+      "Notre expertise sectorielle nourrit aussi bien nos produits que nos missions de conseil et de développement pour compte de tiers. Ce que nous éprouvons sur nos propres plateformes, nous le mettons au service des vôtres.",
+    ctaTitle: 'Discutons de votre besoin',
+    ctaLabel: 'Contactez notre équipe commerciale',
+  },
+
+  /** Libellés partagés par les trois fiches produit. */
+  product: {
+    label: 'Produit',
+    ctaDemo: 'Demander une démo',
+    ctaSales: 'Contactez notre équipe commerciale',
+  },
+
+  productHr: {
+    intro:
+      "Solution SaaS de ressources humaines et de paie conforme OHADA, pensée pour les PME de 2 à 350 employés, offline-first et mobile-first pour les zones à connectivité limitée.",
+
+    features: [
+      {
+        title: 'Conformité CNPS et ITS',
+        text: 'Alignée sur la réglementation ivoirienne dès la première version.',
+      },
+      {
+        title: 'Offline-first',
+        text: 'Fonctionne sans connexion, synchronisation au retour du réseau.',
+      },
+      {
+        title: 'Mobile-first',
+        text: "Optimisée pour les smartphones d'entrée de gamme.",
+      },
+      {
+        title: '2 à 350 employés',
+        text: 'Pensée pour la réalité opérationnelle des PME.',
+      },
+    ],
+
+    deploymentLabel: 'Déploiement',
+    deploymentTitle: 'Une couverture progressive de la zone OHADA',
+    deploymentText:
+      "Le déploiement démarre en Côte d'Ivoire, puis s'étend au Bénin, au Cameroun, au Sénégal et en RDC, avec l'ambition d'étendre progressivement la couverture à l'ensemble de la zone OHADA.",
+    waves: [
+      {
+        label: 'Vague 1, 2026',
+        text: "Contrôle de présence, gestion des absences, gestion budgétaire, gestion des dépenses et engagements.",
+      },
+      {
+        label: 'Vague 2, fin 2026 et début 2027',
+        text: 'Paie complète.',
+      },
+      {
+        label: 'Vague 3, 2027',
+        text: 'Évaluation et performance, recrutement.',
+      },
+    ],
+
+    modulesLabel: 'Modules de la plateforme',
+    modules: [
+      'Paie CNPS et ITS',
+      'Présences QR',
+      'Congés et absences',
+      'RH Core',
+      'Gestion employés',
+      'Temps et activités',
+      'Santé et sécurité',
+      'Performance',
+      'Compétences',
+      'Formation',
+      'Recrutement',
+      'Documents avancés',
+    ],
+
+    ctaTitle: 'Voir Papillon HR Suite en action',
+  },
+
+  productFinance: {
+    intro:
+      "Solution SaaS de budgétisation conforme SYSCOHADA, destinée aux directions financières des PME de la zone OHADA. Elle s'appuie sur la même plateforme technique que Papillon HR Suite, pour une cohérence totale de vos données d'entreprise.",
+    cards: [
+      {
+        title: 'Gestion des dépenses',
+        text: "Suivi et validation des notes de frais et des dépenses courantes, avec traçabilité complète pour vos équipes financières.",
+      },
+      {
+        title: 'Budget et engagements',
+        text: 'Pilotage budgétaire et suivi des engagements financiers, conforme au référentiel SYSCOHADA.',
+      },
+    ],
+    ctaTitle: 'Voir Papillon Corporate Finance Suite en action',
+  },
+
+  /** Libellés partagés par les trois fiches service. */
+  service: {
+    label: 'Service',
+    ctaTitle: 'Discutons de votre besoin',
+    ctaLabel: 'Contactez notre équipe commerciale',
+  },
+
+  serviceConsulting: {
+    intro:
+      "Nous accompagnons les entreprises de la zone OHADA sur leurs systèmes d'information, leurs processus RH et leur gestion financière. Cette expertise nourrit aussi la conception de nos propres suites Papillon.",
+    domains: [
+      {
+        title: "Systèmes d'information",
+        text: "Audit, cadrage et accompagnement à la transformation digitale de vos outils métier.",
+      },
+      {
+        title: 'Ressources humaines',
+        text: 'Structuration des processus RH et accompagnement à la conformité réglementaire OHADA.',
+      },
+      {
+        title: 'Gestion financière',
+        text: 'Cadrage budgétaire, conformité SYSCOHADA et pilotage financier pour vos équipes.',
+      },
+      {
+        title: 'Conduite du changement',
+        text: 'Formation des équipes et accompagnement du déploiement de nouveaux outils.',
+      },
+    ],
+  },
+
+  serviceDev: {
+    intro:
+      "Nous concevons des applications web et mobiles, ainsi que des intégrations sur mesure, avec une architecture cloud-native pensée pour durer.",
+    approachLabel: 'Notre approche',
+    approachText:
+      "Applications web et mobiles, intégrations et connecteurs métier, portails sur mesure. Nous nous appuyons sur des technologies éprouvées, Java et Spring Boot côté serveur, React et TypeScript côté interface, avec une architecture cloud-native pour la fiabilité et la montée en charge.",
+    tags: ['Java / Spring Boot', 'React / TypeScript', 'Architecture cloud-native'],
+  },
+
+  serviceAi: {
+    intro:
+      "Notre expertise couvre la conception de solutions d'aide à la décision alimentées par une IA souveraine, hébergée et opérée en Afrique, pensée pour répondre aux enjeux de souveraineté des données des entreprises OHADA.",
+    domains: [
+      {
+        title: 'Souveraineté des données',
+        text: 'Hébergement et opération en Afrique, pour répondre aux exigences réglementaires locales.',
+      },
+      {
+        title: 'Aide à la décision',
+        text: "Des solutions conçues pour éclairer les décisions financières, RH et opérationnelles de vos équipes.",
+      },
+    ],
+  },
+
+  productPcs: {
+    intro:
+      "Papillon Collection Solution permet aux assureurs et aux courtiers en assurance de la zone CIMA d'automatiser le renouvellement de contrats et la relance de primes, par SMS, WhatsApp et email, jusqu'à l'authentification et au paiement par leurs clients.",
+    externalCta: 'Découvrir PCS sur papillon-collection.com',
+  },
+
+  about: {
+    title: 'Pourquoi ALTARYS LABS',
+    intro:
+      "ALTARYS LABS est une SASU de droit ivoirien, active sur les zones OHADA et CIMA. Notre mission est de rendre accessibles aux entreprises de ces zones des outils SaaS et une expertise conseil habituellement réservés aux grands groupes.",
+    team:
+      "Notre équipe réunit des experts techniques et fonctionnels expérimentés en banque, en assurance et dans la mise en œuvre de systèmes métiers complexes et sécurisés, au service de la croissance des entreprises OHADA et CIMA.",
+
+    approachLabel: 'Notre approche',
+    approach: [
+      {
+        title: 'Conformité OHADA et CIMA',
+        text: "Les référentiels de la zone sont intégrés dès la conception : CNPS et ITS pour la paie ivoirienne, SYSCOHADA pour la gestion budgétaire. La conformité n'est jamais ajoutée après coup.",
+      },
+      {
+        title: 'Conception offline-first',
+        text: "Nos applications fonctionnent sans connexion permanente et se synchronisent au retour du réseau. Elles sont pensées pour les smartphones d'entrée de gamme et les réseaux 3G.",
+      },
+      {
+        title: 'Isolation des données',
+        text: "Chaque client dispose de son propre espace. Plusieurs niveaux d'isolation de la base de données répondent aux exigences des organisations, de la PME au grand compte.",
+      },
+    ],
+
+    /* Une seule personne nommée sur le site. Ni organigramme, ni effectif. */
+    leadershipLabel: 'Direction',
+    leaderName: 'Emmanuel Blonvia',
+    leaderRole: 'Fondateur et Président',
+
+    ctaTitle: 'Discutons de votre projet',
+    ctaLabel: 'Contactez notre équipe commerciale',
+  },
+
+  /**
+   * Page Contact.
+   *
+   * Les sept options du select ne sont pas écrites ici : six sont dérivées de
+   * `pageName`, dans l'ordre PRODUCT_KEYS puis SERVICE_KEYS de `routes.ts`, et
+   * la septième est `interestOther`. Un intitulé de produit ou de service ne
+   * peut donc pas diverger entre la navigation et le formulaire. Voir D068.
+   */
+  contact: {
+    title: 'Contactez notre équipe commerciale',
+    intro: 'Décrivez-nous votre besoin, nous revenons vers vous rapidement.',
+
+    /* Suffixe des deux champs facultatifs. Quatre champs sur six sont requis :
+       marquer la minorité est plus court et plus clair que marquer la
+       majorité, et la maquette ne marquait ni les uns ni les autres. */
+    optional: '(facultatif)',
+
+    nameLabel: 'Nom complet',
+    namePlaceholder: 'Votre nom',
+    companyLabel: 'Société',
+    companyPlaceholder: 'Nom de votre société',
+    emailLabel: 'Email',
+    emailPlaceholder: 'vous@societe.com',
+    phoneLabel: 'Téléphone',
+    phonePlaceholder: '+225 ...',
+    interestLabel: 'Je suis intéressé par',
+    /* Première option, vide et désactivée, pour que `required` ait un sens :
+       sans elle le select est valide dès le premier rendu et toute demande
+       envoyée sans ouvrir la liste est enregistrée comme une piste PCS, le
+       seul produit qui n'est pas encore commercialisé. */
+    interestPrompt: 'Choisissez une option',
+    /* Même origine que les six autres options : `page-names.ts`, que la
+       notification interne lit aussi. Voir D118. */
+    interestOther: INTEREST_OTHER_FR,
+    messageLabel: 'Message',
+    messagePlaceholder: 'Décrivez votre besoin',
+
+    submit: 'Envoyer',
+
+    /* Information sur le traitement des données, sans case à cocher : le
+       formulaire est le seul point de conversion du site. D067. */
+    privacyNotice:
+      'En envoyant ce formulaire, vous acceptez que vos données soient utilisées pour répondre à votre demande.',
+    privacyLink: 'Voir notre politique de confidentialité',
+
+    successTitle: 'Message envoyé',
+    successText:
+      'Merci pour votre message. Notre équipe commerciale vous recontactera très prochainement.',
+
+    errorTitle: 'Envoi impossible',
+    errorText:
+      "Votre message n'a pas pu être transmis. Vérifiez votre connexion et réessayez dans quelques instants.",
+
+    /* Repli commun à l'état d'erreur et au cas sans JavaScript, suivi du lien
+       `mailto:`. Une seule formulation pour les deux, et une adresse lue dans
+       `config.ts`. Ferme D069 : la page cesse d'être un cul-de-sac pour le
+       visiteur dont l'envoi échoue ou qui n'a pas JavaScript. Voir D082. */
+    fallbackText: 'Vous pouvez aussi nous écrire directement à',
+
+    /* Turnstile a besoin de JavaScript pour produire son jeton : sans lui, le
+       formulaire ne peut pas être envoyé du tout. Ce message le dit, plutôt
+       que de laisser le visiteur remplir six champs pour rien. */
+    noScriptText:
+      "L'envoi de ce formulaire nécessite JavaScript, qui est désactivé dans votre navigateur.",
+  },
+
+  meta: {
+    home: {
+      title: 'ALTARYS LABS | Partenaire technologique des entreprises OHADA et CIMA',
+      description:
+        "Éditeur de solutions logicielles SaaS en Assurance, Finance d'entreprise et Ressources Humaines. Prestataire conseil et ingénierie logicielle pour les entreprises d'Afrique de l'Ouest et Centrale.",
+    },
+    products: {
+      title: 'Nos produits | ALTARYS LABS',
+      description:
+        'Trois suites SaaS conçues pour les spécificités réglementaires et opérationnelles des entreprises des zones OHADA et CIMA.',
+    },
+    productsHr: {
+      title: 'Papillon HR Suite | SaaS RH et paie conforme OHADA',
+      description:
+        "Solution SaaS de gestion des ressources humaines et de paie pour les PME de la zone OHADA. Pensée mobile-first et offline-first pour les contextes à connectivité limitée.",
+    },
+    productsFinance: {
+      title: 'Papillon Corporate Finance Suite | Budgétisation conforme SYSCOHADA',
+      description:
+        "Solution SaaS de gestion budgétaire, des engagements et des dépenses, conforme SYSCOHADA, pour les directions financières des PME de la zone OHADA.",
+    },
+    productsPcs: {
+      title: 'Papillon Collection Solution | Recouvrement de primes en zone CIMA',
+      description:
+        "Automatisation du renouvellement de contrats et de la relance de primes par SMS, WhatsApp et email, pour les assureurs et courtiers de la zone CIMA.",
+    },
+    services: {
+      title: 'Nos services | ALTARYS LABS',
+      description:
+        "Conseil IT, RH & Corporate Finance, Développement sur mesure et solutions d'aide à la décision par IA souveraine pour les entreprises des zones OHADA et CIMA.",
+    },
+    servicesConsulting: {
+      title: 'Conseil IT, RH & Corporate Finance | ALTARYS LABS',
+      description:
+        "Accompagnement des entreprises OHADA sur leurs systèmes d'information, leurs processus RH et leur gestion financière.",
+    },
+    servicesDev: {
+      title: 'Développement sur mesure | ALTARYS LABS',
+      description:
+        "Conception et développement d'applications web et mobile et d'intégrations sur mesure, sur une architecture cloud-native éprouvée en production.",
+    },
+    servicesAi: {
+      title: "Solutions d'aide à la décision par IA souveraine | ALTARYS LABS",
+      description:
+        "Conception de solutions d'aide à la décision alimentées par une IA souveraine, hébergée et opérée en Afrique, pour répondre aux enjeux de souveraineté des données des entreprises OHADA.",
+    },
+    about: {
+      title: 'À propos | ALTARYS LABS',
+      description:
+        "ALTARYS LABS, SASU de droit ivoirien, rend accessibles aux entreprises OHADA et CIMA des outils SaaS et une expertise conseil habituellement réservés aux grands groupes.",
+    },
+    contact: {
+      title: 'Contact | ALTARYS LABS',
+      description:
+        "Échangez avec notre équipe commerciale sur vos besoins en solutions RH, finance, recouvrement, conseil ou développement sur mesure.",
+    },
+    legalNotice: {
+      title: 'Mentions légales | ALTARYS LABS',
+      description:
+        "Éditeur, hébergement, propriété intellectuelle et droit applicable du site altaryslabs.com, édité par ALTARYS LABS, SASU de droit ivoirien.",
+    },
+    privacy: {
+      title: 'Politique de confidentialité | ALTARYS LABS',
+      description:
+        "Comment ALTARYS LABS traite les données personnelles collectées sur altaryslabs.com, conformément à la loi ivoirienne n° 2013-450 du 19 juin 2013.",
+    },
+  } satisfies Record<PageKey, { title: string; description: string }>,
+
+  footer: {
+    tagline:
+      'Éditeur de logiciels et expertise conseil, zones OHADA et CIMA.',
+    columnProducts: 'Produits',
+    columnServices: 'Services',
+    /* La colonne 4 passe de "Entreprise" a "Contact" et "À propos" descend
+       dans la colonne Légal, comme la maquette de juillet. Voir D077. */
+    columnContact: 'Contact',
+    columnLegal: 'Légal',
+    emailLabel: 'E-mail :',
+    phoneLabel: 'Téléphone :',
+    contactForm: 'Formulaire de contact',
+    legalEntity: 'ALTARYS LABS, SASU de droit ivoirien',
+    rccm: 'RCCM CI-ABJ-03-2026-B17-00070',
+    location: "Abidjan, Côte d'Ivoire",
+  },
+
+  /** Libellés communs aux deux pages légales. */
+  legal: {
+    /* Sur-titre commun : répéter le titre de la page juste au-dessus de
+       lui-même n'apporte rien au lecteur. */
+    sectionLabel: 'Informations légales',
+    lastUpdated: 'Dernière mise à jour',
+    updatedOn: '30 juillet 2026',
+  },
+} as const;
+
+/**
+ * Même forme que `fr`, mais avec des `string` au lieu des littéraux figés par
+ * `as const`. C'est le contrat que doit remplir chaque traduction : mêmes clés,
+ * texte libre. Une clé oubliée ou en trop fait échouer le build.
+ */
+type Translated<T> = {
+  [K in keyof T]: T[K] extends string ? string : Translated<T[K]>;
+};
+
+export type Dictionary = Translated<typeof fr>;

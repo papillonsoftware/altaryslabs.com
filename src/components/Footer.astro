@@ -1,0 +1,232 @@
+---
+import Logo from './Logo.astro';
+import {
+  CONTACT_EMAIL,
+  CONTACT_PHONE,
+  CONTACT_PHONE_HREF,
+  type Locale,
+} from '../i18n/config';
+import { localizedPath, useTranslations } from '../i18n/utils';
+import { LEGAL_KEYS, PRODUCT_KEYS, SERVICE_KEYS, type PageKey } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+// Genere au build, pas au runtime : le site est entierement statique.
+const year = new Date().getFullYear();
+
+/* Les colonnes de liens internes seules. La colonne Contact ne figure pas ici :
+   elle mele deux protocoles externes, `mailto:` et `tel:`, a une route, et ne
+   rentre donc pas dans une liste de PageKey. Elle est rendue a part.
+
+   "À propos" a quitte sa colonne pour rejoindre Légal, et "Contact" l'a quittee
+   pour devenir le lien de formulaire de la colonne Contact. Voir D077. */
+const linkColumns: Array<{ title: string; keys: readonly PageKey[] }> = [
+  { title: t.footer.columnProducts, keys: PRODUCT_KEYS },
+  { title: t.footer.columnServices, keys: SERVICE_KEYS },
+];
+
+const legalColumn = { title: t.footer.columnLegal, keys: [...LEGAL_KEYS, 'about'] as const };
+---
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a
+        class="footer-logo"
+        href={localizedPath('home', locale)}
+        aria-label={`ALTARYS LABS, ${t.nav.home}`}
+      >
+        <Logo lockup="inline" detail="simple" surface="dark" />
+      </a>
+      <p class="footer-tagline">{t.footer.tagline}</p>
+    </div>
+
+    {
+      linkColumns.map((column) => (
+        <nav class="footer-column" aria-label={column.title}>
+          <h2 class="footer-column-title">{column.title}</h2>
+          <ul>
+            {column.keys.map((key) => (
+              <li>
+                <a href={localizedPath(key, locale)}>{t.pageName[key]}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))
+    }
+
+    <div class="footer-column">
+      <h2 class="footer-column-title">{t.footer.columnContact}</h2>
+      <ul>
+        <li>
+          <a href={`mailto:${CONTACT_EMAIL}`}>
+            <span class="footer-contact-label">{t.footer.emailLabel}</span>
+            {CONTACT_EMAIL}
+          </a>
+        </li>
+        <li>
+          <a href={CONTACT_PHONE_HREF}>
+            <span class="footer-contact-label">{t.footer.phoneLabel}</span>
+            <span class="footer-phone">{CONTACT_PHONE}</span>
+          </a>
+        </li>
+        <li>
+          <a href={localizedPath('contact', locale)}>{t.footer.contactForm}</a>
+        </li>
+      </ul>
+    </div>
+
+    <nav class="footer-column" aria-label={legalColumn.title}>
+      <h2 class="footer-column-title">{legalColumn.title}</h2>
+      <ul>
+        {
+          legalColumn.keys.map((key) => (
+            <li>
+              <a href={localizedPath(key, locale)}>{t.pageName[key]}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+
+  <div class="container footer-legal">
+    <p class="mono">{t.footer.legalEntity}, {t.footer.rccm}</p>
+    <p class="mono">{t.footer.location}, {year}</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding: 64px 0 28px;
+    background: var(--navy-footer);
+    border-top: 1px solid var(--ink-06);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 0.9fr 0.9fr 0.7fr 0.9fr;
+    gap: 48px;
+    padding-bottom: 48px;
+  }
+
+  /* Memes deux raisons qu'au header : sans `inline-flex` l'ancre reserve la
+     descendante de sa ligne de texte sous le logo et creuse l'ecart avec la
+     signature ; et `text-decoration` doit etre annule sur l'ancre elle-meme,
+     un descendant ne pouvant pas retirer la decoration d'un ancetre.
+
+     Le couple `padding` / `margin` negatif porte la cible tactile de 26px a
+     44px sans rien deplacer : l'ancien verrou rendait 36px de haut, le nouveau
+     26. Une `min-height` aurait pousse la signature de 18px vers le bas. */
+  .footer-logo {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 0;
+    margin: -9px 0;
+    text-decoration: none;
+  }
+
+  .footer-tagline {
+    margin-top: 16px;
+    max-width: 280px;
+    font-size: 13px;
+    color: var(--slate);
+    line-height: 1.75;
+  }
+
+  .footer-column-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 18px;
+  }
+
+  .footer-column ul {
+    list-style: none;
+  }
+
+  .footer-column li + li {
+    margin-top: 11px;
+  }
+
+  .footer-column a {
+    font-size: 13.5px;
+    color: var(--muted);
+    text-decoration: none;
+    line-height: 1.5;
+    transition: color var(--ease);
+  }
+
+  .footer-column a:hover {
+    color: var(--gold-light);
+  }
+
+  /* Libelle au-dessus de la valeur plutot qu'a cote : la colonne est etroite et
+     l'adresse est longue. La maquette mettait le libelle e-mail en ligne et
+     coupait celui du telephone avec un `<br></br>`, qui n'est pas du HTML
+     valide ; un bloc donne le meme rendu sans balisage invente. */
+  .footer-contact-label {
+    display: block;
+  }
+
+  /* L'adresse ne doit pas deborder de sa colonne sur les largeurs
+     intermediaires, ou la grille est la plus serree. */
+  .footer-column a {
+    overflow-wrap: anywhere;
+  }
+
+  .footer-phone {
+    white-space: nowrap;
+  }
+
+  .footer-legal {
+    padding-top: 22px;
+    border-top: 1px solid var(--ink-05);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  /* --ink-25 ne donnait que 2.09:1 a 10.5px, tres au-dessous du seuil AA.
+     --ink-60 monte a 5.90:1 en restant une mention discrete. D029. */
+  .footer-legal p {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--ink-60);
+  }
+
+  .footer-legal .mono {
+    letter-spacing: 0.03em;
+  }
+
+  @media (max-width: 900px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-legal {
+      flex-direction: column;
+    }
+  }
+</style>

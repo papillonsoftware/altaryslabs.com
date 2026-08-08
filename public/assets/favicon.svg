@@ -1,0 +1,19 @@
+<!-- Diamant ALTARYS LABS, geometrie du projet claude.ai/design (D086).
+     Trois pastilles sur quatre mordent sur le cadre 0 0 76 70 de la maquette :
+     la gauche jusqu'a x=-1, la droite jusqu'a x=77, la basse jusqu'a y=71. La
+     pastille haute s'arrete a y=1 et reste dans le cadre. Un fichier autonome
+     n'ayant pas de CSS pour leur accorder un overflow visible comme le fait
+     Logo.astro, le viewBox est elargi a gauche, a droite et en bas seulement.
+     Il reste centre sur la marque : contenu en x de -1 a 77 pour un centre a
+     38, et en y de 1 a 71 pour un centre a 36. -->
+<svg width="78" height="72" viewBox="-1 0 78 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="38,4 74,37 38,68 2,37" fill="none" stroke="#C8922A" stroke-width="2"/>
+  <polygon points="38,15 59,37 38,57 17,37" fill="#C8922A" opacity="0.15"/>
+  <line x1="26" y1="57" x2="38" y2="17" stroke="#C8922A" stroke-width="3" stroke-linecap="round"/>
+  <line x1="50" y1="57" x2="38" y2="17" stroke="#C8922A" stroke-width="3" stroke-linecap="round"/>
+  <line x1="29" y1="46" x2="47" y2="46" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="38" cy="4" r="3" fill="#C8922A"/>
+  <circle cx="74" cy="37" r="3" fill="#C8922A"/>
+  <circle cx="38" cy="68" r="3" fill="#C8922A"/>
+  <circle cx="2" cy="37" r="3" fill="#C8922A"/>
+</svg>

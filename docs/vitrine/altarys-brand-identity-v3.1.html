@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALTARYS LABS — Brand Identity System v3.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:       #0F1724;
+    --navy-deep:  #07111E;
+    --navy-mid:   #1A2740;
+    --navy-soft:  #253550;
+    --gold:       #C8922A;
+    --gold-light: #E5B55A;
+    --gold-pale:  #F5E6C8;
+    --ivory:      #FAF7F2;
+    --slate:      #6B7A96;
+    /* Papillon */
+    --pap-amber:  #D4810A;
+    --pap-warm:   #F5A623;
+    /* Enterprise */
+    --ent-teal:   #1A8FA0;
+    --ent-teal-l: #4DB8CC;
+    /* AI (futur) */
+    --ai-violet:  #7C5CBF;
+    --ai-violet-l:#A98EDA;
+    /* System */
+    --ok:  #2E7D52;
+    --err: #B93838;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0F1724; font-family:'DM Sans',sans-serif; color:#FAF7F2; line-height:1.6; }
+
+  /* ─── COVER ─── */
+  .cover {
+    background: var(--navy-deep);
+    min-height: 100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    position:relative; overflow:hidden;
+  }
+  .cover-grid {
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(200,146,42,.03) 79px, rgba(200,146,42,.03) 80px),
+      repeating-linear-gradient(0deg,  transparent, transparent 79px, rgba(200,146,42,.03) 79px, rgba(200,146,42,.03) 80px);
+  }
+  .cover-content { position:relative; text-align:center; }
+  .cover-eyebrow {
+    font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.45em;
+    text-transform:uppercase; color:rgba(200,146,42,.6); margin-bottom:4rem;
+  }
+  .cover-footer {
+    font-family:'DM Sans',sans-serif; font-weight:300;
+    color:rgba(255,255,255,.2); font-size:11px; letter-spacing:.25em;
+    text-transform:uppercase; margin-top:3.5rem;
+  }
+  .cover-version-badge {
+    display:inline-block; margin-top:1rem;
+    background:rgba(200,146,42,.1); border:1px solid rgba(200,146,42,.2);
+    padding:4px 14px; border-radius:2px;
+    font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.2em;
+    color:var(--gold);
+  }
+
+  /* ─── LAYOUT ─── */
+  .page   { padding:72px 64px; max-width:1200px; margin:0 auto; }
+  .divider { border:none; border-top:1px solid rgba(255,255,255,.05); }
+
+  .sec-label {
+    font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.38em;
+    text-transform:uppercase; color:rgba(200,146,42,.65); margin-bottom:.35rem;
+  }
+  .sec-title {
+    font-family:'Cormorant Garamond',serif; font-weight:300;
+    font-size:clamp(24px,2.8vw,38px); color:var(--gold-light); margin-bottom:2.5rem;
+  }
+
+  /* ─── LOGO GRID ─── */
+  .logo-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; max-width:1200px; margin:0 auto; }
+  .logo-cell {
+    padding:60px 44px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
+  }
+  .logo-cell.bg-deep  { background:#040C16; }
+  .logo-cell.bg-navy  { background:#0F1724; border:1px solid rgba(255,255,255,.03); }
+  .logo-cell.bg-light { background:#FAF7F2; }
+  .logo-cell.bg-gold  { background:#C8922A; }
+  .logo-caption {
+    font-family:'Space Mono',monospace; font-size:9px;
+    letter-spacing:.22em; text-transform:uppercase;
+  }
+  .logo-cell.bg-deep  .logo-caption,
+  .logo-cell.bg-navy  .logo-caption { color:rgba(255,255,255,.22); }
+  .logo-cell.bg-light .logo-caption { color:rgba(15,23,36,.3); }
+  .logo-cell.bg-gold  .logo-caption { color:rgba(15,23,36,.4); }
+
+  /* ─── MONOGRAM ROW ─── */
+  .mono-row { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; max-width:1200px; margin:2px auto 0; }
+  .mono-cell {
+    padding:40px 20px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
+  }
+
+  /* ─── COLOR SWATCHES ─── */
+  .swatch-row { display:grid; grid-template-columns:repeat(auto-fill, minmax(138px,1fr)); gap:10px; margin-bottom:28px; }
+  .swatch { border-radius:3px; overflow:hidden; }
+  .swatch-color { height:76px; }
+  .swatch-info  { background:#1A2740; padding:10px 12px; }
+  .swatch-name  { font-size:11px; font-weight:500; color:rgba(255,255,255,.75); margin-bottom:2px; }
+  .swatch-hex   { font-family:'Space Mono',monospace; font-size:10px; color:var(--slate); }
+
+  /* ─── TYPE BLOCKS ─── */
+  .type-block {
+    padding:32px 38px; background:#1A2740; border-radius:3px;
+    margin-bottom:10px; border-left:2px solid var(--gold);
+  }
+  .type-meta {
+    font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.22em;
+    text-transform:uppercase; color:rgba(255,255,255,.22); margin-bottom:10px;
+  }
+
+  /* ─── STATUS CARDS ─── */
+  .status-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .status-card {
+    border-radius:4px; overflow:hidden;
+  }
+  .status-header {
+    padding:20px 28px;
+    font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.3em;
+    text-transform:uppercase; font-weight:700;
+  }
+  .status-header.now    { background:rgba(200,146,42,.15); color:var(--gold); border-top:2px solid var(--gold); }
+  .status-header.future { background:rgba(26,143,160,.1);  color:var(--ent-teal); border-top:2px solid var(--ent-teal); }
+  .status-body { background:#1A2740; padding:24px 28px; }
+
+  /* ─── BRAND GRID ─── */
+  .brand-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; }
+  .brand-card { padding:48px 40px; }
+  .brand-card.papillon   { background:#130D04; }
+  .brand-card.enterprise { background:#050F17; }
+  .brand-card.consulting { background:#09111D; }
+  .brand-card.ai-future  { background:#090718; border:1px solid rgba(124,92,191,.1); }
+  .brand-chip {
+    display:inline-block; font-family:'Space Mono',monospace; font-size:8px;
+    letter-spacing:.18em; text-transform:uppercase; padding:3px 9px; border-radius:2px; margin-bottom:6px;
+  }
+  .brand-desc   { font-size:12.5px; font-weight:300; color:rgba(255,255,255,.38); line-height:1.75; max-width:240px; margin-top:8px; }
+  .brand-domain { font-family:'Space Mono',monospace; font-size:9px; color:rgba(255,255,255,.18); margin-top:12px; }
+
+  /* ─── APP MOCK ─── */
+  .mock-shell {
+    background:#07111E; border-radius:8px; overflow:hidden;
+    box-shadow:0 40px 120px rgba(0,0,0,.6);
+  }
+
+  /* ─── RULES ─── */
+  .rules-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .rule-card  { padding:26px 30px; background:#1A2740; border-radius:3px; }
+  .rule-card.do   { border-top:2px solid #2E7D52; }
+  .rule-card.dont { border-top:2px solid #B93838; }
+  .rule-card h4   { font-size:10px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; margin-bottom:12px; }
+  .rule-card.do   h4 { color:#4CAF80; }
+  .rule-card.dont h4 { color:#E05555; }
+  .rule-card ul   { list-style:none; font-size:12.5px; color:rgba(255,255,255,.42); line-height:1.95; }
+  .rule-card ul li::before { content:'— '; color:rgba(255,255,255,.18); }
+
+  /* ─── FOOTER ─── */
+  .doc-footer {
+    background:#040C16; color:rgba(255,255,255,.18); text-align:center;
+    padding:32px; font-size:10px; letter-spacing:.22em;
+    font-family:'Space Mono',monospace; border-top:1px solid rgba(255,255,255,.04);
+  }
+
+  @media(max-width:768px){
+    .page { padding:40px 20px; }
+    .logo-grid,.brand-grid,.status-grid,.rules-grid { grid-template-columns:1fr; }
+    .mono-row { grid-template-columns:repeat(2,1fr); }
+    .logo-cell { padding:40px 20px; }
+    .brand-card { padding:36px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- DOCUMENT PERIME - UI-FIX-003 / D102, 7 aout 2026 -->
+<div style="background:#1A2740; color:#FAF7F2; font-family:'DM Sans',sans-serif; font-size:14px; line-height:1.7; padding:24px 32px; border-bottom:3px solid #C8922A;">
+  <p style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.2em; color:#E5B55A; text-transform:uppercase; margin:0 0 10px;">Document perime - 7 aout 2026 - UI-FIX-003, D102</p>
+  <p style="margin:0 0 10px;"><strong>Cette charte v3.1 est perimee et ne fait plus foi sur rien.</strong> La reference visuelle est le projet claude.ai/design <code>53d1c228-d274-4df3-8022-1a427dd96c15</code>, et son implementation vit dans <code>src/styles/tokens.css</code> et <code>src/components/</code>. Le document est conserve pour l'historique seulement.</p>
+  <p style="margin:0 0 10px;"><strong>Trois pieges concrets si vous lisez la suite.</strong> Sa section couleurs porte la palette ambre et turquoise <code>#D4810A</code>, <code>#F5A623</code>, <code>#1A8FA0</code>, <code>#4DB8CC</code>, abandonnee depuis : la palette du site est marine et or, exclusivement. Elle presente ALTARYS ENTERPRISE comme une ligne de produit vivante, alors qu'elle a ete remplacee par Papillon Corporate Finance Suite. Et ses verrous portent le diamant fin d'avant D086.</p>
+  <p style="margin:0;">Ce qui fait foi aujourd'hui : <code>CLAUDE.md</code> pour les regles, <code>src/styles/tokens.css</code> pour les valeurs, le projet claude.ai/design pour la forme.</p>
+</div>
+
+<!-- ══════════════════════════════════════════
+  COVER
+══════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-grid"></div>
+  <div class="cover-content">
+    <p class="cover-eyebrow">Brand Identity System — Version 3.1</p>
+
+    <!-- ALTARYS LABS main logo on cover -->
+    <svg width="380" height="76" viewBox="0 0 380 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Flat diamond (aperçu aplati v2+) -->
+      <polygon points="38,5 76,38 38,71 0,38" fill="none" stroke="#C8922A" stroke-width="1.5"/>
+      <polygon points="38,17 60,38 38,59 16,38" fill="#C8922A" opacity="0.11"/>
+      <!-- A -->
+      <line x1="25" y1="58" x2="38" y2="18" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="51" y1="58" x2="38" y2="18" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="28.5" y1="47" x2="47.5" y2="47" stroke="#C8922A" stroke-width="2" stroke-linecap="round"/>
+      <!-- Corner dots -->
+      <circle cx="38" cy="5"  r="2.3" fill="#C8922A"/>
+      <circle cx="76" cy="38" r="2.3" fill="#C8922A"/>
+      <circle cx="38" cy="71" r="2.3" fill="#C8922A"/>
+      <circle cx="0"  cy="38" r="2.3" fill="#C8922A"/>
+      <!-- ALTARYS wordmark -->
+      <text x="94" y="40" font-family="'DM Sans',sans-serif" font-weight="300" font-size="30" letter-spacing="8" fill="#FFFFFF">ALTARYS</text>
+      <!-- LABS sub-label — gold, spaced -->
+      <text x="95" y="57" font-family="'Space Mono',monospace" font-weight="400" font-size="10" letter-spacing="7.5" fill="#C8922A">LABS</text>
+    </svg>
+
+    <p class="cover-footer">Abidjan · Côte d'Ivoire · 2026</p>
+    <span class="cover-version-badge">Entité opérationnelle principale · SAS ivoirienne</span>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════════════
+  01 — LOGO SYSTEM
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="sec-label">01 — Logotype</div>
+  <div class="sec-title">Logo System — ALTARYS LABS</div>
+  <p style="font-size:13px; color:rgba(255,255,255,.38); max-width:580px; margin-bottom:2.5rem; line-height:1.75;">
+    <strong style="color:rgba(255,255,255,.6);">ALTARYS LABS</strong> est l'entité légale et opérationnelle.
+    Le logomark diamant est partagé avec toute la famille ALTARYS.
+    Le sub-label <span style="font-family:'Space Mono',monospace; color:var(--gold); font-size:11px; letter-spacing:.1em;">LABS</span> identifie la filiale.
+  </p>
+</div>
+
+<div class="logo-grid">
+  <!-- Usage principal - fond très sombre -->
+  <div class="logo-cell bg-deep">
+    <svg width="300" height="72" viewBox="0 0 300 72" fill="none">
+      <polygon points="36,5 72,36 36,67 0,36" fill="none" stroke="#C8922A" stroke-width="1.5"/>
+      <polygon points="36,16 57,36 36,56 15,36" fill="#C8922A" opacity="0.11"/>
+      <line x1="24" y1="56" x2="36" y2="17" stroke="#C8922A" stroke-width="2.4" stroke-linecap="round"/>
+      <line x1="48" y1="56" x2="36" y2="17" stroke="#C8922A" stroke-width="2.4" stroke-linecap="round"/>
+      <line x1="27" y1="45" x2="45" y2="45" stroke="#C8922A" stroke-width="1.9" stroke-linecap="round"/>
+      <circle cx="36" cy="5"  r="2.2" fill="#C8922A"/>
+      <circle cx="72" cy="36" r="2.2" fill="#C8922A"/>
+      <circle cx="36" cy="67" r="2.2" fill="#C8922A"/>
+      <circle cx="0"  cy="36" r="2.2" fill="#C8922A"/>
+      <text x="86" y="38" font-family="'DM Sans',sans-serif" font-weight="300" font-size="27" letter-spacing="7" fill="#FFFFFF">ALTARYS</text>
+      <text x="87" y="54" font-family="'Space Mono',monospace" font-size="9.5" letter-spacing="6.5" fill="#C8922A">LABS</text>
+    </svg>
+    <span class="logo-caption">Principal — fond noir · contrats, factures</span>
+  </div>
+
+  <!-- Fond clair -->
+  <div class="logo-cell bg-light">
+    <svg width="300" height="72" viewBox="0 0 300 72" fill="none">
+      <polygon points="36,5 72,36 36,67 0,36" fill="none" stroke="#C8922A" stroke-width="1.5"/>
+      <polygon points="36,16 57,36 36,56 15,36" fill="#C8922A" opacity="0.09"/>
+      <line x1="24" y1="56" x2="36" y2="17" stroke="#C8922A" stroke-width="2.4" stroke-linecap="round"/>
+      <line x1="48" y1="56" x2="36" y2="17" stroke="#C8922A" stroke-width="2.4" stroke-linecap="round"/>
+      <line x1="27" y1="45" x2="45" y2="45" stroke="#C8922A" stroke-width="1.9" stroke-linecap="round"/>
+      <circle cx="36" cy="5"  r="2.2" fill="#C8922A"/>
+      <circle cx="72" cy="36" r="2.2" fill="#C8922A"/>
+      <circle cx="36" cy="67" r="2.2" fill="#C8922A"/>
+      <circle cx="0"  cy="36" r="2.2" fill="#C8922A"/>
+      <text x="86" y="38" font-family="'DM Sans',sans-serif" font-weight="300" font-size="27" letter-spacing="7" fill="#0F1724">ALTARYS</text>
+      <text x="87" y="54" font-family="'Space Mono',monospace" font-size="9.5" letter-spacing="6.5" fill="#C8922A">LABS</text>
+    </svg>
+    <span class="logo-caption">Secondaire — fond clair · papier, print</span>
+  </div>
+
+  <!-- Sans LABS — institutional -->
+  <div class="logo-cell bg-navy">
+    <svg width="300" height="72" viewBox="0 0 300 72" fill="none">
+      <polygon points="36,5 72,36 36,67 0,36" fill="none" stroke="#C8922A" stroke-width="1.5"/>
+      <polygon points="36,16 57,36 36,56 15,36" fill="#C8922A" opacity="0.11"/>
+      <line x1="24" y1="56" x2="36" y2="17" stroke="#C8922A" stroke-width="2.4" stroke-linecap="round"/>
+      <line x1="48" y1="56" x2="36" y2="17" stroke="#C8922A" stroke-width="2.4" stroke-linecap="round"/>
+      <line x1="27" y1="45" x2="45" y2="45" stroke="#C8922A" stroke-width="1.9" stroke-linecap="round"/>
+      <circle cx="36" cy="5"  r="2.2" fill="#C8922A"/>
+      <circle cx="72" cy="36" r="2.2" fill="#C8922A"/>
+      <circle cx="36" cy="67" r="2.2" fill="#C8922A"/>
+      <circle cx="0"  cy="36" r="2.2" fill="#C8922A"/>
+      <text x="86" y="45" font-family="'DM Sans',sans-serif" font-weight="300" font-size="27" letter-spacing="7" fill="#FFFFFF">ALTARYS</text>
+    </svg>
+    <span class="logo-caption">Sans LABS — usage institutionnel futur · holding</span>
+  </div>
+
+  <!-- Monogramme or -->
+  <div class="logo-cell bg-gold">
+    <svg width="72" height="66" viewBox="0 0 76 70" fill="none">
+      <polygon points="38,5 74,38 38,71 2,38" fill="none" stroke="#07111E" stroke-width="1.5" opacity="0.45"/>
+      <polygon points="38,16 60,38 38,60 16,38" fill="#07111E" opacity="0.06"/>
+      <line x1="26" y1="59" x2="38" y2="18" stroke="#07111E" stroke-width="2.8" stroke-linecap="round" opacity="0.65"/>
+      <line x1="50" y1="59" x2="38" y2="18" stroke="#07111E" stroke-width="2.8" stroke-linecap="round" opacity="0.65"/>
+      <line x1="29" y1="47" x2="47" y2="47" stroke="#07111E" stroke-width="2.2" stroke-linecap="round" opacity="0.65"/>
+      <circle cx="38" cy="5"  r="2.5" fill="#07111E" opacity="0.45"/>
+      <circle cx="74" cy="38" r="2.5" fill="#07111E" opacity="0.45"/>
+      <circle cx="38" cy="71" r="2.5" fill="#07111E" opacity="0.45"/>
+      <circle cx="2"  cy="38" r="2.5" fill="#07111E" opacity="0.45"/>
+    </svg>
+    <span class="logo-caption">Monogramme or · événementiel · stamp</span>
+  </div>
+</div>
+
+<!-- Monogram sizes row -->
+<div class="mono-row">
+  <div class="mono-cell" style="background:#04080F;">
+    <svg width="56" height="52" viewBox="0 0 76 70" fill="none">
+      <polygon points="38,5 74,38 38,71 2,38" fill="none" stroke="#C8922A" stroke-width="1.5"/>
+      <polygon points="38,16 60,38 38,60 16,38" fill="#C8922A" opacity="0.11"/>
+      <line x1="26" y1="59" x2="38" y2="18" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="50" y1="59" x2="38" y2="18" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="29" y1="47" x2="47" y2="47" stroke="#C8922A" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="38" cy="5" r="2.5" fill="#C8922A"/>
+      <circle cx="74" cy="38" r="2.5" fill="#C8922A"/>
+      <circle cx="38" cy="71" r="2.5" fill="#C8922A"/>
+      <circle cx="2"  cy="38" r="2.5" fill="#C8922A"/>
+    </svg>
+    <span class="logo-caption" style="color:rgba(255,255,255,.2);">App icon 512px</span>
+  </div>
+  <div class="mono-cell" style="background:#FAF7F2;">
+    <svg width="48" height="44" viewBox="0 0 76 70" fill="none">
+      <polygon points="38,5 74,38 38,71 2,38" fill="none" stroke="#C8922A" stroke-width="1.5"/>
+      <polygon points="38,16 60,38 38,60 16,38" fill="#C8922A" opacity="0.09"/>
+      <line x1="26" y1="59" x2="38" y2="18" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="50" y1="59" x2="38" y2="18" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="29" y1="47" x2="47" y2="47" stroke="#C8922A" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="38" cy="5" r="2.5" fill="#C8922A"/>
+      <circle cx="74" cy="38" r="2.5" fill="#C8922A"/>
+      <circle cx="38" cy="71" r="2.5" fill="#C8922A"/>
+      <circle cx="2"  cy="38" r="2.5" fill="#C8922A"/>
+    </svg>
+    <span class="logo-caption" style="color:rgba(15,23,36,.28);">Favicon · fond clair</span>
+  </div>
+  <div class="mono-cell" style="background:#C8922A;">
+    <svg width="48" height="44" viewBox="0 0 76 70" fill="none">
+      <polygon points="38,5 74,38 38,71 2,38" fill="none" stroke="#07111E" stroke-width="1.5" opacity="0.4"/>
+      <line x1="26" y1="59" x2="38" y2="18" stroke="#07111E" stroke-width="2.8" stroke-linecap="round" opacity="0.6"/>
+      <line x1="50" y1="59" x2="38" y2="18" stroke="#07111E" stroke-width="2.8" stroke-linecap="round" opacity="0.6"/>
+      <line x1="29" y1="47" x2="47" y2="47" stroke="#07111E" stroke-width="2.2" stroke-linecap="round" opacity="0.6"/>
+    </svg>
+    <span class="logo-caption" style="color:rgba(15,23,36,.35);">Stamp · tampon officiel</span>
+  </div>
+  <div class="mono-cell" style="background:#1A2740;">
+    <!-- 32px min size simulation -->
+    <svg width="34" height="32" viewBox="0 0 76 70" fill="none">
+      <polygon points="38,5 74,38 38,71 2,38" fill="none" stroke="#C8922A" stroke-width="2.5"/>
+      <line x1="26" y1="59" x2="38" y2="18" stroke="#C8922A" stroke-width="4" stroke-linecap="round"/>
+      <line x1="50" y1="59" x2="38" y2="18" stroke="#C8922A" stroke-width="4" stroke-linecap="round"/>
+      <line x1="29" y1="47" x2="47" y2="47" stroke="#C8922A" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <span class="logo-caption" style="color:rgba(255,255,255,.2);">32px min · sans points</span>
+  </div>
+</div>
+
+<hr class="divider" style="margin-top:2px;">
+
+<!-- ══════════════════════════════════════════
+  02 — COULEURS
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="sec-label">02 — Couleurs</div>
+  <div class="sec-title">Palette de couleurs</div>
+
+  <!-- Primaires groupe -->
+  <p style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.28em; text-transform:uppercase; color:rgba(200,146,42,.55); margin-bottom:12px;">
+    Palette principale · ALTARYS LABS (navy + or)
+  </p>
+  <div class="swatch-row" style="margin-bottom:32px;">
+    <div class="swatch"><div class="swatch-color" style="background:#07111E;"></div><div class="swatch-info"><div class="swatch-name">Noir Profond</div><div class="swatch-hex">#07111E</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#0F1724;"></div><div class="swatch-info"><div class="swatch-name">Navy Deep</div><div class="swatch-hex">#0F1724</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#1A2740;"></div><div class="swatch-info"><div class="swatch-name">Navy Mid</div><div class="swatch-hex">#1A2740</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#253550;"></div><div class="swatch-info"><div class="swatch-name">Navy Soft</div><div class="swatch-hex">#253550</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C8922A;"></div><div class="swatch-info"><div class="swatch-name">Gold</div><div class="swatch-hex">#C8922A</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#E5B55A;"></div><div class="swatch-info"><div class="swatch-name">Gold Light</div><div class="swatch-hex">#E5B55A</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#FAF7F2;"></div><div class="swatch-info"><div class="swatch-name">Ivory</div><div class="swatch-hex" style="color:#6B7A96;">#FAF7F2</div></div></div>
+  </div>
+
+  <!-- Couleurs filiales (future) -->
+  <p style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.28em; text-transform:uppercase; color:rgba(255,255,255,.2); margin-bottom:12px;">
+    Couleurs filiales futures · usage réservé
+  </p>
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+    <div>
+      <p style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.2em; color:rgba(212,129,10,.55); margin-bottom:8px; text-transform:uppercase;">Papillon · PME</p>
+      <div style="display:grid; gap:8px;">
+        <div class="swatch"><div class="swatch-color" style="background:#D4810A; height:56px;"></div><div class="swatch-info"><div class="swatch-name">Amber</div><div class="swatch-hex">#D4810A</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#F5A623; height:56px;"></div><div class="swatch-info"><div class="swatch-name">Warm Gold</div><div class="swatch-hex">#F5A623</div></div></div>
+      </div>
+    </div>
+    <div>
+      <p style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.2em; color:rgba(26,143,160,.55); margin-bottom:8px; text-transform:uppercase;">Enterprise · ETI</p>
+      <div style="display:grid; gap:8px;">
+        <div class="swatch"><div class="swatch-color" style="background:#1A8FA0; height:56px;"></div><div class="swatch-info"><div class="swatch-name">Teal</div><div class="swatch-hex">#1A8FA0</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#4DB8CC; height:56px;"></div><div class="swatch-info"><div class="swatch-name">Teal Light</div><div class="swatch-hex">#4DB8CC</div></div></div>
+      </div>
+    </div>
+    <div>
+      <p style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.2em; color:rgba(124,92,191,.55); margin-bottom:8px; text-transform:uppercase;">ALTARYS AI · futur ⚡</p>
+      <div style="display:grid; gap:8px;">
+        <div class="swatch"><div class="swatch-color" style="background:#7C5CBF; height:56px;"></div><div class="swatch-info"><div class="swatch-name">Violet</div><div class="swatch-hex">#7C5CBF</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#A98EDA; height:56px;"></div><div class="swatch-info"><div class="swatch-name">Violet Light</div><div class="swatch-hex">#A98EDA</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════════════
+  03 — TYPOGRAPHIE
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="sec-label">03 — Typographie</div>
+  <div class="sec-title">Système typographique</div>
+
+  <div class="type-block">
+    <div class="type-meta">Display / Marketing — Cormorant Garamond Light 300 · Pitch, site vitrine, storytelling</div>
+    <p style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:46px; color:#FAF7F2; line-height:1.1;">
+      Logiciels d'entreprise <em>construits</em><br>pour l'Afrique.
+    </p>
+  </div>
+
+  <div class="type-block">
+    <div class="type-meta">Heading Interface — DM Sans 500 · Titres d'écrans, navigation, sections</div>
+    <p style="font-family:'DM Sans',sans-serif; font-weight:500; font-size:23px; color:#FAF7F2; letter-spacing:-.01em;">
+      Tableau de bord · Gestion RH · Paie CNPS · Conformité OHADA
+    </p>
+  </div>
+
+  <div class="type-block">
+    <div class="type-meta">Body — DM Sans 300 · 15px / 1.72 · Textes courants, descriptions</div>
+    <p style="font-family:'DM Sans',sans-serif; font-weight:300; font-size:15px; color:rgba(255,255,255,.52); line-height:1.72; max-width:580px;">
+      ALTARYS LABS développe des logiciels d'entreprise pour les marchés OHADA — automatisant la conformité réglementaire, la gestion RH et le pilotage financier, avec une architecture cloud-native conçue pour l'Afrique de l'Ouest.
+    </p>
+  </div>
+
+  <div class="type-block">
+    <div class="type-meta">Technical / Mono — Space Mono 400 · Montants XOF, codes, labels système, données</div>
+    <p style="font-family:'Space Mono',monospace; font-size:12.5px; color:var(--gold); letter-spacing:.18em; text-transform:uppercase; line-height:2.1;">
+      12 450 000 XOF · CNPS 16% · ITS TRANCHE 3<br>CIV-2026 · SYSCOHADA · tenant_id::uuid · RCCM CI-ABJ-2026
+    </p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════════════
+  04 — ARCHITECTURE DE MARQUE
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="sec-label">04 — Architecture de marque</div>
+  <div class="sec-title">Aujourd'hui vs Demain</div>
+
+  <div class="status-grid">
+    <!-- MAINTENANT -->
+    <div class="status-card">
+      <div class="status-header now">État actuel · Dès immatriculation</div>
+      <div class="status-body">
+        <!-- ALTARYS LABS logo mini -->
+        <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
+          <svg width="44" height="40" viewBox="0 0 76 70" fill="none">
+            <polygon points="38,5 74,38 38,71 2,38" fill="none" stroke="#C8922A" stroke-width="2"/>
+            <polygon points="38,16 60,38 38,60 16,38" fill="#C8922A" opacity="0.12"/>
+            <line x1="26" y1="59" x2="38" y2="18" stroke="#C8922A" stroke-width="3" stroke-linecap="round"/>
+            <line x1="50" y1="59" x2="38" y2="18" stroke="#C8922A" stroke-width="3" stroke-linecap="round"/>
+            <line x1="29" y1="47" x2="47" y2="47" stroke="#C8922A" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="38" cy="5" r="3" fill="#C8922A"/><circle cx="74" cy="38" r="3" fill="#C8922A"/>
+            <circle cx="38" cy="71" r="3" fill="#C8922A"/><circle cx="2"  cy="38" r="3" fill="#C8922A"/>
+          </svg>
+          <div>
+            <p style="font-family:'DM Sans',sans-serif; font-weight:400; font-size:16px; color:#FAF7F2; letter-spacing:2px;">ALTARYS <span style="color:var(--gold);">LABS</span></p>
+            <p style="font-family:'Space Mono',monospace; font-size:9px; color:rgba(255,255,255,.25); letter-spacing:.12em; margin-top:2px;">SAS · RCCM Abidjan</p>
+          </div>
+        </div>
+        <p style="font-size:12.5px; color:rgba(255,255,255,.4); line-height:1.8; margin-bottom:16px;">
+          Entité unique regroupant <strong style="color:rgba(255,255,255,.65);">toutes les activités</strong> :
+        </p>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:center; gap:10px; padding:8px 12px; background:rgba(212,129,10,.08); border-radius:3px; border-left:2px solid #D4810A;">
+            <svg width="16" height="14" viewBox="0 0 50 46" fill="none"><path d="M8,23 C1,10 1,3 13,7 C21,11 23,18 23,23" fill="none" stroke="#D4810A" stroke-width="2.5"/><path d="M8,23 C1,36 1,43 13,39 C21,35 23,28 23,23" fill="none" stroke="#D4810A" stroke-width="2.5"/><path d="M38,23 C45,10 45,3 33,7 C25,11 23,18 23,23" fill="none" stroke="#F5A623" stroke-width="2.5"/><path d="M38,23 C45,36 45,43 33,39 C25,35 23,28 23,23" fill="none" stroke="#F5A623" stroke-width="2.5"/><line x1="23" y1="6" x2="23" y2="40" stroke="#D4810A" stroke-width="2.5"/></svg>
+            <span style="font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(255,255,255,.55);">Produit <strong style="color:#F5A623;">Papillon HR Suite</strong> · PME</span>
+          </div>
+          <div style="padding:8px 12px; background:rgba(100,136,180,.08); border-radius:3px; border-left:2px solid #6488B4;">
+            <span style="font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(255,255,255,.5);">💼 Consulting RH, Finance & IT</span>
+          </div>
+          <div style="padding:8px 12px; background:rgba(200,146,42,.06); border-radius:3px; border-left:2px solid rgba(200,146,42,.3);">
+            <span style="font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(255,255,255,.5);">⚙️ R&D plateforme</span>
+          </div>
+        </div>
+        <p style="font-family:'Space Mono',monospace; font-size:9px; color:rgba(255,255,255,.2); margin-top:16px; letter-spacing:.08em;">altarysgroup.com · papillonhr.com</p>
+      </div>
+    </div>
+
+    <!-- FUTUR -->
+    <div class="status-card">
+      <div class="status-header future">État cible · Quand CA le justifie</div>
+      <div class="status-body">
+        <!-- Holding -->
+        <div style="text-align:center; padding:12px; background:rgba(200,146,42,.06); border:1px solid rgba(200,146,42,.15); border-radius:3px; margin-bottom:10px;">
+          <p style="font-family:'DM Sans',sans-serif; font-weight:400; font-size:13px; color:#FAF7F2; letter-spacing:2.5px;">ALTARYS GROUP</p>
+          <p style="font-family:'Space Mono',monospace; font-size:8px; color:rgba(200,146,42,.5); letter-spacing:.12em; margin-top:2px;">Holding · altarysgroup.com</p>
+        </div>
+        <!-- Connector -->
+        <div style="display:flex; justify-content:center; margin:6px 0;">
+          <div style="width:1px; height:16px; background:rgba(200,146,42,.25);"></div>
+        </div>
+        <div style="width:calc(100% - 40px); height:1px; background:rgba(200,146,42,.2); margin:0 20px 6px;"></div>
+        <!-- Filiales -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+          <div style="padding:10px; background:rgba(212,129,10,.07); border:1px solid rgba(212,129,10,.15); border-radius:3px; text-align:center;">
+            <p style="font-family:'Space Mono',monospace; font-size:8px; color:#F5A623; letter-spacing:.1em;">ALTARYS LABS</p>
+            <p style="font-size:10px; color:rgba(255,255,255,.3); margin-top:3px;">SaaS + R&D</p>
+          </div>
+          <div style="padding:10px; background:rgba(100,136,180,.07); border:1px solid rgba(100,136,180,.15); border-radius:3px; text-align:center;">
+            <p style="font-family:'Space Mono',monospace; font-size:8px; color:#6488B4; letter-spacing:.1em;">ALTARYS CONSULTING</p>
+            <p style="font-size:10px; color:rgba(255,255,255,.3); margin-top:3px;">Conseil</p>
+          </div>
+          <div style="padding:10px; background:rgba(26,143,160,.07); border:1px solid rgba(26,143,160,.15); border-radius:3px; text-align:center;">
+            <p style="font-family:'Space Mono',monospace; font-size:8px; color:#4DB8CC; letter-spacing:.1em;">ALTARYS ENTERPRISE</p>
+            <p style="font-size:10px; color:rgba(255,255,255,.3); margin-top:3px;">ETI + Banking</p>
+          </div>
+          <div style="padding:10px; background:rgba(124,92,191,.07); border:1px solid rgba(124,92,191,.15); border-radius:3px; text-align:center;">
+            <p style="font-family:'Space Mono',monospace; font-size:8px; color:#A98EDA; letter-spacing:.1em;">ALTARYS AI ⚡</p>
+            <p style="font-size:10px; color:rgba(255,255,255,.3); margin-top:3px;">altarys.ai</p>
+          </div>
+        </div>
+        <div style="margin-top:14px; padding:10px 14px; background:rgba(26,143,160,.06); border-radius:3px;">
+          <p style="font-size:11px; color:rgba(255,255,255,.3); line-height:1.7;">
+            Déclencheur : CA récurrent &gt; 75M XOF/mois stable + DAF dédié + associé ou investisseur identifié
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════════════
+  05 — SOUS-MARQUES PRODUIT
+══════════════════════════════════════════ -->
+<div class="page" style="padding-bottom:0;">
+  <div class="sec-label">05 — Sous-marques produit</div>
+  <div class="sec-title">Logos des produits & filiales</div>
+</div>
+
+<div class="brand-grid" style="max-width:1200px; margin:0 auto;">
+
+  <!-- Papillon — 2 lignes de produit, même palette amber -->
+  <div class="brand-card papillon">
+    <!-- Ligne 1 : Papillon HR Suite -->
+    <svg width="214" height="58" viewBox="0 0 214 58" fill="none">
+      <path d="M8,28 C1,14 1,6 14,10 C22,14 24,21 24,28" fill="none" stroke="#D4810A" stroke-width="1.8"/>
+      <path d="M8,28 C1,42 1,50 14,46 C22,42 24,35 24,28" fill="none" stroke="#D4810A" stroke-width="1.8"/>
+      <path d="M40,28 C47,14 47,6 34,10 C26,14 24,21 24,28" fill="none" stroke="#F5A623" stroke-width="1.8"/>
+      <path d="M40,28 C47,42 47,50 34,46 C26,42 24,35 24,28" fill="none" stroke="#F5A623" stroke-width="1.8"/>
+      <line x1="24" y1="9" x2="24" y2="47" stroke="#D4810A" stroke-width="1.8"/>
+      <text x="58" y="31" font-family="'Cormorant Garamond',serif" font-weight="400" font-size="21" letter-spacing="2" fill="#F5E6C8">Papillon</text>
+      <text x="58" y="46" font-family="'Space Mono',monospace" font-size="8" letter-spacing="3.5" fill="#D4810A">HR SUITE</text>
+    </svg>
+    <p style="font-size:11px; font-weight:300; color:rgba(255,255,255,.32); margin-top:8px; line-height:1.6;">Gestion des talents : paie, congés, présences, évaluations, recrutement</p>
+
+    <!-- Séparateur -->
+    <div style="border-top:1px solid rgba(212,129,10,.12); margin:18px 0;"></div>
+
+    <!-- Ligne 2 : Papillon Corporate Finance Suite -->
+    <svg width="280" height="58" viewBox="0 0 280 58" fill="none">
+      <path d="M8,28 C1,14 1,6 14,10 C22,14 24,21 24,28" fill="none" stroke="#D4810A" stroke-width="1.8"/>
+      <path d="M8,28 C1,42 1,50 14,46 C22,42 24,35 24,28" fill="none" stroke="#D4810A" stroke-width="1.8"/>
+      <path d="M40,28 C47,14 47,6 34,10 C26,14 24,21 24,28" fill="none" stroke="#F5A623" stroke-width="1.8"/>
+      <path d="M40,28 C47,42 47,50 34,46 C26,42 24,35 24,28" fill="none" stroke="#F5A623" stroke-width="1.8"/>
+      <line x1="24" y1="9" x2="24" y2="47" stroke="#D4810A" stroke-width="1.8"/>
+      <text x="58" y="31" font-family="'Cormorant Garamond',serif" font-weight="400" font-size="21" letter-spacing="2" fill="#F5E6C8">Papillon</text>
+      <text x="58" y="46" font-family="'Space Mono',monospace" font-size="8" letter-spacing="3.5" fill="#D4810A">CORPORATE FINANCE SUITE</text>
+    </svg>
+    <p style="font-size:11px; font-weight:300; color:rgba(255,255,255,.32); margin-top:8px; line-height:1.6;">Gestion financière : notes de frais, engagements budgétaires, conformité SYSCOHADA</p>
+
+    <!-- Chips et infos communes -->
+    <div class="brand-chip" style="background:rgba(212,129,10,.12); color:#F5A623; margin-top:18px;">PME · 2 – 350 employés</div>
+    <p class="brand-desc">2 lignes de produit, même marque Papillon, même palette amber.<br>Un seul SaaS technique, deux positionnements commerciaux distincts.</p>
+    <p style="font-family:'Space Mono',monospace; font-size:8.5px; letter-spacing:.12em; color:rgba(212,129,10,.3); margin-top:10px;">RÈGLE : même logomark papillon, même palette amber.<br>Distinction uniquement par le sous-titre (HR SUITE vs CORPORATE FINANCE SUITE).</p>
+    <p class="brand-domain">papillonhr.com · by ALTARYS LABS</p>
+  </div>
+
+  <!-- Enterprise — 2 suites miroir de Papillon pour ETI/GC -->
+  <div class="brand-card enterprise">
+    <svg width="224" height="58" viewBox="0 0 224 58" fill="none">
+      <polygon points="20,3 38,50 2,50" fill="none" stroke="#1A8FA0" stroke-width="1.5"/>
+      <line x1="9" y1="35" x2="31" y2="35" stroke="#1A8FA0" stroke-width="1.5"/>
+      <circle cx="20" cy="3" r="2" fill="#1A8FA0"/>
+      <circle cx="38" cy="50" r="2" fill="#1A8FA0"/>
+      <circle cx="2" cy="50" r="2" fill="#1A8FA0"/>
+      <text x="50" y="27" font-family="'DM Sans',sans-serif" font-weight="300" font-size="17" letter-spacing="3.5" fill="#FFFFFF">ALTARYS</text>
+      <text x="50" y="44" font-family="'Space Mono',monospace" font-size="8" letter-spacing="2.8" fill="#1A8FA0">ENTERPRISE</text>
+    </svg>
+    <div class="brand-chip" style="background:rgba(26,143,160,.12); color:#4DB8CC; margin-top:18px;">ETI & Grands comptes · M+18</div>
+    <p class="brand-desc">Desktop-first · Dense · Analytique<br>Deux suites : ENTERPRISE HR Suite + ENTERPRISE Corporate Finance Suite</p>
+    <p class="brand-domain">altarysenterprise.com</p>
+  </div>
+
+  <!-- Consulting -->
+  <div class="brand-card consulting">
+    <svg width="230" height="58" viewBox="0 0 230 58" fill="none">
+      <rect x="2" y="6" width="36" height="46" rx="2" fill="none" stroke="#6488B4" stroke-width="1.5"/>
+      <line x1="2" y1="18" x2="38" y2="18" stroke="#6488B4" stroke-width="1" opacity="0.45"/>
+      <line x1="9" y1="30" x2="31" y2="30" stroke="#6488B4" stroke-width="1.5"/>
+      <line x1="12" y1="39" x2="28" y2="39" stroke="#6488B4" stroke-width="1.2" opacity="0.55"/>
+      <text x="50" y="27" font-family="'DM Sans',sans-serif" font-weight="300" font-size="17" letter-spacing="3.5" fill="#FFFFFF">ALTARYS</text>
+      <text x="50" y="44" font-family="'Space Mono',monospace" font-size="7.5" letter-spacing="2.5" fill="#6488B4">CONSULTING</text>
+    </svg>
+    <div class="brand-chip" style="background:rgba(100,136,180,.12); color:#6488B4; margin-top:18px;">Conseil · Formation · Dev. sur mesure</div>
+    <p class="brand-desc">IT, RH & Finance · Projets OHADA<br>Premier moteur de trésorerie du groupe</p>
+    <p class="brand-domain">altarysgroup.com/consulting</p>
+  </div>
+
+  <!-- AI - futur -->
+  <div class="brand-card ai-future">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px;">
+      <svg width="42" height="38" viewBox="0 0 50 46" fill="none">
+        <circle cx="25" cy="23" r="21" fill="none" stroke="#7C5CBF" stroke-width="1.5"/>
+        <circle cx="25" cy="23" r="10" fill="#7C5CBF" opacity="0.1"/>
+        <circle cx="25" cy="23" r="4" fill="#7C5CBF"/>
+        <line x1="25" y1="2" x2="25" y2="9"  stroke="#7C5CBF" stroke-width="1.5"/>
+        <line x1="25" y1="37" x2="25" y2="44" stroke="#7C5CBF" stroke-width="1.5"/>
+        <line x1="4"  cy="23" x1="4" y1="23" x2="11" y2="23" stroke="#7C5CBF" stroke-width="1.5"/>
+        <line x1="39" y1="23" x2="46" y2="23" stroke="#7C5CBF" stroke-width="1.5"/>
+      </svg>
+      <div>
+        <p style="font-family:'DM Sans',sans-serif; font-weight:300; font-size:17px; letter-spacing:3.5px; color:#FAF7F2;">ALTARYS</p>
+        <p style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:5px; color:#7C5CBF; margin-top:2px;">AI</p>
+      </div>
+    </div>
+    <div class="brand-chip" style="background:rgba(124,92,191,.12); color:#A98EDA;">⚡ altarys.ai · À acquérir maintenant</div>
+    <p class="brand-desc">Services IA : paie prédictive, compliance automatisée, analyse financière, ML bancaire</p>
+    <p class="brand-domain" style="color:rgba(124,92,191,.4);">altarys.ai — domaine prioritaire</p>
+  </div>
+</div>
+
+<hr class="divider" style="margin-top:2px;">
+
+<!-- ══════════════════════════════════════════
+  06 — APP PREVIEW
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="sec-label">06 — Application produit</div>
+  <div class="sec-title">Papillon HR Suite · Interface</div>
+
+  <div class="mock-shell">
+    <div style="background:#030C15; padding:11px 22px; display:flex; align-items:center; gap:13px; border-bottom:1px solid rgba(255,255,255,.04);">
+      <svg width="18" height="16" viewBox="0 0 50 46" fill="none">
+        <path d="M8,23 C1,10 1,3 13,7 C21,11 23,18 23,23" fill="none" stroke="#D4810A" stroke-width="2.5"/>
+        <path d="M8,23 C1,36 1,43 13,39 C21,35 23,28 23,23" fill="none" stroke="#D4810A" stroke-width="2.5"/>
+        <path d="M38,23 C45,10 45,3 33,7 C25,11 23,18 23,23" fill="none" stroke="#F5A623" stroke-width="2.5"/>
+        <path d="M38,23 C45,36 45,43 33,39 C25,35 23,28 23,23" fill="none" stroke="#F5A623" stroke-width="2.5"/>
+        <line x1="23" y1="6" x2="23" y2="40" stroke="#D4810A" stroke-width="2.5"/>
+      </svg>
+      <span style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:14px; color:rgba(255,255,255,.88); letter-spacing:1px;">Papillon</span>
+      <span style="font-family:'Space Mono',monospace; font-size:7.5px; color:rgba(255,255,255,.18); letter-spacing:.12em;">HR SUITE · by ALTARYS LABS</span>
+      <div style="margin-left:auto; display:flex; align-items:center; gap:7px;">
+        <div style="width:6px;height:6px;background:#2E7D52;border-radius:50%;"></div>
+        <span style="font-family:'Space Mono',monospace; font-size:8px; color:rgba(255,255,255,.22); letter-spacing:.07em;">KOFFI INDUSTRIES · ABIDJAN · CIV</span>
+      </div>
+    </div>
+    <div style="display:flex; min-height:380px;">
+      <div style="width:196px; background:#070F1C; padding:18px 0; border-right:1px solid rgba(255,255,255,.03); flex-shrink:0;">
+        <div style="padding:0 14px; margin-bottom:16px;">
+          <span style="font-family:'Space Mono',monospace; font-size:7.5px; letter-spacing:.25em; color:rgba(255,255,255,.15); text-transform:uppercase;">Navigation</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:1px;padding:0 8px;">
+          <div style="padding:8px 12px; background:rgba(200,146,42,.1); border-radius:3px; border-left:2px solid #C8922A;">
+            <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:#E5B55A;">Tableau de bord</span>
+          </div>
+          <div style="padding:8px 12px;"><span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.33);font-weight:300;">Employés</span></div>
+          <div style="padding:8px 12px;"><span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.33);font-weight:300;">Paie & Charges</span></div>
+          <div style="padding:8px 12px;"><span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.33);font-weight:300;">Congés & Absences</span></div>
+          <div style="padding:8px 12px;"><span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.33);font-weight:300;">Budget</span></div>
+          <div style="padding:8px 12px;"><span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.33);font-weight:300;">Présences</span></div>
+          <div style="padding:8px 12px; margin-top:6px;"><span style="font-family:'Space Mono',monospace;font-size:8.5px;color:rgba(200,146,42,.4);letter-spacing:.1em;">CNPS · ITS · OHADA</span></div>
+        </div>
+      </div>
+      <div style="flex:1; padding:26px 28px; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:22px;">
+          <div>
+            <p style="font-family:'Cormorant Garamond',serif; font-weight:300; font-size:24px; color:white; line-height:1.2;">Tableau de bord</p>
+            <p style="font-family:'Space Mono',monospace; font-size:8.5px; color:rgba(255,255,255,.22); margin-top:3px; letter-spacing:.1em;">MARS 2026 · EXERCICE OHADA · SYSCOHADA</p>
+          </div>
+          <div style="background:#C8922A; padding:7px 16px; border-radius:3px;">
+            <span style="font-family:'DM Sans',sans-serif; font-size:11.5px; font-weight:500; color:#07111E;">Lancer la paie</span>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px;">
+          <div style="background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.05); border-radius:4px; padding:16px;">
+            <p style="font-family:'Space Mono',monospace; font-size:7.5px; letter-spacing:.18em; color:rgba(255,255,255,.22); margin-bottom:5px;">MASSE SALARIALE</p>
+            <p style="font-family:'DM Sans',sans-serif; font-size:19px; font-weight:300; color:white;">12 450 000</p>
+            <p style="font-family:'Space Mono',monospace; font-size:8.5px; color:#C8922A; margin-top:2px;">XOF · Fév. 2026</p>
+          </div>
+          <div style="background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.05); border-radius:4px; padding:16px;">
+            <p style="font-family:'Space Mono',monospace; font-size:7.5px; letter-spacing:.18em; color:rgba(255,255,255,.22); margin-bottom:5px;">EMPLOYÉS ACTIFS</p>
+            <p style="font-family:'DM Sans',sans-serif; font-size:19px; font-weight:300; color:white;">47</p>
+            <p style="font-family:'Space Mono',monospace; font-size:8.5px; color:#2E7D52; margin-top:2px;">+2 ce mois</p>
+          </div>
+          <div style="background:rgba(200,146,42,.07); border:1px solid rgba(200,146,42,.16); border-radius:4px; padding:16px;">
+            <p style="font-family:'Space Mono',monospace; font-size:7.5px; letter-spacing:.18em; color:rgba(200,146,42,.5); margin-bottom:5px;">CNPS À DÉCLARER</p>
+            <p style="font-family:'DM Sans',sans-serif; font-size:19px; font-weight:300; color:#E5B55A;">1 867 500</p>
+            <p style="font-family:'Space Mono',monospace; font-size:8.5px; color:#C8922A; margin-top:2px;">Éch. 15/04/2026</p>
+          </div>
+        </div>
+        <div style="background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.04); border-radius:4px; padding:16px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <span style="font-family:'DM Sans',sans-serif; font-size:12px; color:rgba(255,255,255,.45);">Conformité OHADA — Exercice 2025</span>
+            <span style="font-family:'Space Mono',monospace; font-size:10px; color:#E5B55A;">87%</span>
+          </div>
+          <div style="background:rgba(255,255,255,.04); border-radius:2px; height:3px;">
+            <div style="background:linear-gradient(90deg,#C8922A,#E5B55A); width:87%; height:100%; border-radius:2px;"></div>
+          </div>
+          <p style="font-family:'Space Mono',monospace; font-size:8px; color:rgba(255,255,255,.2); margin-top:8px; letter-spacing:.08em;">3 actions requises · Voir le rapport de conformité</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════════════
+  07 — RÈGLES
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="sec-label">07 — Règles d'usage</div>
+  <div class="sec-title">À faire & À éviter</div>
+
+  <div class="rules-grid">
+    <div class="rule-card do">
+      <h4>✓ À faire</h4>
+      <ul>
+        <li>ALTARYS LABS = entité légale, toutes communications officielles</li>
+        <li>Papillon HR Suite = marque produit RH sur toutes les communications PME</li>
+        <li>Papillon Corporate Finance Suite = marque produit Finance sur les communications PME</li>
+        <li>Les deux Papillon partagent la même palette amber et le même logomark papillon</li>
+        <li>La distinction HR / Corporate Finance se fait uniquement par le sous-titre</li>
+        <li>Navy + or = couleurs d'ALTARYS LABS (pas de violet, réservé AI)</li>
+        <li>Cormorant Garamond uniquement pour titres marketing</li>
+        <li>DM Sans pour toute l'interface produit</li>
+        <li>Space Mono pour montants XOF, codes, labels système</li>
+        <li>Acheter altarys.ai rapidement, domaine prioritaire</li>
+        <li>Conserver "by ALTARYS LABS" en petit sur les supports Papillon</li>
+      </ul>
+    </div>
+    <div class="rule-card dont">
+      <h4>✗ À éviter</h4>
+      <ul>
+        <li>Ne pas créer la holding avant que le CA le justifie vraiment</li>
+        <li>Ne pas utiliser le violet sur ALTARYS LABS, uniquement pour altarys.ai</li>
+        <li>Ne pas mélanger palette Papillon (amber) avec palette Enterprise (teal)</li>
+        <li>Ne pas créer une palette séparée pour Corporate Finance Suite (même amber que HR Suite)</li>
+        <li>Ne jamais déformer ou faire pivoter le losange</li>
+        <li>Ne pas utiliser Inter, Roboto, ni dégradés violets génériques</li>
+        <li>Ne pas ajouter un tagline sectoriel sur le logo ALTARYS LABS</li>
+        <li>Ne pas lancer ALTARYS ENTERPRISE avant le mois 18</li>
+        <li>Ne pas négliger la réglementation BCEAO si core banking</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="doc-footer">
+  ALTARYS LABS · BRAND IDENTITY SYSTEM · VERSION 3.1 · MARS 2026 · CONFIDENTIEL
+</div>
+
+</body>
+</html>

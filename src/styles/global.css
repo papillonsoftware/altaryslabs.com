@@ -1,0 +1,685 @@
+/* ==========================================================================
+   ALTARYS LABS - Styles globaux
+   Primitives partagees uniquement. Les styles propres a un composant vivent
+   dans le bloc <style> scope du composant .astro correspondant.
+   Valeurs alignees sur le handoff claude.ai/design.
+   ========================================================================== */
+
+@import './tokens.css';
+
+/* --- Reset ---------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Compense le header fixe lors d'une navigation vers une ancre */
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+}
+
+/* UI-002 bascule le fond par defaut du document vers le clair (D028, D055).
+   Les sections qui restent sombres portent desormais leur propre couleur de
+   texte explicite : elles ne peuvent plus compter sur celle du body. Pour
+   `.section--deep`, `.section--navy` et `.section--cta`, la regle `color`
+   est ci-dessous, a cote de leur `background`. Le Hero de l'accueil est
+   l'exception : sa couleur vit dans son propre style scope, Hero.astro,
+   puisqu'il n'utilise aucun de ces modificateurs. */
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--slate-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Le header est fixe : on reserve sa hauteur pour ne pas masquer le contenu */
+  padding-top: var(--nav-h);
+}
+
+img,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+/* --- Accessibilite -------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Le remplissage or seul ne vaut que 2.47:1 sur le corps de page devenu creme
+   (UI-002) : meme correctif que .nav-cta et .btn-primary, D039. Le lien est
+   hors de .nav et de toute .section--light, donc son propre focus-visible
+   doit reprendre --gold-deep plutot que le --gold global. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  background: var(--gold);
+  border: 1px solid var(--gold-deep);
+  color: var(--navy-deep);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 11px 19px;
+  border-radius: 0 0 var(--radius-sm) 0;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+.skip-link:focus-visible {
+  outline-color: var(--gold-deep);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- Layout --------------------------------------------------------------- */
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.section {
+  padding: var(--section-y) 0;
+}
+
+.section--hero {
+  padding: var(--hero-y) 0 var(--section-y);
+}
+
+.section--deep {
+  background: var(--navy-deep);
+  color: var(--ivory);
+}
+
+.section--navy {
+  background: var(--navy);
+  color: var(--ivory);
+}
+
+/* Bandeau d'appel a l'action de fin de page. */
+.section--cta {
+  background: linear-gradient(135deg, var(--navy-mid), var(--navy));
+  color: var(--ivory);
+  padding: 80px 0;
+  text-align: center;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1000px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Typographie ---------------------------------------------------------- */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* Sur-titre technique en Space Mono, tres espace, au-dessus des titres.
+   La couleur etait --gold-65, soit 3.49:1 a 10px sur navy, sous le seuil AA.
+   --gold-light donne 10.03:1 pour un rendu quasi identique a l'oeil. D029. */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--gold-light);
+  margin-bottom: 48px;
+}
+
+/* Titre de page, une echelle au-dessus des titres de section. */
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 5vw, 64px);
+  font-weight: 300;
+  line-height: 1.15;
+  color: var(--ivory);
+  margin-bottom: 28px;
+}
+
+/* Emphase doree en italique, signature typographique de la marque. */
+.page-title em,
+.section-title em {
+  color: var(--gold-light);
+  font-style: italic;
+}
+
+.section-subtitle,
+.lede {
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 660px;
+}
+
+/* --- Boutons -------------------------------------------------------------- */
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  padding: 15px 28px;
+  border-radius: var(--radius-btn);
+  text-decoration: none;
+  min-height: 48px;
+  line-height: 1.4;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background var(--ease), border-color var(--ease), transform 0.2s ease;
+}
+
+.btn-primary {
+  font-weight: 600;
+  color: var(--navy-deep);
+  background: var(--gold);
+}
+
+.btn-primary:hover {
+  background: var(--gold-light);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  font-weight: 500;
+  color: var(--gold-light);
+  background: transparent;
+  border-color: var(--gold-40);
+}
+
+.btn-secondary:hover {
+  border-color: var(--gold);
+  background: var(--gold-06);
+}
+
+/* --- Cartes --------------------------------------------------------------- */
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--navy-mid);
+  border: 1px solid var(--gold-15);
+  border-radius: var(--radius-card);
+  padding: 36px 32px;
+}
+
+/* Variante des cartes de service, volontairement plus effacee que les cartes
+   produits : les produits doivent primer dans la hierarchie visuelle. */
+.card--service {
+  background: var(--navy-card);
+  border-color: var(--ink-06);
+}
+
+/* Variante des pages hub, ou la carte est le contenu principal et non un
+   resume renvoyant ailleurs : plus d'air, texte un cran plus lisible. */
+.card--large {
+  padding: 40px 32px;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--ivory);
+  margin-bottom: 12px;
+}
+
+.card--service .card-title {
+  font-size: 22px;
+}
+
+.card--large .card-title {
+  font-size: 26px;
+  margin-bottom: 14px;
+}
+
+.card--prominent.card--large .card-title {
+  font-size: 24px;
+}
+
+.card-text {
+  font-size: 13.5px;
+  color: var(--muted-soft);
+  line-height: 1.7;
+  margin-bottom: 24px;
+  flex: 1;
+}
+
+.card--large .card-text {
+  font-size: 14px;
+  line-height: 1.75;
+  margin-bottom: 26px;
+}
+
+/* --- Badges --------------------------------------------------------------- */
+.badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+/* Badge plein, reserve a l'information la plus saillante d'une carte. */
+.badge--solid {
+  background: var(--gold-light);
+  color: var(--navy-deep);
+}
+
+.badge--soft {
+  background: var(--gold-12);
+  color: var(--gold);
+}
+
+/* --- Liens ---------------------------------------------------------------- */
+.link-arrow {
+  color: var(--gold-light);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: color var(--ease);
+}
+
+.card--large .link-arrow {
+  font-size: 14px;
+}
+
+.link-arrow::after {
+  content: ' \2192';
+  display: inline-block;
+  transition: transform var(--ease);
+}
+
+.link-arrow:hover::after {
+  transform: translateX(3px);
+}
+
+.external-link::after {
+  content: '';
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  margin-left: 0.15em;
+  background: currentColor;
+  /* Fleche sortante, masquee pour heriter de la couleur du lien */
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14V3zM5 5h4v2H7v10h10v-2h2v4H5V5z'/%3E%3C/svg%3E")
+    no-repeat center / contain;
+}
+
+/* --- Puce losange des listes ---------------------------------------------- */
+.list-diamond {
+  list-style: none;
+}
+
+.list-diamond li {
+  font-size: 13.5px;
+  font-weight: 300;
+  color: var(--muted-soft);
+  padding: 6px 0 6px 18px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.list-diamond li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 13px;
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--gold);
+  transform: rotate(45deg);
+}
+
+/* --- Apparition au defilement --------------------------------------------- */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Sans JS, le contenu doit rester visible */
+.no-js .fade-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Surface claire --------------------------------------------------------
+   Le handoff de juillet 2026 fait alterner des sections creme et des sections
+   navy. Plutot que de dupliquer chaque composant en version claire, on
+   redefinit ses couleurs sous `.section--light` : le balisage et les classes
+   des composants ne changent pas, seule la surface qui les porte change.
+
+   UI-002 bascule le fond par defaut du body sur creme et applique cette
+   classe a chaque section qui doit rester claire, page par page. Voir D028
+   et D055.
+
+   POURQUOI `.section--light.section--light` PARTOUT. La classe est repetee
+   volontairement, ce qui ajoute un cran de specificite sans changer ce que le
+   selecteur designe. Sans cela, le peritexte se retrouve a egalite avec les
+   styles scopes des composants, `.page-intro[data-astro-cid-...]` valant lui
+   aussi (0,2,0), et l'arbitrage se joue alors sur l'ordre d'emission. Or Astro
+   place les styles scopes tantot avant tantot apres le bundle global selon la
+   route : `ProductCard` passe avant global sur /produits et apres sur /,
+   `CtaBanner` avant sur /a-propos et apres sur seize autres pages. Le peritexte
+   gagnait donc par chance. Il doit gagner par construction, puisque UI-002
+   etend tout le site sur cette fondation. Le doublement porte les regles de
+   base a (0,3,0) et celles d'etat a (0,4,0), au-dessus des `.card:hover` scopes
+   de `ProductCard` et `ServiceCard` qui valent (0,3,0). Voir D036.
+   -------------------------------------------------------------------------- */
+.section--light.section--light {
+  background: var(--cream);
+  color: var(--slate-body);
+}
+
+.section--light.section--light h1,
+.section--light.section--light h2,
+.section--light.section--light h3,
+.section--light.section--light h4,
+.section--light.section--light .card-title {
+  color: var(--navy-text);
+}
+
+.section--light.section--light .page-title em,
+.section--light.section--light .section-title em,
+.section--light.section--light .section-title {
+  color: var(--gold-deeper);
+}
+
+.section--light.section--light .section-label {
+  color: var(--gold-deeper);
+}
+
+.section--light.section--light .lede,
+.section--light.section--light .section-subtitle,
+.section--light.section--light .page-intro,
+.section--light.section--light .card-text {
+  color: var(--slate-body);
+}
+
+.section--light.section--light .card,
+.section--light.section--light .card--service {
+  background: var(--surface);
+  border-color: var(--navy-08);
+  box-shadow: var(--shadow-card);
+}
+
+/* `ProductCard` et `ServiceCard` posent chacun leur propre `.card:hover`, en
+   or a 30% ou en ivoire a 15%. Sur une carte blanche, l'ivoire a 15% est
+   pratiquement du blanc : l'affordance de survol disparaitrait. */
+.section--light.section--light .card:hover {
+  border-color: var(--gold-deep);
+}
+
+.section--light.section--light .link-arrow {
+  color: var(--gold-deeper);
+}
+
+.section--light.section--light .badge--soft {
+  color: var(--gold-deeper);
+  background: var(--gold-12);
+}
+
+/* Le badge plein garde l'or clair et le texte navy : deja 10.0:1, la meme
+   paire que celle mesuree plus haut pour `.section-label`. */
+.section--light.section--light .badge--solid {
+  color: var(--navy-deep);
+  background: var(--gold-light);
+}
+
+/* La bordure heritait de --gold-40, une valeur pensee pour fond sombre : une
+   fois composee sur le creme elle donne #E4CB9C, soit 1.41:1, une limite de
+   bouton invisible. --gold-deep en pleine opacite donne 3.25:1, le seuil de
+   SC 1.4.11 pour la limite d'un composant d'interface. */
+.section--light.section--light .btn-secondary {
+  color: var(--gold-deeper);
+  border-color: var(--gold-deep);
+}
+
+.section--light.section--light .btn-secondary:hover {
+  border-color: var(--gold-deeper);
+  background: var(--gold-06);
+}
+
+/* L'indicateur de focus clavier est le seul reperage du site. En or standard
+   il ne vaut que 2.47:1 sur creme et 2.76:1 sur blanc, sous les 3:1 exiges par
+   SC 1.4.11 et SC 2.4.11. --gold-deep donne 3.25:1. */
+.section--light.section--light :focus-visible {
+  outline-color: var(--gold-deep);
+}
+
+/* Le bouton plein garde le remplissage or de la maquette, qui le pose telle
+   quelle sur le header creme, mais gagne une limite : --gold sur --cream ne
+   vaut que 2.47:1, sous le seuil de 3:1 de SC 1.4.11 pour la limite d'un
+   composant. Le libelle interieur reste a 6.86:1. Assombrir le remplissage
+   aurait respecte le seuil aussi, au prix d'un ecart visible avec le handoff
+   sur le premier appel a l'action commercial de chaque page. Voir D039. */
+.section--light.section--light .btn-primary {
+  border: 1px solid var(--gold-deep);
+}
+
+/* --- Classes propres aux composants sur surface claire ---------------------
+   Le peritexte ci-dessus ne couvre que les primitives globales. Les composants
+   de page portent leurs propres classes : chacune ci-dessous a ete mesuree
+   entre 1.02:1 et 2.91:1 avant sa correction, restee sur les jetons de
+   surface sombre alors que la page qui la porte est desormais claire.
+
+   Regle pour la suite : toute nouvelle classe de composant portant une couleur
+   doit etre ajoutee ici en meme temps qu'elle est ecrite, pour ne pas avoir a
+   la redecouvrir page par page. Voir D040.
+   -------------------------------------------------------------------------- */
+.section--light.section--light .about-text,
+.section--light.section--light .leadership-name {
+  color: var(--navy-text);
+}
+
+.section--light.section--light .about-team,
+.section--light.section--light .leadership-role,
+.section--light.section--light .legal-line,
+.section--light.section--light .module-label,
+.section--light.section--light .roadmap-intro,
+.section--light.section--light .approach-text {
+  color: var(--slate-body);
+}
+
+.section--light.section--light .leadership-label,
+.section--light.section--light .approach-label {
+  color: var(--gold-deeper);
+}
+
+/* L'etiquette technique garde son fond dore tres pale, lisible sur clair
+   comme sur sombre, mais son texte passe a l'or fonce : 5.05:1. */
+.section--light.section--light .approach-tag {
+  color: var(--gold-deeper);
+  background: var(--gold-12);
+}
+
+/* Cartes a fond navy : elles deviennent blanches, comme les cartes de module
+   du prototype. Sans cela un libelle deja converti se retrouve sur navy. */
+.section--light.section--light .module,
+.section--light.section--light .feature {
+  background: var(--surface);
+  border-color: var(--navy-08);
+  box-shadow: var(--shadow-card);
+}
+
+/* `.module` porte son libelle en texte direct, sans `<p>` : la regle ne peut
+   pas viser `.module p`, qui ne correspond a rien et laissait le texte sur
+   --ink-80, presque blanc sur la carte blanche. */
+.section--light.section--light .module,
+.section--light.section--light .feature-title {
+  color: var(--navy-text);
+}
+
+.section--light.section--light .feature-text {
+  color: var(--slate-body);
+}
+
+/* Corps des pages legales. `LegalPage` style son contenu passe en slot avec
+   `.legal-body :global(p)` et consorts, a (0,2,1) : il faut donc surcharger
+   au-dessus, d'ou le selecteur descendant complet. Sur creme, le gras tombait
+   a 1.04:1, ce qui rendait "ALTARYS LABS" litteralement invisible. */
+.section--light.section--light .legal-body p,
+.section--light.section--light .legal-body li {
+  color: var(--slate-body);
+}
+
+.section--light.section--light .legal-body h2 {
+  color: var(--gold-deeper);
+}
+
+.section--light.section--light .legal-body h3,
+.section--light.section--light .legal-body strong {
+  color: var(--navy-text);
+}
+
+.section--light.section--light .legal-body a {
+  color: var(--gold-deeper);
+}
+
+.section--light.section--light .legal-body a:hover {
+  color: var(--gold-deep);
+}
+
+.section--light.section--light .legal-body li::before {
+  border-color: var(--gold-deep);
+}
+
+/* --- Controles de formulaire -----------------------------------------------
+   Poses par UI-001 pour que la page Contact n'ait pas a inventer son propre
+   style. `ContactContent` les consomme depuis PAGE-002.
+   -------------------------------------------------------------------------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 12.5px;
+  color: var(--slate-body);
+}
+
+.field-input,
+.field-select,
+.field-textarea {
+  background: var(--surface);
+  border: 1px solid var(--navy-14);
+  border-radius: var(--radius-btn);
+  padding: 12px 14px;
+  color: var(--navy-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+
+.field-textarea {
+  resize: vertical;
+}
+
+/* La maquette pose #9AA3B4 en texte indicatif, soit 2.53:1 sur blanc.
+   --slate-body reste secondaire a l'oeil et passe a 5.96:1. */
+.field-input::placeholder,
+.field-textarea::placeholder {
+  color: var(--slate-body);
+}
+
+/* Meme decalage que partout ailleurs sur le site. UI-001 avait pose 1px alors
+   qu'aucune page ne rendait encore ces regles ; la page Contact est la
+   premiere a les afficher, et six controles cernes a 1px au milieu d'un site
+   cerne a 3px se voyaient. */
+.field-input:focus,
+.field-select:focus,
+.field-textarea:focus {
+  outline: 2px solid var(--gold-deep);
+  outline-offset: 3px;
+}

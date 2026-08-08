@@ -1,0 +1,512 @@
+---
+/**
+ * Corps de la page Contact, partage par les deux langues.
+ *
+ * Les deux pages `/contact` et `/en/contact` appellent ce meme composant : la
+ * structure ne peut pas diverger d'une langue a l'autre, seul le dictionnaire
+ * change. Voir D019.
+ *
+ * DEUX ETATS, PILOTES PAR L'URL. Les panneaux succes et erreur sont dans le
+ * document des le rendu, masques par `hidden`, et reveles par `?statut=`. Le
+ * succes est donc porte par une redirection du serveur et non par la reponse
+ * d'un `fetch` : si la connexion lache apres que le POST est parti, le
+ * visiteur ne revoit pas son formulaire intact et ne renvoie pas. Un
+ * rechargement reaffiche l'etat au lieu de ressusciter le formulaire. FORM-001
+ * a tranche pour la POST-redirection que ce balisage rendait possible. Voir
+ * D066 et D092.
+ *
+ * POURQUOI LA LECTURE EST CLIENTE. Le site est en sortie statique : la page
+ * est prerendue une fois, et `Astro.url` n'a aucune chaine de requete au
+ * moment du build. Le parametre ne peut donc etre lu que dans le navigateur.
+ * Le script est `is:inline` et place juste apres le formulaire pour s'executer
+ * pendant l'analyse du document, avant le premier rendu : le formulaire
+ * n'apparait pas une fraction de seconde avant d'etre masque.
+ *
+ * LA LANGUE VOYAGE DANS LE CORPS DU POST. Les deux pages postent vers le meme
+ * `/api/contact`, donc la fonction doit savoir vers quelle langue rediriger.
+ * Elle le lit dans un champ cache et non dans le `Referer`, en-tete facultatif
+ * par conception dont la disparition renverrait un anglophone sur la page
+ * francaise sans qu'aucun journal ne le signale. Voir D091.
+ */
+import PageHeader from './PageHeader.astro';
+import { CONTACT_EMAIL, TURNSTILE_SITE_KEY, type Locale } from '../i18n/config';
+import { localizedPath, useTranslations } from '../i18n/utils';
+import { PRODUCT_KEYS, SERVICE_KEYS } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+/* Les six premieres options sont derivees de `pageName`, dans l'ordre de
+   navigation du site. Un intitule ne peut donc pas diverger entre le menu et
+   le formulaire, et le renommage du conseil (D044) est arrive ici sans que
+   personne ait a y penser. Voir D068.
+
+   La valeur envoyee est la PageKey, pas le libelle traduit : sans cela le
+   meme interet arrive a FORM-001 sous deux chaines differentes selon la
+   langue de la page, et rederive a chaque fois qu'un `pageName` change. Voir
+   D070. */
+const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
+  value: key,
+  label: t.pageName[key],
+}));
+
+/* La cle de site vient de `config.ts` et non plus d'une variable de build.
+
+   Ni repli, ni garde-fou : la cle ne peut plus manquer, donc le formulaire ne
+   peut plus etre rendu sans widget. L'emplacement vide de D065 supposait une
+   cle absente, et le garde-fou de D094 supposait qu'elle puisse le redevenir ;
+   les deux hypotheses ont disparu avec la constante. D065 et D094 sont closes.
+   Voir D100 pour la raison, qui est un vrai piege de plateforme. */
+---
+
+<PageHeader label={t.pageName.contact} title={t.contact.title} intro={t.contact.intro} />
+
+<section class="section section--light contact-section">
+  <div class="container contact-inner">
+    {/* `tabindex="-1"` sur les deux panneaux : sans lui, aucun appel a `focus()`
+        n'a d'effet sur un div. C'est ce que le garde-fou supprime par FORM-001
+        faisait deja correctement sur son propre panneau, et que ce lot remet.
+        Voir D105. */}
+    <div class="panel panel--success" id="form-sent" tabindex="-1" hidden>
+      <p class="panel-title">{t.contact.successTitle}</p>
+      <p class="panel-text">{t.contact.successText}</p>
+    </div>
+
+    <div class="panel panel--error" id="form-error" role="alert" tabindex="-1" hidden>
+      <p class="panel-title">{t.contact.errorTitle}</p>
+      <p class="panel-text">
+        {t.contact.errorText} {t.contact.fallbackText}{' '}
+        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+      </p>
+    </div>
+
+    <form id="contact-form" class="contact-form" method="POST" action="/api/contact">
+      {/* En tete de formulaire, et non en pied : le but est d'epargner au
+          visiteur six champs remplis pour rien, ce qu'un message place apres
+          le dernier champ ne fait pas. */}
+      <noscript>
+        <p class="noscript-note">
+          {t.contact.noScriptText} {t.contact.fallbackText}{' '}
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+        </p>
+      </noscript>
+
+      {/* Langue de la page, pour que `/api/contact` sache ou renvoyer le
+          visiteur. Jamais une URL, toujours l'une des deux cles de langue : la
+          fonction lit la cible dans `ROUTES` et ne construit rien depuis cette
+          valeur, si bien qu'un champ trafique ne peut produire que l'une des
+          deux pages Contact du site. Enregistree en base comme une donnee de la
+          demande, parce qu'elle dicte la langue de la reponse. Voir D091. */}
+      <input type="hidden" name="locale" value={locale} />
+
+      <div class="field-row">
+        <p class="field">
+          <label class="field-label" for="contact-name">{t.contact.nameLabel}</label>
+          <input
+            class="field-input"
+            id="contact-name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            placeholder={t.contact.namePlaceholder}
+            required
+          />
+        </p>
+
+        <p class="field">
+          <label class="field-label" for="contact-company">
+            {t.contact.companyLabel} <span class="field-optional">{t.contact.optional}</span>
+          </label>
+          <input
+            class="field-input"
+            id="contact-company"
+            name="company"
+            type="text"
+            autocomplete="organization"
+            placeholder={t.contact.companyPlaceholder}
+          />
+        </p>
+      </div>
+
+      <div class="field-row">
+        <p class="field">
+          <label class="field-label" for="contact-email">{t.contact.emailLabel}</label>
+          <input
+            class="field-input"
+            id="contact-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder={t.contact.emailPlaceholder}
+            required
+          />
+        </p>
+
+        <p class="field">
+          <label class="field-label" for="contact-phone">
+            {t.contact.phoneLabel} <span class="field-optional">{t.contact.optional}</span>
+          </label>
+          <input
+            class="field-input"
+            id="contact-phone"
+            name="phone"
+            type="tel"
+            autocomplete="tel"
+            placeholder={t.contact.phonePlaceholder}
+          />
+        </p>
+      </div>
+
+      <p class="field">
+        <label class="field-label" for="contact-interest">{t.contact.interestLabel}</label>
+        <select class="field-select" id="contact-interest" name="interest" required>
+          <option value="" disabled selected>{t.contact.interestPrompt}</option>
+          {interests.map((item) => <option value={item.value}>{item.label}</option>)}
+          <option value="other">{t.contact.interestOther}</option>
+        </select>
+      </p>
+
+      <p class="field">
+        <label class="field-label" for="contact-message">{t.contact.messageLabel}</label>
+        <textarea
+          class="field-textarea"
+          id="contact-message"
+          name="message"
+          rows="5"
+          placeholder={t.contact.messagePlaceholder}
+          required></textarea>
+      </p>
+
+      {/* `data-language` est obligatoire, pas cosmetique. Sans lui l'attribut
+          vaut `auto` et le widget suit l'en-tete `Accept-Language` du
+          navigateur, pas la langue de la page : `/en/contact` affichait
+          "Verification..." en francais. Sur ce marche les navigateurs sont
+          massivement configures en francais, donc ce n'etait pas un cas limite
+          mais le cas courant, et la page anglaise montrait un controle francais
+          a la majorite du public pour lequel elle existe. Double defaut : une
+          chaine francaise dans une page anglaise, et un fragment francais sans
+          `lang`, soit un echec WCAG 3.1.2. Voir D103. */}
+      <div
+        class="cf-turnstile turnstile-slot"
+        data-sitekey={TURNSTILE_SITE_KEY}
+        data-language={locale}
+      />
+
+      <button class="btn btn-primary contact-submit" type="submit">{t.contact.submit}</button>
+
+      <p class="privacy-notice">
+        {t.contact.privacyNotice}{' '}
+        <a href={localizedPath('privacy', locale)}>{t.contact.privacyLink}</a>
+      </p>
+    </form>
+
+    <script is:inline>
+      // Revele l'etat porte par l'URL, conserve la saisie a travers la
+      // redirection, et donne le focus au panneau revele.
+      //
+      // Volontairement `is:inline` et place ici, juste apres le formulaire : il
+      // s'execute pendant l'analyse du document, donc avant le premier rendu.
+      // Ni le formulaire ne clignote avant de ceder la place au panneau de
+      // succes, ni les champs ne s'affichent vides avant d'etre repeuples.
+      //
+      // La comparaison porte sur deux valeurs figees, jamais reinjectees dans
+      // la page : le parametre ne peut rien ecrire dans le document.
+      (function () {
+        // POURQUOI LA SAISIE EST CONSERVEE. La redirection 303 mene a une page
+        // statique, donc le formulaire y arrive vide, sous un panneau qui dit
+        // "reessayez". Un directeur qui vient d'ecrire trois paragraphes sur un
+        // appel d'offres ne les retape pas : un jeton refuse coutait la demande
+        // entiere. D092 raisonnait sur le double envoi cote succes et n'avait
+        // jamais examine le cout symetrique cote erreur. Voir D104.
+        //
+        // `sessionStorage` et non l'URL : renvoyer les valeurs dans l'adresse
+        // ferait voyager le message du visiteur dans une chaine de requete,
+        // journalisee partout sur le chemin. Le stockage meurt avec l'onglet, et
+        // seuls les six champs nommes sont conserves. Le jeton Turnstile en est
+        // exclu par construction, ce qui est necessaire : il est a usage unique
+        // et le restaurer produirait un refus garanti.
+        var CLE = 'altarys.contact.brouillon';
+        var CHAMPS = ['name', 'company', 'email', 'phone', 'interest', 'message'];
+
+        var formulaire = document.getElementById('contact-form');
+
+        function champ(nom) {
+          return formulaire ? formulaire.querySelector('[name="' + nom + '"]') : null;
+        }
+
+        function oublier() {
+          try {
+            sessionStorage.removeItem(CLE);
+          } catch (e) {
+            /* Stockage refuse ou plein : sans consequence, la conservation de la
+               saisie est un confort et jamais une condition de l'envoi. */
+          }
+        }
+
+        // POURQUOI LE SECOND ENVOI EST BLOQUE. Le jeton Turnstile est a usage
+        // unique. Deux POST partis avant la navigation, ce qu'un double-clic
+        // suffit a produire, donnent donc un premier envoi reussi et un second
+        // refuse par Cloudflare en `timeout-or-duplicate` : la demande est en
+        // base, l'email est parti, et le visiteur lit un panneau d'erreur qui
+        // lui dit le contraire de ce qui s'est passe. La fenetre est courte,
+        // mais le message est faux, sur la seule page de conversion du site.
+        // Voir D112.
+        //
+        // C'EST LE SECOND ENVOI QUI EST ANNULE, PAS LE PREMIER. Le drapeau et
+        // `preventDefault` portent tout le mecanisme; la desactivation du bouton
+        // n'est qu'un retour visuel, et n'est jamais ce sur quoi la protection
+        // repose. L'ordre importe : on ne touche au bouton qu'une fois le
+        // premier envoi laisse intact et le brouillon ecrit.
+        var envoiEnCours = false;
+        var bouton = formulaire ? formulaire.querySelector('button[type="submit"]') : null;
+
+        if (formulaire) {
+          formulaire.addEventListener('submit', function (evenement) {
+            if (envoiEnCours) {
+              evenement.preventDefault();
+              return;
+            }
+            envoiEnCours = true;
+
+            var brouillon = {};
+            CHAMPS.forEach(function (nom) {
+              var element = champ(nom);
+              if (element) brouillon[nom] = element.value;
+            });
+
+            try {
+              sessionStorage.setItem(CLE, JSON.stringify(brouillon));
+            } catch (e) {
+              /* Voir ci-dessus : on n'empeche jamais l'envoi pour autant. */
+            }
+
+            if (bouton) bouton.disabled = true;
+          });
+
+          // LE RETOUR ARRIERE REARME LE FORMULAIRE. Un retour sur `?statut=...`
+          // est une navigation neuve, donc le drapeau repart a faux et le
+          // balisage statique ne porte jamais `disabled` : rien a faire. Le
+          // bouton "Precedent" du navigateur, lui, peut restaurer la page depuis
+          // le bfcache telle qu'elle etait, bouton desactive compris, et le
+          // visiteur se retrouverait alors devant un formulaire qu'il ne peut
+          // plus envoyer. Ce serait pire que le defaut corrige ci-dessus.
+          window.addEventListener('pageshow', function (evenement) {
+            if (!evenement.persisted) return;
+            envoiEnCours = false;
+            if (bouton) bouton.disabled = false;
+          });
+        }
+
+        var statut = new URLSearchParams(window.location.search).get('statut');
+        if (statut !== 'envoye' && statut !== 'erreur') return;
+
+        var panneau = document.getElementById(statut === 'envoye' ? 'form-sent' : 'form-error');
+        if (panneau) panneau.hidden = false;
+
+        if (statut === 'envoye') {
+          if (formulaire) formulaire.hidden = true;
+          // La demande est partie : le brouillon n'a plus de raison d'exister.
+          oublier();
+        } else {
+          // Le brouillon est conserve apres relecture, et non efface : un
+          // rechargement de la page d'erreur doit retrouver la saisie. Il ne
+          // survit de toute facon pas a la fermeture de l'onglet, et le succes
+          // l'efface.
+          var brut = null;
+          try {
+            brut = sessionStorage.getItem(CLE);
+          } catch (e) {
+            brut = null;
+          }
+
+          if (brut) {
+            try {
+              var brouillon = JSON.parse(brut);
+              CHAMPS.forEach(function (nom) {
+                var element = champ(nom);
+                // `typeof` et non une simple verite : une chaine vide est une
+                // valeur legitime pour les deux champs facultatifs.
+                if (element && typeof brouillon[nom] === 'string') {
+                  element.value = brouillon[nom];
+                }
+              });
+            } catch (e) {
+              // Contenu illisible : on repart d'un formulaire vide plutot que
+              // de laisser une exception interrompre le reste du script.
+              oublier();
+            }
+          }
+        }
+
+        // POURQUOI LE FOCUS EST DIFFERE. Reveler un `role="alert"` pendant
+        // l'analyse ne l'annonce pas : une region live presente des le premier
+        // rendu fait partie de l'etat initial de la page, pas d'un changement.
+        // Deplacer le focus sur le panneau, en revanche, le fait lire. Le geste
+        // est differe a `DOMContentLoaded` parce qu'un `focus()` pose en pleine
+        // analyse n'est pas fiable. Voir D105.
+        document.addEventListener('DOMContentLoaded', function () {
+          if (!panneau) return;
+
+          // L'option explicite d'un scrollIntoView bat la valeur calculee de
+          // `scroll-behavior`, y compris le garde-fou que `global.css` pose
+          // lui-meme. On lit donc la preference plutot que de l'imposer.
+          var sansAnimation = matchMedia('(prefers-reduced-motion: reduce)').matches;
+          panneau.scrollIntoView({
+            behavior: sansAnimation ? 'auto' : 'smooth',
+            block: 'center',
+          });
+
+          // Le focus sert aussi l'utilisateur de loupe, qui ne verrait rien
+          // bouger si l'annonce restait sonore.
+          panneau.focus();
+        });
+      })();
+    </script>
+  </div>
+</section>
+
+<script is:inline async defer src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+
+<style>
+  /* Colonne unique de 640px, comme la maquette. Le conteneur garde sa
+     gouttiere : c'est elle qui protege le formulaire des bords en mobile. */
+  .contact-inner {
+    max-width: calc(640px + 2 * var(--gutter));
+  }
+
+  .contact-section {
+    padding-top: 0;
+  }
+
+  /* --- Panneaux d'etat ------------------------------------------------------
+     Ces classes ne figurent pas dans le peritexte clair de `global.css` : elles
+     naissent sur les jetons de surface claire, alors que le peritexte existe
+     pour rattraper les classes nees sur les jetons sombres. Voir D040. */
+  .panel {
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    margin-bottom: 32px;
+  }
+
+  /* Le succes est une carte centree, l'erreur une banniere a filet lateral :
+     les deux etats se distinguent par la forme et par leur texte, jamais par
+     la seule couleur. */
+  .panel--success {
+    border: 1px solid var(--gold-30);
+    padding: 48px 32px;
+    text-align: center;
+  }
+
+  .panel--error {
+    border: 1px solid var(--navy-08);
+    border-left: 3px solid var(--gold-deep);
+    padding: 24px 28px;
+  }
+
+  .panel-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 24px;
+    color: var(--gold-deeper);
+    margin-bottom: 12px;
+  }
+
+  .panel--error .panel-title {
+    font-size: 20px;
+    color: var(--navy-text);
+  }
+
+  .panel-text {
+    font-size: 14px;
+    color: var(--slate-body);
+    line-height: 1.7;
+  }
+
+  /* --- Formulaire ----------------------------------------------------------
+     Les controles eux-memes viennent de `global.css` (`.field`, `.field-label`,
+     `.field-input`, `.field-select`, `.field-textarea`), livres par UI-001. */
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* `display: flex` bat le `display: none` que la feuille de l'agent
+     utilisateur attache a [hidden] : sans cette regle, le formulaire reste
+     affiche sous le panneau de succes et invite a renvoyer le message qui
+     vient justement de partir. Les panneaux, eux, ne declarent aucun
+     `display` et se masquent donc tout seuls. */
+  .contact-form[hidden] {
+    display: none;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* Deux champs cote a cote deviennent illisibles des que la colonne se
+     resserre : la maquette ne descend pas sous le desktop. */
+  @media (max-width: 640px) {
+    .field-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Hauteur du widget Turnstile standard, reservee pour que le bouton d'envoi
+     ne se deplace pas quand le widget se pose. */
+  .turnstile-slot {
+    min-height: 65px;
+  }
+
+  .contact-submit {
+    align-self: flex-start;
+  }
+
+  /* LE BOUTON DESACTIVE DOIT SE VOIR. `.btn` pose sa couleur de fond et son
+     texte explicitement, donc le rendu par defaut d'un `:disabled` ne change
+     rien du tout et le retour visuel annonce par D112 n'existerait pas. Ni
+     couleur ni jeton nouveaux : l'opacite et le curseur suffisent, et l'etat
+     ne porte de toute facon aucune information a lui seul, la page etant en
+     train de naviguer. */
+  .contact-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 640px) {
+    .contact-submit {
+      align-self: stretch;
+      text-align: center;
+    }
+  }
+
+  .privacy-notice,
+  .noscript-note {
+    font-size: 12.5px;
+    color: var(--slate-body);
+    line-height: 1.65;
+  }
+
+  /* --gold-deeper et non --gold-deep : 5.66:1 sur blanc et 5.06:1 sur creme,
+     alors que --gold-deep tombe sous le seuil AA en petit texte. D029, D030. */
+  .privacy-notice a,
+  .noscript-note a,
+  .panel-text a {
+    color: var(--gold-deeper);
+  }
+
+  /* Sans JavaScript, Turnstile ne produit aucun jeton et l'envoi est
+     impossible. Le message est place en tete de formulaire, pas ici : voir le
+     commentaire du <noscript> dans le balisage. */
+  .noscript-note {
+    border-left: 3px solid var(--gold-deep);
+    padding-left: 14px;
+  }
+</style>

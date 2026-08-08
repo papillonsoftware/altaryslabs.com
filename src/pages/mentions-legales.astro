@@ -1,0 +1,100 @@
+---
+/**
+ * Mentions legales, version francaise. Adaptees de celles de
+ * papillon-collection.com. Texte non encore relu par un avocat.
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import LegalPage from '~/components/LegalPage.astro';
+
+const locale = 'fr' as const;
+const pageKey = 'legalNotice' as const;
+---
+
+<BaseLayout locale={locale} pageKey={pageKey}>
+  <LegalPage locale={locale} pageKey={pageKey}>
+    <h2>Éditeur du site</h2>
+    <p>
+      Le site <strong>altaryslabs.com</strong> est édité par <strong>ALTARYS LABS</strong>, éditeur
+      de solutions SaaS et prestataire de services de conseil et de développement.
+    </p>
+    <ul>
+      <li>Forme juridique : Société par Actions Simplifiée Unipersonnelle (SASU)</li>
+      <li>
+        Siège social : Abidjan, Abobo Biabou, Derrière la pharmacie Rédemption, Lot 3108 Ilot 273,
+        Côte d'Ivoire
+      </li>
+      <li>Registre du commerce (RCCM) : CI-ABJ-03-2026-B17-00070</li>
+      <li>Directeur de la publication : Emmanuel BLONVIA</li>
+      <li>Contact : <a href="mailto:contact@altaryslabs.com">contact@altaryslabs.com</a></li>
+    </ul>
+
+    <h2>Hébergement</h2>
+    <p>
+      Le site altaryslabs.com est hébergé par <strong>Cloudflare, Inc.</strong>, 101 Townsend
+      Street, San Francisco, CA 94107, États-Unis.
+    </p>
+    <p>
+      Les produits édités par ALTARYS LABS reposent sur des infrastructures distinctes, décrites
+      sur leurs sites respectifs.
+    </p>
+
+    <h2>Propriété intellectuelle</h2>
+    <p>
+      L'ensemble des contenus présents sur ce site, notamment les textes, éléments graphiques,
+      visuels, captures d'écran de produits, marques, logos, icônes, documents et tout autre
+      élément accessible sur le site, est la propriété exclusive d'ALTARYS LABS, sauf mention
+      contraire expresse.
+    </p>
+    <p>
+      Toute reproduction, représentation, adaptation, diffusion ou exploitation, totale ou
+      partielle, de tout ou partie du site ou de son contenu, par quelque procédé que ce soit, sans
+      autorisation écrite préalable d'ALTARYS LABS, est interdite.
+    </p>
+    <p>
+      Les marques ou signes distinctifs de tiers éventuellement mentionnés sur le site demeurent la
+      propriété exclusive de leurs titulaires respectifs.
+    </p>
+
+    <h2>Responsabilité</h2>
+    <p>
+      ALTARYS LABS s'efforce de fournir sur ce site des informations aussi précises que possible.
+      Toutefois, les informations publiées sont fournies à titre indicatif et peuvent être
+      modifiées, mises à jour ou corrigées à tout moment, sans préavis. Elles ne constituent ni une
+      offre contractuelle, ni un engagement de disponibilité ou de calendrier.
+    </p>
+    <p>ALTARYS LABS ne saurait être tenue responsable :</p>
+    <ul>
+      <li>des interruptions temporaires d'accès au site ;</li>
+      <li>de la survenance de bogues ou d'erreurs ;</li>
+      <li>de toute inexactitude ou omission portant sur les informations disponibles sur le site ;</li>
+      <li>de tout dommage direct ou indirect résultant de l'accès au site ou de son utilisation.</li>
+    </ul>
+
+    <h2>Liens vers des sites tiers</h2>
+    <p>
+      Ce site comporte des liens vers des sites édités par ALTARYS LABS ou par des tiers. ALTARYS
+      LABS n'exerce aucun contrôle sur le contenu des sites tiers et décline toute responsabilité
+      quant à leur contenu ou à l'usage qui pourrait en être fait.
+    </p>
+
+    <h2>Données personnelles</h2>
+    <p>
+      Les modalités de collecte et de traitement des données personnelles transmises via ce site,
+      notamment par le formulaire de contact, sont décrites dans la{' '}
+      <a href="/confidentialite">politique de confidentialité</a>.
+    </p>
+
+    <h2>Droit applicable</h2>
+    <p>
+      Les présentes mentions légales sont soumises au droit ivoirien. Tout litige relatif à leur
+      interprétation, leur validité ou leur exécution relève, sauf disposition légale impérative
+      contraire, de la compétence des juridictions d'Abidjan.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      Pour toute question relative au site ou à son contenu, vous pouvez écrire à{' '}
+      <a href="mailto:contact@altaryslabs.com">contact@altaryslabs.com</a>.
+    </p>
+  </LegalPage>
+</BaseLayout>

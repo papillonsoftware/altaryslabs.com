@@ -1,0 +1,46 @@
+---
+/**
+ * Bandeau d'appel a l'action de fin de page. Present sur toutes les pages du
+ * design : le visiteur ne doit jamais arriver en bas sans une porte de sortie
+ * vers le contact.
+ *
+ * Les fiches produit en proposent deux, une demonstration et un contact
+ * commercial. Le second reste volontairement present : tout le monde ne veut
+ * pas d'une demonstration pour poser une question.
+ */
+interface Props {
+  title: string;
+  label: string;
+  href: string;
+  secondary?: { label: string; href: string };
+}
+
+const { title, label, href, secondary } = Astro.props;
+---
+
+<section class="section--cta">
+  <div class="container">
+    <h2 class="cta-title">{title}</h2>
+    <div class="cta-actions">
+      <a class="btn-primary" href={href}>{label}</a>
+      {secondary && <a class="btn-secondary" href={secondary.href}>{secondary.label}</a>}
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 2.8vw, 34px);
+    font-weight: 300;
+    color: var(--ivory);
+    margin-bottom: 28px;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>
