@@ -152,12 +152,14 @@ in the order below.
     `CF-IPCountry`**: the published policy closes that list. See D093.
   - **The environment variables are enumerated in exactly one place**: the `Env`
     interface of `functions/api/contact.ts`, which names each one, says whether
-    it is required or optional and states what happens in its absence. This file
-    deliberately carries neither the list nor its count, and neither do
-    `wrangler.jsonc`, `.gitignore` and the `docs/kb/` runbook: the scattered
-    descriptions drifted from the code twice, once when D100 removed a variable
-    and once when D106 made one optional. Read the interface, never a copy of
-    it. See D110.
+    it is required or optional and states what happens in its absence. This
+    file, `wrangler.jsonc` and `.gitignore` deliberately carry neither the list
+    nor its count: the scattered descriptions drifted from the code twice, once
+    when D100 removed a variable and once when D106 made one optional. Read the
+    interface, never a copy of it. `docs/kb/turnstile-d1-resend-setup.md` is
+    **outside this rule and does list what to type**, being a portable tutorial
+    for any project rather than a description of this one; it is not
+    authoritative on what this project expects. See D110.
   - What holds regardless: they are posed on the Pages project in Production
     **and** Preview, the keys **must carry the Secret type, never Text**, and
     there is **no build-time variable at all**.

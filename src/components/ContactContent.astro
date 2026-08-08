@@ -247,8 +247,31 @@ const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
           }
         }
 
+        // POURQUOI LE SECOND ENVOI EST BLOQUE. Le jeton Turnstile est a usage
+        // unique. Deux POST partis avant la navigation, ce qu'un double-clic
+        // suffit a produire, donnent donc un premier envoi reussi et un second
+        // refuse par Cloudflare en `timeout-or-duplicate` : la demande est en
+        // base, l'email est parti, et le visiteur lit un panneau d'erreur qui
+        // lui dit le contraire de ce qui s'est passe. La fenetre est courte,
+        // mais le message est faux, sur la seule page de conversion du site.
+        // Voir D112.
+        //
+        // C'EST LE SECOND ENVOI QUI EST ANNULE, PAS LE PREMIER. Le drapeau et
+        // `preventDefault` portent tout le mecanisme; la desactivation du bouton
+        // n'est qu'un retour visuel, et n'est jamais ce sur quoi la protection
+        // repose. L'ordre importe : on ne touche au bouton qu'une fois le
+        // premier envoi laisse intact et le brouillon ecrit.
+        var envoiEnCours = false;
+        var bouton = formulaire ? formulaire.querySelector('button[type="submit"]') : null;
+
         if (formulaire) {
-          formulaire.addEventListener('submit', function () {
+          formulaire.addEventListener('submit', function (evenement) {
+            if (envoiEnCours) {
+              evenement.preventDefault();
+              return;
+            }
+            envoiEnCours = true;
+
             var brouillon = {};
             CHAMPS.forEach(function (nom) {
               var element = champ(nom);
@@ -260,6 +283,21 @@ const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
             } catch (e) {
               /* Voir ci-dessus : on n'empeche jamais l'envoi pour autant. */
             }
+
+            if (bouton) bouton.disabled = true;
+          });
+
+          // LE RETOUR ARRIERE REARME LE FORMULAIRE. Un retour sur `?statut=...`
+          // est une navigation neuve, donc le drapeau repart a faux et le
+          // balisage statique ne porte jamais `disabled` : rien a faire. Le
+          // bouton "Precedent" du navigateur, lui, peut restaurer la page depuis
+          // le bfcache telle qu'elle etait, bouton desactive compris, et le
+          // visiteur se retrouverait alors devant un formulaire qu'il ne peut
+          // plus envoyer. Ce serait pire que le defaut corrige ci-dessus.
+          window.addEventListener('pageshow', function (evenement) {
+            if (!evenement.persisted) return;
+            envoiEnCours = false;
+            if (bouton) bouton.disabled = false;
           });
         }
 
@@ -429,6 +467,17 @@ const interests = [...PRODUCT_KEYS, ...SERVICE_KEYS].map((key) => ({
 
   .contact-submit {
     align-self: flex-start;
+  }
+
+  /* LE BOUTON DESACTIVE DOIT SE VOIR. `.btn` pose sa couleur de fond et son
+     texte explicitement, donc le rendu par defaut d'un `:disabled` ne change
+     rien du tout et le retour visuel annonce par D112 n'existerait pas. Ni
+     couleur ni jeton nouveaux : l'opacite et le curseur suffisent, et l'etat
+     ne porte de toute facon aucune information a lui seul, la page etant en
+     train de naviguer. */
+  .contact-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   @media (max-width: 640px) {
