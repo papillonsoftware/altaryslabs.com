@@ -245,7 +245,7 @@ This loop never merges and never lets you review your own work. The Writer / Rev
 - The switch, when it comes: merge into `main`, verify the build, remove the GitHub Pages records from the DNS zone (A records to 185.199.108-111.153, or the CNAME to papillonsoftware.github.io), add the custom domains in Pages, then disable GitHub Pages in the repository.
 - Never create a Direct Upload Pages project: it cannot be converted into a Git-connected project.
 - Build output is `./dist`. Configuration lives in `wrangler.jsonc`.
-- **The D1 binding in `wrangler.jsonc` is commented out** until the contact-form work lands. Reactivate it after `wrangler d1 create`, and do not forget the comma after `pages_build_output_dir`. A block with an unresolved `database_id` fails the Cloudflare build.
+- **The D1 binding in `wrangler.jsonc` is live** since `FORM-001`: a `d1_databases` block binding `DB` to the `altaryslabs-contact` database, with a real `database_id`. Two things still matter if it is ever touched. The `database_id` must stay the real one, a placeholder fails the Cloudflare build and not merely the local binding. And the comma after `pages_build_output_dir` must be present.
 
 ---
 
