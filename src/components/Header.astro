@@ -1,7 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import LangSwitcher from './LangSwitcher.astro';
-import type { Locale } from '../i18n/config';
+import { LABEL_SEPARATOR, type Locale } from '../i18n/config';
 import { localizedPath, useTranslations } from '../i18n/utils';
 import { PRODUCT_KEYS, SERVICE_KEYS, type PageKey } from '../i18n/routes';
 
@@ -57,7 +57,7 @@ const isActive = (key: PageKey, children: readonly PageKey[] = []) =>
                   class="nav-disclosure"
                   aria-expanded="false"
                   aria-controls={`menu-${key}`}
-                  aria-label={`${label} : ${t.nav.openMenu}`}
+                  aria-label={`${label}${LABEL_SEPARATOR[locale]}${t.nav.openMenu}`}
                 >
                   <svg viewBox="0 0 12 8" width="10" height="7" aria-hidden="true">
                     <path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" />

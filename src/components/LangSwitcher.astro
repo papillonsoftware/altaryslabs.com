@@ -1,5 +1,5 @@
 ---
-import { LOCALE_LABEL, HTML_LANG, type Locale } from '../i18n/config';
+import { LOCALE_LABEL, HTML_LANG, LABEL_SEPARATOR, type Locale } from '../i18n/config';
 import { localizedPath, otherLocale, useTranslations } from '../i18n/utils';
 import type { PageKey } from '../i18n/routes';
 
@@ -15,6 +15,14 @@ const target = otherLocale(locale);
 // Le selecteur pointe vers la traduction exacte de la page courante, jamais
 // vers l'accueil : la table ROUTES garantit la correspondance des slugs.
 const href = localizedPath(pageKey, target);
+
+// DEUX LANGUES SE CROISENT DANS CE LIBELLE, et elles ne s'indexent pas pareil.
+// Le libelle est une phrase de la page, donc dans la langue de la page
+// (`locale`) : sa typographie, separateur compris, suit `locale`. Seul le nom
+// de la langue visee est dans la langue cible (`target`), par definition. Sur
+// une page anglaise on lit donc "Change language: Français", ponctue en
+// anglais. Indexer le separateur sur `target` reintroduirait le defaut que
+// D124 corrige, a l'envers. Voir D124.
 ---
 
 <a
@@ -22,7 +30,7 @@ const href = localizedPath(pageKey, target);
   href={href}
   hreflang={HTML_LANG[target]}
   lang={HTML_LANG[target]}
-  aria-label={`${t.common.switchLanguage} : ${LOCALE_LABEL[target]}`}
+  aria-label={`${t.common.switchLanguage}${LABEL_SEPARATOR[locale]}${LOCALE_LABEL[target]}`}
 >
   <span aria-hidden="true">{target.toUpperCase()}</span>
 </a>

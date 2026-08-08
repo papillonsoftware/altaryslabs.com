@@ -17,8 +17,33 @@ export const OG_LOCALE: Record<Locale, string> = {
 
 /** Libelles du selecteur de langue, toujours affiches dans la langue cible. */
 export const LOCALE_LABEL: Record<Locale, string> = {
-  fr: 'Francais',
+  fr: 'Français',
   en: 'English',
+};
+
+/**
+ * Separateur des libelles composes de deux morceaux, du type
+ * "Produits : Ouvrir le menu" ou "Change language: English".
+ *
+ * C'EST UNE DONNEE DE LANGUE, PAS UNE DECORATION. Le francais met une espace
+ * avant le deux-points, l'anglais non. Ecrit en dur dans un gabarit, le
+ * separateur suit le composant et non la langue : les pages anglaises servaient
+ * ainsi `aria-label="Products : Open menu"` sur tout le site.
+ *
+ * Il vit ici, en une table indexee par la langue, et non dans les
+ * dictionnaires : les deux valeurs se lisent alors sur deux lignes voisines,
+ * donc une divergence se voit d'un coup d'oeil, alors que `fr.ts` et `en.ts`
+ * les auraient eloignees de plusieurs centaines de lignes. Le type Dictionary
+ * garantit qu'une cle existe des deux cotes, jamais qu'elle est juste.
+ *
+ * NE PAS DUPLIQUER DE CONDITION SUR LA LANGUE DANS UN COMPOSANT pour le
+ * choisir : c'est exactement ainsi que les deux seules occurrences du motif ont
+ * diverge sans que deux rondes de revue le voient. Les composants lisent cette
+ * table, indexee par la langue de la page. Voir D124.
+ */
+export const LABEL_SEPARATOR: Record<Locale, string> = {
+  fr: ' : ',
+  en: ': ',
 };
 
 export const SITE_URL = 'https://altaryslabs.com';
