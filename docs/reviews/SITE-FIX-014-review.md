@@ -467,3 +467,221 @@ can still print a clean verdict and a false coverage count over a contradiction
 it did not look for; and the branch still carries four accounting statements
 that contradict measurement or contradict each other, in the item whose whole
 subject is that no accounting statement should.
+
+## Round 3 - 2026-08-08
+**Verdict**: CHANGES REQUESTED
+
+Reviewed `origin/fix/docs-check` at `749adf8` against `origin/refonte-multipages`
+at `84d86c5`, in a dedicated review worktree on `review-site-fix-014`. PR #41,
+base `refonte-multipages`, correct. Round 2 was run at `7087064`; the round 2
+fixes are commit `749adf8`.
+
+### What was verified independently
+
+- `npm ci`, `npm run build`: green, 26 pages built. `npm run check`: 0 errors,
+  0 warnings, 0 hints. Nothing suppressed: the diff touches no TypeScript, no
+  Astro file, no `package.json`. `bin/docs_check` is committed `100755`, like
+  `bin/og_images` and `bin/contrast_sweep`.
+- The diff touches `bin/` and `docs/` only. No page, component, token,
+  dictionary, route, `functions/`, `public/` or `wrangler.jsonc` file changes,
+  so **no rendered surface changes** and the visual-fidelity pass is inapplicable
+  here rather than skipped: there is no prototype to compare anything against and
+  manufacturing a delta would be noise. Bilingual parity, editorial guardrails,
+  palette, typography, SEO surfaces, accessibility and Cloudflare configuration
+  were swept anyway under the maximal bar and are untouched.
+- No em-dash and no interpunct anywhere in the diff or in the three commit
+  messages. Comments and commit messages French, documents English, as the
+  repository language rule requires.
+- No new dependency: `node:fs`, `node:child_process`, `node:path` only.
+- **All six round 2 findings and the three round 2 suggestions are genuinely
+  closed, verified by execution rather than by reading the fix commit.**
+  `docs/BACKLOG.md` absent now exits 2 with a message, and so does a backlog
+  whose `## Done` and `## Open` headings are renamed; the coverage count is now
+  derived from what ran; D129 states five of six and names the survivor;
+  `UI-FIX-004` is gone from the script; the `STATUS` words are anchored and
+  "NOT DONE" is no longer read as DONE while "OPEN, not started" still reads as
+  open; the fiche header and the pull request body both carry D134; nothing
+  in the script or in D130 names `SITE-FIX-015` any more; `Per` and `Under` are
+  now recognised; the `bin/og_images` exit-code citation is correct at `:40`.
+- **The two benches replay exactly as the fiche describes.** At `1818413`:
+  12 gaps, including the six named at the exact lines named, `BACKLOG.md:43`,
+  `BACKLOG.md:81`, `I18N-FIX-002.md:36`, `SEO-FIX-001.md:3`, `PAGE-003.md:7` and
+  the unclosed backtick at `I18N-FIX-002.md:23`. At `2678c6f`: 7 gaps, five of
+  the six gone, the survivor being `I18N-FIX-002.md:43`. The documented
+  `D-UNDEF` recipe was executed verbatim and returned exactly the three
+  `D-UNDEF` lines, the two `ITEM-NOFILE` fixture artefacts, the `PR-STATE`
+  disablement and "6 controles sur 7" the fiche announces.
+- Run against `origin/refonte-multipages`, the tool returns exactly the seven
+  gaps `SITE-FIX-016` lists, at exactly the lines it lists. Run against this
+  branch it returns the same seven and no eighth, so the branch's own documents
+  add no gap.
+- The D-number reservation note was re-measured branch by branch today:
+  D115 to D118 on `fix/conventions-variables-et-perimetre-de-revue`, D119 to
+  D123 plus D127 on `fix/commentaire-en-ts`, D124 to D126 plus D128 plus D133 on
+  `fix/typographie-des-libelles-anglais`. Exact, and D129 to D132 plus D134
+  collide with nothing.
+- The seven delivery gaps are real, pre-existing, and properly materialised as
+  a fiche plus a D-row rather than as a pull request mention. They stay tracked
+  debt for the founder to close through `SITE-FIX-016`; nothing here defers them
+  silently, the round being CHANGES REQUESTED on its own findings anyway.
+
+The tool is sound and the round 2 work is real and complete. What follows is
+what this round found on top of it, all of it confirmed by execution.
+
+### Blockers
+
+- [ ] **[BLOCKER]** `bin/docs_check:309` and `:315` - **a recognised citation
+  written as a range is not merely excluded, it is erased**, and so is any other
+  citation sharing its line. `D_PLAGE` blanks `D\d{3}\s*(?:-|to|a)\s*D?\d{3}`
+  before `D_CITATION` runs, which removes the very number the citation form
+  needs as its anchor, so the whole match fails and nothing on that line is
+  checked. Verified on one fixture, changing only the punctuation between three
+  identical undefined numbers:
+
+  ```
+  **Decisions** D901, D902 and D903 in `docs/DECISIONS.md`.  -> 3 D-UNDEF lines
+  **Decisions** D901 to D903 in `docs/DECISIONS.md`.         -> nothing, exit 0
+  ```
+
+  And the collateral, which no decision covers at all:
+
+  ```
+  See D999 and D115-D119 here.  -> D-UNDEF on D999
+  See D115-D119 and D999 here.  -> nothing
+  ```
+
+  Five live instances on this branch, each a recognised form whose declared
+  references are entirely unverified: `docs/work-items/UI-001.md:5`,
+  `docs/work-items/SITE-FIX-001.md:5`, `docs/work-items/I18N-001.md:6`,
+  `docs/work-items/I18N-FIX-001.md:6`, and `docs/AI_Development_Workflow.md:213`
+  which ends on "See D056 to D058".
+
+  D131 does say the range is not caught, so the exclusion itself is recorded.
+  What is not recorded, and what makes this blocking rather than a documented
+  under-detection, is its effect: the same row states that the plural
+  `**Decisions**` header "matters more than it looks: it is the standard fiche
+  header, used by fifteen of them", and presents its recognition as the fix for
+  the tool not seeing its own references. Four of those fifteen headers are
+  still not seen, and a reader of D131 cannot derive that. The line-neighbour
+  case is worse still: `D999` there belongs to no range and is dropped anyway.
+  This is the third round in a row on the same family, a check silently narrower
+  than the record claims, in the item whose subject is that no claim should
+  exceed its coverage -> neutralise only the interior of a range rather than the
+  whole of it, so the anchor survives and the endpoints of a `**Decisions**` or
+  `See` range are checked like any other cited number; and if the endpoints are
+  to stay excluded by choice, say so in D131 in those words, naming the four
+  fiche headers it costs.
+
+### Important
+
+- [ ] **[IMPORTANT]** `bin/docs_check:386` - the comment justifies the
+  per-table-row special case with "Sinon la table de DECISIONS.md forme un bloc
+  unique de 115 lignes". Measured on this branch, the table is contiguous from
+  line 18 to line 138, which is 121 lines; at `8ec4ee2`, where the comment was
+  written, it was already 120. The figure was wrong when written and is now off
+  by six. It is a count written in one document and contradicted by the file it
+  describes, which is precisely the third blind spot D132 records, shipped
+  inside the tool that records it, and it is the same shape round 2 raised for
+  the "126" D-row count -> write the measured figure, or drop the figure and
+  keep the reason, which does not need a number to hold.
+
+- [ ] **[IMPORTANT]** `bin/docs_check:44` - the header writes "Le depot raconte
+  son propre historique : « renumbered from D115-D119 to D119-D123 »", which
+  reads as a quotation and is the founding example for the whitelist rule.
+  `grep -rn 'D119-D123\|D115-D119'` across `docs/`, `.claude/`, `CLAUDE.md` and
+  `bin/` returns that line and nothing else. The real passage exists and D131
+  quotes it correctly at `docs/DECISIONS.md:136`, "renumbered from D115 to
+  D119". Two readers are misled: one who greps for the quoted string and finds
+  nothing, and one who concludes the repository writes ranges with a hyphen,
+  which matters here because the hyphen and the "to" form are handled by the
+  same regex and the blocker above turns on exactly that -> quote the passage
+  that exists, in the form D131 already uses.
+
+- [ ] **[IMPORTANT]** `bin/docs_check:649-651` against `:674` - the comment
+  defines the proof `D108-QUOTE` looks for as "un bloc de citation markdown : un
+  bloc introduit par `>` qui reproduit la phrase du reviewer mot pour mot, sous
+  un titre qui l'annonce". The code is `lignes.some(l => /^\s*>\s+\S/.test(l))`:
+  any single line starting with `>`, anywhere in the file, with no relation to
+  the birth declaration and no heading requirement. Verified on a fiche that
+  declares "Born from `docs/reviews/SITE-FIX-001-review.md`", carries
+  `> npm run build` under a `## Repro` heading and quotes no reviewer at all: it
+  passes, while the same fiche without that line is reported. Reproducing the
+  sentence word for word is out of mechanical reach and D132 covers that; the
+  heading and the proximity are not, and are simply not implemented. A comment
+  asserting a coverage it does not have is the second blind spot D132 itself
+  enumerates -> either narrow the comment to what the code checks, the mere
+  presence of a blockquote, or implement the announcing heading it promises.
+
+### Suggestions
+
+- **[SUGGESTION]** `bin/docs_check:721` - the comment three lines above insists
+  "Le compte est DERIVE de ce qui a tourne, jamais ecrit en dur", and the next
+  statement is `const TOTAL_CONTROLES = 7;`. The derivation is real for the
+  numerator, `executes`, so the comment is not false as written; the denominator
+  is still a literal that has to be kept in step by hand with the seven-row
+  USAGE table above it and the seven-row table in
+  `docs/work-items/SITE-FIX-014.md:52-62`. Deriving it from the set of check
+  names would close the last hand-kept count in a tool built against hand-kept
+  counts.
+
+- **[SUGGESTION]** `bin/docs_check:280` - `ITEM_ID` hand-enumerates
+  `SITE|PAGE|UI|I18N|SEO|FORM|OPS`, which is the "Prefixes (LOCKED)" table of
+  `docs/AI_Development_Workflow.md`. The two agree today, checked against
+  `docs/work-items/`. A prefix added to that table without an edit here would
+  make `ITEM-NOFILE` and `D108-QUOTE` stop seeing every item of the new type,
+  quietly and with no exit-2 refusal, which is the one failure mode the `refuser`
+  discipline exists to prevent everywhere else.
+
+- **[SUGGESTION]** `bin/docs_check:518` and `docs/work-items/OPS-001.md:3` - the
+  round 2 anchoring fix also stops `STATUS` arbitrating "**Status** step 1 DONE
+  on 31 July 2026", the only qualified status form in the corpus. There is no
+  live contradiction, `docs/BACKLOG.md:32` filing `OPS-001` under `## Done`, and
+  abstaining on a partial status is arguably the right answer rather than a
+  regression. Recorded so the next round does not spend itself rediscovering it.
+
+### Correctness (code-review skill)
+
+`code-review:code-review` was invoked on PR #41 by its qualified plugin name and
+ran its five parallel passes. Its eligibility pass again reported the pull
+request ineligible, this time on a real prior comment of its own; that comment
+is timestamped 08:29Z, which is commit `8ec4ee2`, two fix commits before the
+head under review, so the gate was overridden and the pass run against `749adf8`.
+Every finding below was re-verified here by execution against synthetic trees
+before promotion, and is classified at the severity this round assigns rather
+than the skill's.
+
+- **[BLOCKER]** the range neutralisation erasing the citation anchor. Confirmed
+  on a fixture and traced to five live instances.
+- **[IMPORTANT]** the "115 lignes" claim. Confirmed, measured 121.
+- **[IMPORTANT]** the fabricated « D115-D119 to D119-D123 » quotation. Confirmed
+  by grep over the whole tree.
+- **[IMPORTANT]** `D108-QUOTE` satisfied by any blockquote line. Confirmed in
+  both directions.
+- **[SUGGESTION]** `TOTAL_CONTROLES` literal, and the `ITEM_ID` prefix
+  enumeration. Both confirmed as drift risks, neither wrong today.
+
+Discarded as false positives after checking against the code:
+
+- CLAUDE.md non-compliance. None: French comments and commit messages, English
+  documents, correct base branch, no em-dash, no interpunct.
+- the `STATUS` anchoring being a regression on `OPS-001`. Real as a behaviour
+  change, but the fiche and the backlog agree, and not arbitrating a partial
+  status is consistent with the deliberate abstention on IMPLEMENTED and IN
+  REVIEW; kept as a suggestion, not as a defect.
+- `SITE-FIX-011` still appearing in two comments at `:58-59` and `:334-335`.
+  Those quote the mention-against-citation grammar rule by example, which is the
+  form D131 defines as a mention; they are not navigation pointers.
+- the in-place rewrite of D129 and D131. Both rows were born on this branch and
+  have never been merged, which the `SITE-FIX-002` round 3 precedent covers.
+
+### Summary
+
+Round 2 was answered completely: all six findings and all three suggestions are
+genuinely closed, verified by execution, and both benches plus the documented
+recipe replay exactly as the fiche claims. It is blocked on one thing, of the
+same family as the two rounds before it: `D_PLAGE` erases a citation's anchor
+along with its range, so four of the fifteen fiche headers D131 celebrates
+recognising, plus one line of `docs/AI_Development_Workflow.md`, are entirely
+unchecked while the run reports the prose's accounting as right. Three smaller
+findings are all statements the tool makes about itself that measurement
+contradicts, in the item whose subject is that no such statement should.
