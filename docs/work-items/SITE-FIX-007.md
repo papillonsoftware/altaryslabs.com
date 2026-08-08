@@ -3,7 +3,7 @@
 **Type** FIX | **Status** OPEN, not started | **Branch to create** `fix/checklist-reviewer`
 **Base** `refonte-multipages`
 
-**Decision** D073 in `docs/DECISIONS.md`. Raised by the `I18N-001` round 1
+**Decision** D075 in `docs/DECISIONS.md`. Raised by the `I18N-001` round 1
 review, `docs/reviews/I18N-001-review.md`, as a latent defect outside that PR's
 scope.
 
