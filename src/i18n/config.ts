@@ -15,10 +15,72 @@ export const OG_LOCALE: Record<Locale, string> = {
   en: 'en',
 };
 
-/** Libelles du selecteur de langue, toujours affiches dans la langue cible. */
+/**
+ * Nom de la langue cible, expose dans le libelle accessible du selecteur et
+ * JAMAIS affiche : le contenu visible du selecteur est le code `FR` ou `EN`,
+ * pose en `aria-hidden`. Ces valeurs n'atteignent donc qu'un lecteur d'ecran.
+ */
 export const LOCALE_LABEL: Record<Locale, string> = {
-  fr: 'Francais',
+  fr: 'Français',
   en: 'English',
+};
+
+/**
+ * Separateur des libelles composes de deux morceaux, du type
+ * "Produits : Ouvrir le menu" cote francais et "Change language: Français"
+ * cote anglais.
+ *
+ * LES DEUX EXEMPLES NE SE RELEVENT PAS AU MEME ENDROIT, et c'est deja une
+ * illustration de la regle enoncee plus bas. "Produits : Ouvrir le menu" est un
+ * `aria-label` plat : il se lit tel quel dans `dist/`. "Change language:
+ * Français" n'y figure nulle part et ne le peut pas, ce nom vivant depuis D128
+ * dans deux spans voisins ; il ne se releve qu'a la mesure, par
+ * `Accessibility.getFullAXTree`. La phrase est toujours dans la langue de la
+ * page et le nom de langue dans l'autre, si bien que "Change language: English"
+ * ne peut pas exister.
+ *
+ * C'EST UNE DONNEE DE LANGUE, PAS UNE DECORATION. Le francais met une espace
+ * avant le deux-points, l'anglais non. Ecrit en dur dans un gabarit, le
+ * separateur suit le composant et non la langue : les pages anglaises servaient
+ * ainsi `aria-label="Products : Open menu"` sur tout le site.
+ *
+ * Il vit ici, en une table indexee par la langue, et non dans les
+ * dictionnaires : les deux valeurs se lisent alors sur deux lignes voisines,
+ * donc une divergence se voit d'un coup d'oeil, alors que `fr.ts` et `en.ts`
+ * les auraient eloignees de plusieurs centaines de lignes. Le type Dictionary
+ * garantit qu'une cle existe des deux cotes, jamais qu'elle est juste.
+ *
+ * NE PAS DUPLIQUER DE CONDITION SUR LA LANGUE DANS UN COMPOSANT pour le
+ * choisir : c'est exactement ainsi que les occurrences du motif ont diverge
+ * sans que deux rondes de revue le voient. Les composants lisent cette table,
+ * indexee par la langue de la page.
+ *
+ * LE MOTIF SE LIT MAL A LA SOURCE, ET PAS MIEUX DANS LE HTML PRODUIT. Deux
+ * rondes de revue ont ete necessaires pour l'etablir, chacune en demolissant la
+ * methode de verification de la precedente.
+ *
+ * La ronde 1 a trouve une occurrence qu'un grep de la source avait manquee,
+ * `LegalPage.astro`, parce que les occurrences ne partagent aucune forme
+ * syntaxique : litteral gabarit ici, texte de balisage nu la, premier caractere
+ * d'un span ailleurs.
+ *
+ * La ronde 2 a montre que le HTML produit ne fait pas foi non plus des qu'il
+ * s'agit d'un NOM ACCESSIBLE. Un nom calcule depuis les descendants n'est pas
+ * le texte du balisage : Chrome insere une espace a la frontiere entre elements
+ * en ligne quand le texte accumule n'en finit pas deja par une. Le HTML disait
+ * `>Learn more<span>: Papillon...`, et le navigateur annoncait
+ * "Learn more : Papillon...". Douze liens anglais etaient donc encore faux
+ * apres un correctif qui semblait juste dans `dist/`, et deux "defauts"
+ * francais diagnostiques a la ronde 1 n'avaient jamais existe.
+ *
+ * **LE BALAYAGE QUI FAIT FOI MESURE LES NOMS ACCESSIBLES CALCULES**, par
+ * `Accessibility.getFullAXTree` sur le site servi, et non le texte de `dist/`.
+ * Ce dernier reste l'autorite pour le texte visible, et pour lui seul.
+ * Voir D124, D133 et la fiche I18N-FIX-003.
+ */
+export const LABEL_SEPARATOR: Record<Locale, string> = {
+  fr: ' : ',
+  en: ': ',
 };
 
 export const SITE_URL = 'https://altaryslabs.com';
