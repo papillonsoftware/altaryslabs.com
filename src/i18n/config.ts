@@ -53,13 +53,22 @@ export const CONTACT_PHONE_HREF = `tel:${CONTACT_PHONE.replace(/\s/g, '')}`;
  * POURQUOI ELLE VIT ICI ET NON DANS UNE VARIABLE DE BUILD. Elle y a vecu, et
  * cela a casse un build. Depuis que `wrangler.jsonc` porte
  * `pages_build_output_dir`, ce fichier est la source de verite de la
- * configuration du projet et Cloudflare cesse de lire les variables du
- * dashboard : le journal de build affiche alors "Build environment variables:
+ * configuration du projet et AUCUNE VARIABLE EN CLAIR DU DASHBOARD N'ATTEINT
+ * PLUS LE PROJET, NI AU BUILD NI A L'EXECUTION ; seuls les secrets y restent
+ * gerables. Au build, le journal l'annonce : "Build environment variables:
  * (none found)" alors que la variable est bien posee dans les deux
- * environnements. Surtout, la valeur est figee dans le HTML statique a la
- * compilation, donc la faire tourner exigeait deja un rebuild : la porter dans
- * le code ne coute aucune souplesse et rend son absence impossible. Voir D100,
- * qui supersede D094.
+ * environnements. A l'execution il n'y a aucun journal du tout, la fonction lit
+ * simplement undefined.
+ *
+ * NE PAS REPETER LA FORME COURTE de cette regle ("Cloudflare cesse de lire les
+ * variables du dashboard pour le build") : elle est vraie, incomplete, et
+ * laisse croire que l'execution, elle, fonctionne. C'est la formulation qui a
+ * envoye l'enquete du mauvais cote pendant une heure.
+ *
+ * Surtout, la valeur est figee dans le HTML statique a la compilation, donc la
+ * faire tourner exigeait deja un rebuild : la porter dans le code ne coute
+ * aucune souplesse et rend son absence impossible. Voir D115, qui complete
+ * D100, laquelle supersede D094.
  */
 /* Valeur relue de la source autoritative, `npx wrangler turnstile widget list`,
    et non d'une capture d'ecran : une premiere lecture visuelle avait ajoute un
