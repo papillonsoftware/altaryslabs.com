@@ -221,3 +221,249 @@ follow-up this lineage was blocked on twice; and three of the seven checks can
 turn themselves off in silence while the run prints that the prose's accounting
 is right, which is the exact coverage-wider-than-coverage failure D132 was
 written to forbid, occurring inside the tool that forbids it.
+
+## Round 2 - 2026-08-08
+**Verdict**: CHANGES REQUESTED
+
+Reviewed `origin/fix/docs-check` at `7087064` against `origin/refonte-multipages`
+at `84d86c5`, in a dedicated review worktree on `review-site-fix-014`. PR #41,
+base `refonte-multipages`, correct. Round 1 was run at `8ec4ee2`; the round 1
+fixes are commit `7087064`.
+
+### What was verified independently
+
+- `npm ci`, `npm run build`: green, 26 pages built. `npm run check`: 0 errors,
+  0 warnings, 0 hints. Nothing suppressed: the diff touches no TypeScript, no
+  Astro file, no `package.json`.
+- The diff touches `bin/` and `docs/` only. No page, component, token,
+  dictionary, route, `functions/`, `public/` or `wrangler.jsonc` file changes,
+  so **no rendered surface changes** and the visual-fidelity pass is inapplicable
+  rather than skipped. A palette and guardrail sweep was run anyway under the
+  maximal bar: no hardcoded hex outside `tokens.css`, no amber, no teal, no
+  violet, no ALTARYS ENTERPRISE as a live product line, three products only.
+- No em-dash and no interpunct anywhere in the diff or in the three commit
+  messages.
+- **Both round 1 blockers are genuinely fixed, verified by execution, not by
+  reading the commit message.** `D134` exists and `SITE-FIX-016.md:5` points at
+  it. A `docs/DECISIONS.md` with no `| Dnnn |` row and an absent
+  `docs/work-items/` now both exit 2 with no verdict. The `gh` degradation
+  warning now prints under `--check`.
+- Five of the six round 1 IMPORTANT findings are fixed and were re-measured:
+  the plural `**Decisions**` is now recognised (fifteen fiches use it, counted);
+  `MD-BROKEN` now lands on the right line across a multi-line code span
+  (reproduced on a four-line fixture, reported line 3, correct); the D119
+  citation is gone from the header; the D114 to D129 gap is annotated in the
+  file's own established shape, and the three branch holdings it names are
+  exact, checked branch by branch; `SITE-FIX-016` sits at BACKLOG order 1 under
+  its blocker. The five suggestions are all treated.
+- **The two benches replay exactly as the fiche now describes.** At `1818413`:
+  12 gaps, including the six named, at the exact lines named, the unclosed
+  backtick at `I18N-FIX-002.md:23`. At `2678c6f`: 7 gaps, five of the six gone,
+  the survivor being `I18N-FIX-002.md:43`, precisely as the corrected fiche
+  states. The documented `D-UNDEF` recipe was executed verbatim and produced
+  exactly the three `D-UNDEF` lines and the two `ITEM-NOFILE` artefacts the
+  fiche announces.
+- The seven delivery gaps are still all live on the integration branch after
+  PR #31 merged into it, and each of the seven citations in `SITE-FIX-016.md`
+  was checked line by line against its file. All seven are exact.
+- `D-DUP`, `D108-QUOTE` in both directions, `PR-STATE` anchoring, the warning
+  tier and the journal tier were each exercised on synthetic trees and each
+  behaved as documented.
+- The `D131` row is rewritten in place rather than annotated. That is
+  legitimate here and should not be re-raised: the row was born on this branch
+  at `8ec4ee2` and has never been merged, which is the exception round 3 of the
+  `SITE-FIX-002` review already established.
+
+The tool is sound and the round 1 work is real. What follows is what survives.
+
+### Blockers
+
+- [ ] **[BLOCKER]** `bin/docs_check:497` and `:459-461` - **`STATUS` still
+  disables itself in complete silence**, which is the third site of the round 1
+  blocker, left unguarded while the other two received `refuser`.
+  `tablesBacklog` returns `null` when `docs/BACKLOG.md` is absent, and
+  `verifierStatus` opens with `if (!backlog) return;` with no message of any
+  kind. Reproduced on one tree, twice, changing nothing but the presence of the
+  backlog: with `docs/BACKLOG.md` present the tool reports
+  `SITE-999.md:3 [STATUS] la fiche se dit close alors que docs/BACKLOG.md la
+  range dans les ouverts` and exits 1; with the same file removed it prints
+  `AUCUN ECART sur les six controles qui ont tourne` and exits 0 on the same
+  contradiction. A second, softer form of the same hole: renaming the backlog's
+  `## Done` and `## Open` headings leaves `tablesBacklog` returning two empty
+  sets, and the fiche-against-backlog half of `STATUS` reports nothing, again in
+  silence and again with exit 0.
+
+  Two aggravating facts. First, both end-of-run messages, `:687` and `:707`,
+  then state "six controles sur sept" and "les six controles qui ont tourne"
+  when five ran, so the tool does not merely stay quiet, it prints a false
+  count of its own coverage. Second, the reachable precondition is not
+  hypothetical: the `D-UNDEF` recipe this very item documents at
+  `docs/work-items/SITE-FIX-014.md:111-116` builds a tree that copies
+  `DECISIONS.md` alone, so `STATUS` does not run there either, and the paragraph
+  at `:122-127` that enumerates what the fixture disabled names `PR-STATE` only.
+  This is the coverage-claim-wider-than-coverage failure D132 forbids, in the
+  tool that forbids it, in the same place round 1 found it -> guard
+  `docs/BACKLOG.md` with `refuser` exactly as `docs/DECISIONS.md` and
+  `docs/work-items/` are guarded at `:269`, `:276` and `:280`, and derive the
+  "six sur sept" wording from the number of checks that actually ran rather than
+  hardcoding it.
+
+### Important
+
+- [ ] **[IMPORTANT]** `docs/DECISIONS.md:134` (D129) - the row still reads
+  "replayed against `2678c6f` those six are gone where the author fixed them".
+  That is the exact claim round 1 blocked at `docs/work-items/SITE-FIX-014.md:94`.
+  The fiche was corrected to "five of the six" and now names the survivor; the
+  decision row was left byte-identical to its `8ec4ee2` version. Measured here:
+  at `2678c6f` five of the six are gone and `I18N-FIX-002.md:43` still fires.
+  The branch therefore contradicts itself, and it does so in the durable record
+  rather than in the working document. Correcting the row is legitimate for the
+  same reason correcting D131 was, the row having been born on this branch and
+  never merged -> bring D129 into line with the fiche, five of six and the
+  survivor named.
+
+- [ ] **[IMPORTANT]** `bin/docs_check:620` - "Le modele de forme est
+  UI-FIX-004." `UI-FIX-004` exists nowhere on this branch nor on
+  `refonte-multipages`; searching every remote branch finds it only as
+  `docs/work-items/UI-FIX-004.md` on `origin/fix/commentaire-en-ts`, which is
+  unmerged. On merge this becomes a pointer to an item that does not exist,
+  inside the tool written to catch pointers to items that do not exist, invisible
+  to it only because the scan is `.md` only. It is the same defect round 1
+  raised for the D119 citation at `:31-32`; the fix was applied to the one
+  instance named rather than to the class, and this second one predates it,
+  having shipped in `8ec4ee2` -> name a model that exists on the integration
+  branch, or describe the expected shape without naming an item.
+
+- [ ] **[IMPORTANT]** `bin/docs_check:489-490` and `:518-519` - `STATUS` has no
+  negation awareness. `STATUT_CLOS` and `STATUT_OUVERT` are bare word searches
+  over the free text of the `**Status**` line, so "NOT DONE" reads as DONE and
+  "not OPEN yet" reads as OPEN. Reproduced in both directions on synthetic
+  fiches: a fiche saying `**Status**: NOT DONE, waiting on legal review` while
+  the backlog lists it open is reported as "la fiche se dit close alors que
+  docs/BACKLOG.md la range dans les ouverts", exit 1. No fiche in the repository
+  uses a negated form today, so this is latent rather than live, but it is a
+  blocking false positive in the blocking tier, and a tool that cries wolf is
+  the adoption failure the header at `:53-54` argues against -> require the
+  status word to open the field, or refuse to arbitrate a status line carrying a
+  negation, on the model of the deliberate abstention on IMPLEMENTED and IN
+  REVIEW at `:515-517`.
+
+- [ ] **[IMPORTANT]** `docs/work-items/SITE-FIX-014.md:5` - the header declares
+  "**Decisions** D129, D130, D131 and D132", while `:133` of the same file says
+  the follow-up is "opened by D134" and `docs/DECISIONS.md:138` attributes D134
+  to `SITE-FIX-014`. The fiche omits its own fifth decision row, so the item
+  whose subject is the accounting of the repository's prose does not account for
+  itself. The pull request body repeats the same omission, "Decisions : **D129 a
+  D132**". Nothing mechanical can catch it, an omission having no form -> add
+  D134 to the header, and to the pull request body.
+
+- [ ] **[IMPORTANT]** `docs/work-items/SITE-FIX-014.md:19` - "114 on the
+  integration branch, 126 counting branches, as measured on 8 August 2026".
+  Measured today, branch by branch: 114 on the integration branch, plus the
+  fourteen numbers D115 to D128 held on the three unmerged branches, plus D133
+  on the typography branch, which is 129; counting this branch's own five rows
+  it is 134. 126 is reachable from no reading. Round 1 raised the figure as a
+  suggestion and the fix dated the line instead of correcting it, which turns an
+  ageing number into a dated false one. It is aggravated by this same commit:
+  the note added at `docs/DECISIONS.md:141-147` enumerates exactly the numbers
+  that make the count 129, so the branch now contradicts itself inside one
+  commit. D132 names that class, "a count written in one document and
+  contradicted by another", as the tool's blind spot; the item ships an instance
+  of it -> write 129, or drop the second figure and keep the note as the
+  authority.
+
+- [ ] **[IMPORTANT]** `bin/docs_check:692`, `:65`, `:148` and
+  `docs/DECISIONS.md:135` (D130) - the whole warning tier rests on
+  `SITE-FIX-015`, and the tool prints "hors perimetre de SITE-FIX-014, voir
+  SITE-FIX-015" to the user at runtime whenever a `.claude/` or `CLAUDE.md` gap
+  is found. `SITE-FIX-015` has no fiche under `docs/work-items/` on any branch,
+  no decision row, and no row in `docs/BACKLOG.md`. D130 states the tier exists
+  because "repairing those files belongs to the `SITE-FIX-015` this item may not
+  touch", which is a definite reference to a document that does not exist. This
+  is the half-materialised follow-up shape D113 and D114 each recorded, and that
+  round 1 of this item blocked a third time for `SITE-FIX-016`. The fiche's own
+  "Out of scope" at `:150` uses the indefinite article, which by D131's own
+  grammar rule marks a mention rather than a reference, so the fiche is
+  consistent; the runtime string and D130 are not -> either materialise
+  `SITE-FIX-015` as a fiche plus a row like `SITE-FIX-016` received, or stop
+  pointing the user and the decision log at an identifier that resolves to
+  nothing.
+
+### Suggestions
+
+- **[SUGGESTION]** `bin/docs_check:292` - `See` and `Voir` are each given both
+  cases in `D_CITATION`, `per` and `under` only lowercase, and the regex carries
+  no `i` flag. Verified on a synthetic tree, the lowercase form caught and the
+  two capitalised ones silent:
+
+  ```
+  Opened under D902.   -> D-UNDEF
+  Opened Under D903.   -> nothing
+  Opened Per D905.     -> nothing
+  ```
+
+  This falls inside the under-detection direction D131 deliberately chose, so it
+  is not a defect against the stated design, but the asymmetry with `See` and
+  `Voir` looks unintended and is documented nowhere. The example above is fenced
+  on purpose: written as prose it makes this very round fail `D-UNDEF`, which is
+  the fenced-code exclusion at `bin/docs_check:202-215` working as intended.
+
+- **[SUGGESTION]** `bin/docs_check:258-263` - the comment reads "suit le
+  precedent de bin/og_images, qui refuse d'ecrire quand une police n'a pas
+  charge [...] : sortie 2, aucun verdict". `bin/og_images:303` exits **1** on
+  that font refusal; it reserves exit 2 for the missing-Chrome precondition at
+  `:40`, which is in fact the closer analogue of what `docs_check` does. The
+  sentence can also be read as stating `docs_check`'s own answer rather than
+  `og_images`', so I cannot confirm it asserts something false; a comma or a
+  line reference would settle it.
+
+- **[SUGGESTION]** `docs/work-items/SITE-FIX-016.md` - the fiche carries no
+  blockquote, and its own gaps 6 and 7 flag other fiches for exactly that.
+  Raised and **discarded as a false positive** after checking D108: the rule
+  binds a follow-up item born from a review, and `SITE-FIX-016` is born from the
+  tool's delivery run, not from a reviewer's sentence. Recorded here so the next
+  round does not spend itself re-raising it.
+
+### Correctness (code-review skill)
+
+`code-review:code-review` was invoked on PR #41 by its qualified plugin name and
+ran its five parallel passes. Every finding it returned was re-verified here
+before promotion, by execution against synthetic trees, and is classified below
+at the severity this round assigns rather than the skill's.
+
+- **[IMPORTANT]** D129 contradicting the fiche on the bench 2 count. Confirmed
+  by replaying `2678c6f`.
+- **[IMPORTANT]** `UI-FIX-004` cited at `:620` and existing only on an unmerged
+  branch. Confirmed by searching every remote branch.
+- **[IMPORTANT]** `STATUS` blind to negation. Confirmed in both directions.
+- **[SUGGESTION]** `per` and `under` case-sensitive. Confirmed.
+- **[SUGGESTION]** the `bin/og_images` exit-code citation. Confirmed as to the
+  fact, not as to the reading.
+
+Discarded as false positives after checking against the code:
+
+- CLAUDE.md non-compliance. None found: the script's comments and all three
+  commit messages are French, the documents are English, the branch targets
+  `refonte-multipages`, and no em-dash or interpunct appears anywhere.
+- `SITE-FIX-016` violating D108 for lack of a verbatim quote. D108 binds items
+  born from a review; this one is born from the tool's own output.
+- the in-place rewrite of D131 breaking the never-rewrite-a-D-row rule. The row
+  was born on this branch and never merged, which the `SITE-FIX-002` round 3
+  precedent covers.
+
+The skill's own eligibility pass additionally reported the pull request
+ineligible, having mistaken round 1's own comment for a prior run of itself.
+That was overridden after checking: the pull request is open, not a draft, and
+the skill had posted nothing on `7087064`.
+
+### Summary
+
+Round 1 was answered well: both blockers are genuinely closed, the benches
+replay exactly as the corrected fiche now claims, and the tool is a sound third
+application of the D048 gesture. It is blocked again on one thing of substance
+and five smaller ones, all of the same family: `STATUS` is the third check that
+could turn itself off in silence and it was the one left unguarded, so the run
+can still print a clean verdict and a false coverage count over a contradiction
+it did not look for; and the branch still carries four accounting statements
+that contradict measurement or contradict each other, in the item whose whole
+subject is that no accounting statement should.
