@@ -149,7 +149,7 @@ mechanically on the built CSS, 22 distinct hexes with no amber, teal or violet;
 | # | Where | Answer |
 |---|---|---|
 | 1 | `docs/kb/…:141-151` | D110 claimed the runbook carried neither the list nor a count, and it still said "Les deux cles" above a two-row table. **The rule was false on one of the four files it named.** `docs/kb/` is out of this item's reach by founder ruling, so the fix took the branch the reviewer offered as its alternative: D110 and `CLAUDE.md` are corrected to describe the state the repository actually has. The runbook is now excluded from the rule **by name**, being a portable tutorial rather than a description of this project |
-| 2 | `docs/DECISIONS.md` | The log jumped D107 to D110 with no reservation note, against its own D033-D035 precedent, so a session following the "grep for the highest" rule would have found D108 and D109 free and reused them. They are held, uncommitted, by `SITE-FIX-010`, which is why they appear on no reference. A reservation note now says so and names the holder |
+| 2 | `docs/DECISIONS.md` | The log jumped D107 to D110 with no reservation note, against its own D033-D035 precedent, so a session following the "grep for the highest" rule would have found D108 and D109 free and reused them. They were held, uncommitted, by `SITE-FIX-010`, which is why they appeared on no reference. **They have since landed through PR #37 and the gap is closed**; the note kept in their place records why the survey rule alone could not have found them, which is D109's own subject |
 | 3 | this file | Deferred five points to a `SITE-FIX-011` with no fiche, no D-row and no commit: the same structure as `FORM-CHR-001`, and naming the risk in the doc did not discharge it. `SITE-FIX-012` is opened instead, with its D-row. See D113 |
 | 4 | this file | Deferred the review-record cause to a `SITE` item with **no identifier at all**. `SITE-FIX-013` is opened, with its D-row. See D114 |
 | 5 | this file, D111, the PR body | All three said "round 2" for what the review file classes as `## Round 1`, so the cross-reference resolved to nothing and was about to name two different rounds. Rounds are now named by what they followed. See the numbering note above |
@@ -186,7 +186,9 @@ Everything below is deferred to a work item that **exists**, with its own D-row,
 because this item twice deferred findings to items that did not: `FORM-CHR-001`,
 named in a work item and a PR body while existing nowhere, and `SITE-FIX-011`,
 which had no fiche, no branch and no D-row either. Both were caught by review.
-`SITE-FIX-011` is held by another session, hence the numbering below.
+`SITE-FIX-011` is claimed by `SITE-FIX-010`, merged through PR #37, whose own
+out-of-scope paragraph defers to it; the fiche does not exist yet and that is
+that item's to open, not this one's. Hence the numbering below.
 
 **`SITE-FIX-012`** (see D113) carries seven points, each named rather than
 summarised:

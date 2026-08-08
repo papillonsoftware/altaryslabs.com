@@ -122,6 +122,16 @@ Ship **one work item at a time**. Never batch.
 
 ---
 
+## Follow-up items born from a review
+
+A round that returns CHANGES REQUESTED usually spawns one or more follow-up items. Two rules apply to them, and both exist because both were broken once.
+
+**Quote the scope from the review, never summarise it.** When a follow-up item's scope comes from a review, the plan must carry the reviewer's own defining sentence **verbatim**, not a paraphrase. A paraphrase silently converts the author's preference into an apparent requirement, and the founder then has to argue with a document instead of with the author. This happened on `FORM-001` round 1: the review named a single follow-up item and scoped it to "the blocker and the important findings", while the plan presented a two-item split as what the review demanded, quietly deferring three `IMPORTANT` findings to the second item. **The plan gate cannot catch a mislabelled premise**, which is why this rule is mechanical rather than a matter of care.
+
+**Classify by the severity the reviewer assigned, never by how cheap the fix looks.** A one-line correction to a comment that states something false is a defect the reviewer graded, not housekeeping. Grouping findings by effort and then naming the group after its most trivial member is how an `IMPORTANT` finding ends up inside a `CHR` item. Severity comes from the review; effort belongs in the plan's sequencing and nowhere else.
+
+---
+
 ## Work item nomenclature
 
 The pipeline formally models a change of any kind. Decide the type first.
@@ -186,6 +196,8 @@ Format:
 ```
 
 Grep for the highest D-number before assigning new ones, across every open branch. An unrecorded decision is future drift.
+
+**A D-number can be born after your survey.** Grepping every open branch at plan time is necessary and not sufficient: a review round routinely adds D-rows to a branch that is already open, so a number that was free when the plan was written can be taken by the time the work is committed. **Re-check immediately before committing.** `FORM-FIX-001` reserved D102 to D106 against a survey that showed `UI-FIX-003` holding D101 alone; that item's own review round then added D102, and the collision surfaced as a merge conflict.
 
 A superseded clause in an existing D-row is **not** a defect. A D-row is a dated journal entry: it is annotated, never rewritten.
 
