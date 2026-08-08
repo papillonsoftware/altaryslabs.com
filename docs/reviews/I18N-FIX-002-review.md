@@ -475,3 +475,305 @@ et D119 se met a compter les versions autrement que le commentaire qu'elle
 prescrit. L'item dont le sujet est qu'un document ne doit pas affirmer ce qu'il
 n'a pas mesure bute une cinquieme fois sur la meme classe, dans le paragraphe
 ecrit pour la supprimer.
+
+## Round 3 - 2026-08-08
+**Verdict**: CHANGES REQUESTED
+
+Ronde conduite sur la **PR #39**, branche `fix/commentaire-en-ts`, base
+`origin/refonte-multipages`, HEAD `c7cc75f`. Worktree de revue
+`.claude/worktrees/review-I18N-FIX-002`, non detache, sur la branche jetable
+`review-i18n-fix-002` forkee de `origin/fix/commentaire-en-ts`. Reviewer
+independant, session fraiche, aucune continuite de contexte avec les rondes 1
+et 2.
+
+Un seul commit est arrive depuis la ronde 2, `c7cc75f`, qui traite le blocker et
+les deux constats importants de cette ronde et livre `SITE-FIX-007` au passage.
+
+Diff mesure contre l'integration : **17 fichiers, 824 insertions, 46
+suppressions**. Trois valeurs de dictionnaire, deux PNG, le reste documentaire.
+Aucun fichier de page, de composant, de style, de configuration ou de fonction
+n'est touche, verifie par filtrage du `--name-only`.
+
+### Les constats de la ronde 2, verifies un par un
+
+- **Le blocker**, la clause D072 fausse dans `src/i18n/en.ts` : levee. Le
+  paragraphe est reecrit a l'imperatif et ne nomme plus aucune cle.
+  `grep -n "D072\|meta.home.description" src/i18n/en.ts` ne renvoie rien.
+  L'auteur a balaye la classe et non l'instance : la clause
+  `wherever a page argues the regulatory point`, jamais touchee jusque la, passe
+  a `when a page argues`, et le compte de versions disparait du commentaire.
+- **Important 1**, le compte de versions de D119 : corrige et mesurable.
+  `docs/DECISIONS.md:134` lit desormais « four versions preceded the current
+  one : `12025d9`, `5873c71`, `1818413` and `2678c6f` ». Verifie a la main :
+  `git log --oneline --all -- src/i18n/en.ts` montre exactement ces quatre
+  commits avant `c7cc75f`, et le commentaire n'ecrit plus aucun compte, donc
+  plus aucune contradiction possible entre les deux textes.
+- **Important 2**, les deux lignes de `REVIEWER.md` : traitees, et livrees ici
+  plutot que sur `fix/checklist-reviewer`, sous **D127**. La ligne 71 lit
+  « Products before Services » avec la raison inline, la ligne 61 porte
+  « Papillon Corporate Finance Suite ». `SITE-FIX-007` passe a DONE et
+  `docs/BACKLOG.md` le deplace. **La ligne 61 reste fausse sur sa seconde
+  mention**, voir l'important 3 ci-dessous.
+- **Suggestion 1**, la recette qui n'excluait pas le `<head>` : traitee au-dela
+  de ce qui etait demande. Le commentaire porte maintenant un `node -e` qui
+  tranche apres `</head>`. Execute tel quel : il renvoie `about`, `index`,
+  `products` et `products/papillon-hr-suite`, et PCS en sort correctement.
+- **Suggestion 2**, le commentaire d'en-tete en anglais : non traitee, ce qui
+  est le droit d'une suggestion. Reprise ci-dessous a l'identique.
+
+### Ce qui a ete verifie et qui passe
+
+- **Build**, relance independamment dans le worktree de revue apres `npm ci` :
+  `npm run build` sort **26 pages**, `npm run check` sort **0 erreur, 0
+  avertissement, 0 indice**. Aucun `any`, aucun `@ts-ignore`, `en.ts` importe
+  toujours `Dictionary` depuis `./fr`.
+- **Parite FR/EN mesuree cle par cle**, en important les deux dictionnaires et
+  en aplatissant les objets : **176 feuilles de chaque cote, ensemble vide dans
+  les deux sens**. Les sept valeurs vides sont les `pageTagline.*` des pages
+  sans tagline, vides des deux cotes.
+- **La recette du commentaire se reproduit exactement**, sur le `dist/` de ce
+  worktree : `find dist/en -name index.html | wc -l` donne **13** ;
+  `grep -rl "business-law zone" dist/en --include=index.html` renvoie `about`,
+  `index`, `products`, `products/papillon-hr-suite` ;
+  `grep -rl "insurance zone"` renvoie `about`, `index`, `products`,
+  `products/pcs`. Les deux moities ne voyagent pas ensemble, exactement comme le
+  commentaire l'annonce.
+- **Surface reellement touchee**, le menu deroulant de l'en-tete, mesuree par le
+  protocole DevTools a 1440 px sur `/en`, panneau de **288 px** :
+  `Premium and instalment collection in the CIMA zone` tient en **2 lignes**,
+  `Budgeting aligned with the SYSCOHADA accounting standard` aussi, en
+  `rgb(91, 100, 114)` soit `--slate-body`, **contraste 5,98:1 sur `#FFFFFF`**,
+  AA tenu. Aucun debordement, aucune collision, anneau de focus visible sur
+  l'item ouvrant.
+- **Rendu verifie dans le navigateur**, sur le `dist/` de ce worktree.
+  `astro preview` a glisse sur le port **4322**, 4321 etant pris par un autre
+  worktree ; propriete confirmee par `lsof -a -p <pid> -d cwd`, qui donne bien
+  `.claude/worktrees/review-I18N-FIX-002`. 18 captures produites par
+  `bin/review_shots` a 360, 768 et 1440 px sur `/`, `/produits`, `/produits/pcs`,
+  `/en`, `/en/products`, `/en/products/pcs`, plusieurs ouvertes a l'oeil pour
+  ecarter le defaut `SITE-FIX-009` : les pages rendues sont les bonnes.
+- **Fidelite a la maquette** : `Header.dc.html` relu a la RACINE du projet de
+  design `53d1c228`, jamais dans `design_handoff_altaryslabs_refonte/`. Le
+  prototype pose un panneau blanc a `min-width:250px`, bordure
+  `rgba(26,39,64,.1)`, en-tete creme et bouton or `#C8922A` ; l'implementation
+  recree tout cela avec ses propres composants et rien n'est copie du HTML
+  inline ni de `support.js`. Le prototype ecrit « Papillon Corporate Finance »
+  sans « Suite » et le depot gagne, comme `CLAUDE.md` le prevoit.
+- **Vignettes de partage** : `bin/og_images --check` sort 0, deux `inchangee`.
+  Les deux PNG ouverts a l'oeil. Navy et or seulement, logomark D086,
+  sous-titre sur deux lignes sans rognage, point final francais present.
+  `og:image` pointe sur deux fichiers presents dans `public/`. Les valeurs
+  livrees correspondent mot pour mot a la citation de D122, `collections` au
+  pluriel cote anglais.
+- **Garde-fous editoriaux** : aucun prix, aucun nom de client ou de partenaire,
+  aucune date exacte, aucune figure inventee, aucun temoignage. `Available Q3
+  2026` vient bien de la constante unique `availability.pcs`. Trois produits,
+  aucune mention d'ALTARYS ENTERPRISE en dehors des commentaires qui
+  l'interdisent.
+- **Marque** : aucun hex en dur ajoute dans `src/`, aucun violet, aucun ambre,
+  aucun teal. Produits avant Services verifie sur les deux accueils.
+- **Accessibilite** : 26 pages, **un seul `h1` par page**, attribut `lang`
+  correct sur les 26, `fr` sur les 13 racines et `en` sur les 13 prefixees.
+- **SEO** : `og:locale`, canonical, hreflang reciproques verifies sur la paire
+  PCS avec `x-default` sur le francais, sitemap a **26 `<loc>`**, `robots.txt`
+  coherent, rien n'est sorti de `BaseLayout.astro`.
+- **Deploiement** : sortie statique, aucun adaptateur, `wrangler.jsonc`,
+  `astro.config.mjs`, `package.json` et `functions/` absents du diff, aucun
+  secret. La PR vise bien `refonte-multipages`.
+- **Typographie** : aucun cadratin, aucun point median, ni dans les lignes
+  ajoutees du diff ni dans les messages de commit.
+
+### Blockers
+
+Aucun. La ronde 2 est levee et le site lui-meme est propre a tous les postes
+mesures ci-dessus. Ce qui suit est documentaire et bloque neanmoins la ronde, la
+barre maximale du depot bloquant sur tout defaut verifie.
+
+### Important
+
+- [ ] **[IMPORTANT]** `docs/DECISIONS.md:143` - **La D-row que cette PR ajoute
+  pour justifier la livraison de `SITE-FIX-007` ne rend pas comme une ligne de
+  tableau.** Elle est posee seule, apres une ligne vide et le paragraphe
+  « D033 to D035 are reserved... », donc en dehors du tableau qui se termine a
+  la ligne 138. En Markdown GitHub, une ligne `| ... |` sans en-tete ni ligne de
+  separation au-dessus n'est pas un tableau. Verifie en passant le **fichier
+  entier** a l'API de rendu de GitHub (`gh api -X POST /markdown`, mode `gfm`) :
+  D123 ressort en `<tr><td>D123</td>...`, D127 ressort en
+  `<p>| D127 | 2026-08-08 | I18N-FIX-002 | ...`. Une seule ligne orpheline dans
+  tout le fichier, et c'est D127. Le lecteur du journal voit un mur de barres
+  verticales la ou toutes les autres decisions sont des cellules.
+  -> Remonter la ligne D127 dans le tableau, juste apres D123, et laisser les
+  deux paragraphes de reserve la ou ils sont. Une ligne de tableau ne peut pas
+  vivre sous un paragraphe.
+
+- [ ] **[IMPORTANT]** `docs/BACKLOG.md:54`, `:29-38` et `:3` - **L'index dit
+  qu'il reste a faire un travail qui est en production.** La ligne 54 porte
+  `| 4 | FORM-001 | PAGE-002 |` dans « Open, in dependency order », alors que
+  `FORM-001` est fusionne : `git merge-base --is-ancestor 46a2890
+  origin/refonte-multipages` sort 0, `docs/work-items/FORM-001.md:3` lit
+  **DONE, proven end to end on the deployed preview on 2026-08-07**, et
+  `CLAUDE.md` ecrit « Contact form: live since `FORM-001` ». Cinq autres items
+  fusionnes manquent au tableau « Done » : `UI-003` (`03d26ca`), `UI-004`
+  (`e6c60ef`), `UI-FIX-003` (`253df18`), `FORM-FIX-001` (`2e63bfc`) et
+  `SITE-FIX-010` (`a1d7cd6`), tous verifies ancetres de
+  `origin/refonte-multipages`. La date de tete, ligne 3, annonce encore
+  « the close of 7 August 2026 » alors que la PR edite le fichier le 8 aout
+  depuis une base du 8 aout. Le defaut precede la PR mais **cette PR reecrit les
+  deux tableaux** : elle ajoute `SITE-FIX-007` et `SEO-FIX-001` a « Done » et
+  retire deux lignes de « Open », donc le fichier etait ouvert et l'index a ete
+  curate a moitie. Une session fraiche qui lit ce backlog, ce qui est
+  exactement son role declare a la ligne 3, conclut que le formulaire de contact
+  reste a construire.
+  -> Deplacer `FORM-001` vers « Done », y ajouter les cinq autres, et rafraichir
+  la date de tete. C'est le meme piege que le fichier decrit lui-meme sous
+  « Watch the D-numbers », applique au statut des items au lieu des numeros.
+
+- [ ] **[IMPORTANT]** `.claude/personalities/REVIEWER.md:61` - **La ligne
+  reecrite par cette PR pour imposer le « Suite » le laisse tomber deux
+  propositions plus loin, dans la meme phrase.** Elle lit « Papillon Collection
+  Solution, Papillon HR Suite, **Papillon Corporate Finance Suite**, which keeps
+  its "Suite" per `CLAUDE.md`, D017 and D031 », puis « it was replaced by
+  **Papillon Corporate Finance** ». `CLAUDE.md:258` verrouille le nom complet et
+  D017 puis D031 l'ont deja retabli une fois. C'est un defaut neuf, la ligne
+  entiere etant reecrite par `c7cc75f`, et il est dans le fichier meme dont D127
+  dit qu'il ne contredit plus `CLAUDE.md`. Un reviewer seme avec cette ligne y
+  lit le nom ampute une fois sur deux.
+  -> Ecrire « it was replaced by Papillon Corporate Finance Suite ».
+
+- [ ] **[IMPORTANT]** `docs/work-items/UI-FIX-004.md:13-14` et `:45-46` - **La
+  citation presentee comme la phrase du reviewer desaccentue les deux chaines
+  francaises dont l'item a fait son sujet.** Le document ecrit
+  `Societe par Actions Simplifiee Unipersonnelle` et
+  `Derriere la pharmacie Redemption` ; la source,
+  `docs/reviews/I18N-FIX-001-review.md:219-220`, ecrit
+  `Société par Actions Simplifiée Unipersonnelle` et
+  `Derrière la pharmacie Rédemption`, et ce sont les formes accentuees qui sont
+  rendues :
+  `grep -c "Société par Actions Simplifiée Unipersonnelle" dist/en/legal-notice/index.html`
+  donne 1, la forme desaccentuee donne **0**. L'item existe pour poser un `lang`
+  inline sur ces fragments precis ; la session qui l'executera cherchera des
+  chaines qui n'existent nulle part dans le depot. La ligne 43 attenue en
+  demandant d'enumerer par la mesure, elle n'annule pas une citation alteree.
+  -> Retablir les accents dans le bloc cite et dans la liste des lignes 45-46.
+  La regle de desaccentuation du depot porte sur la prose, pas sur une chaine
+  entre backticks qui doit rester greppable.
+
+- [ ] **[IMPORTANT]** `docs/DECISIONS.md:139-150` - **Le saut D124 a D126 n'est
+  explique nulle part, dans le fichier dont c'est la convention de les
+  expliquer.** Le tableau passe de D123 a D127 ; deux autres sauts du meme
+  fichier portent leur note, « D033 to D035 are reserved by `SITE-FIX-001` »
+  (ligne 140) et « D115 to D118 are reserved by `SITE-FIX-011` » (ligne 145),
+  cette derniere ajoutee par cette PR meme. `grep -n "D124\|D125\|D126"
+  docs/DECISIONS.md` ne renvoie rien. Les trois numeros sont bien reserves :
+  ils sont pris par `I18N-FIX-003` sur `origin/fix/typographie-des-libelles-anglais`,
+  verifie par `git grep` sur toutes les branches distantes.
+  `docs/work-items/I18N-FIX-002.md:31-34` l'explique en prose, mais D109 fait du
+  journal l'endroit ou la reserve se lit, et c'est le journal qui est muet.
+  -> Ajouter la note, sur le modele des deux autres, en nommant `I18N-FIX-003`
+  et sa branche.
+
+- [ ] **[IMPORTANT]** `docs/work-items/PAGE-003.md:12` et
+  `docs/reviews/I18N-FIX-002-review.md:157` - **La plage de lignes citee ne
+  correspond pas au texte cite.** Les deux fichiers annoncent
+  `docs/reviews/I18N-FIX-001-review.md:184-194`. Mesure : la citation commence a
+  `pageTagline.productsPcs` passe de`, qui est ligne **183**, et s'arrete a
+  « ...disparait de la navigation anglaise. », qui tombe ligne **191** ; les
+  lignes 192 a 194, incluses dans la plage, portent un texte que la citation ne
+  reproduit pas (`CLAUDE.md veut une readaptation...` et la proposition
+  `Insurance premium collection in the CIMA zone`). La plage est donc courte
+  d'une ligne au debut et longue de trois a la fin. L'erreur nait dans le
+  fichier de revue et a ete recopiee dans le work item sans etre verifiee, ce
+  qui est la mecanique meme que ce fil combat.
+  -> Corriger en `:183-191` dans les deux fichiers, ou retirer la plage et ne
+  garder que le nom du fichier, la citation etant verbatim et donc greppable.
+
+### Suggestions
+
+- **[SUGGESTION]** `src/i18n/en.ts:3-46` - Le commentaire d'en-tete reste en
+  anglais alors que `CLAUDE.md` demande les commentaires de code en francais, et
+  que les commentaires voisins du meme fichier (`availability`, `ogSubtitle`)
+  sont en francais. Constat identique aux rondes 1 et 2, non traite, ce qui est
+  le droit d'une suggestion. Reste un arbitrage du fondateur : le bloc documente
+  une adaptation anglaise et cite des chaines anglaises.
+
+- **[SUGGESTION]** `src/i18n/en.ts:35-38` - Le `node -e` prescrit calcule
+  `h.indexOf("</head>")` et decoupe a partir de la. Si `</head>` venait a
+  disparaitre du HTML produit, `indexOf` renvoie `-1` et `slice(-1)` ne garde
+  que le dernier caractere : la commande sortirait silencieusement zero page au
+  lieu d'echouer. Elle fonctionne aujourd'hui, verifiee telle quelle. Un garde
+  d'une ligne la rendrait franche.
+
+- **[SUGGESTION]** `docs/work-items/I18N-FIX-001.md:64` - « **Two rewrites of
+  that comment shipped false** » compte comme reecriture la version d'origine.
+  Sur les quatre versions que D119 enumere, la premiere, `12025d9`, cree le bloc
+  et ne reecrit rien ; les deux qui ont ete publiees sont donc une creation et
+  une reecriture. Sans consequence pratique, mais c'est un compte, dans le
+  document dont le sujet est qu'un compte s'ecrit mesure.
+
+### Correctness (code-review skill)
+
+Passe generique executee via `code-review:code-review` sur la PR #39, nom
+pleinement qualifie, sans option (D082). Le controle d'eligibilite du plugin a
+repondu **NOT ELIGIBLE**, la PR portant deja les commentaires de revue des
+rondes 1 et 2 ; la passe a ete conduite quand meme, `c7cc75f` etant arrive
+depuis, et l'etape 8 de publication a ete laissee de cote pour cette raison. Le
+present fichier reste l'enregistrement durable.
+
+Cinq agents de revue en parallele : conformite `CLAUDE.md`, balayage de defauts
+sur le diff seul, contexte d'historique `git`, commentaires des PR anterieures,
+et guidance portee par les commentaires de code.
+
+Constats retenus apres verification contre le code, tous deja portes ci-dessus
+et non dupliques :
+
+- **[IMPORTANT]** `.claude/personalities/REVIEWER.md:61` - « Suite » perdu sur
+  la seconde mention. Verifie contre `CLAUDE.md:258` et contre le contenu de
+  la ligne avant `c7cc75f`.
+- **[IMPORTANT]** `docs/BACKLOG.md:54` - `FORM-001` ouvert alors qu'il est
+  fusionne. Verifie par `git merge-base --is-ancestor`, plus cinq items absents
+  de « Done ».
+- **[IMPORTANT]** `docs/work-items/UI-FIX-004.md:13-14` - citation
+  desaccentuee. Verifie par `grep` sur `dist/en/legal-notice/index.html`.
+- **[IMPORTANT]** `docs/DECISIONS.md:139-150` - saut D124 a D126 sans note.
+  Verifie par `git grep` sur les branches distantes.
+- **[IMPORTANT]** `docs/work-items/PAGE-003.md:12` - plage de lignes fausse.
+  Verifie par `awk` sur la source.
+
+Constats remontes par la passe puis **ecartes** apres verification, pour que le
+prochain lecteur n'ait pas a les reinstruire :
+
+- « Les nouvelles D-rows rendent toutes comme des lignes de tableau valides,
+  sept barres chacune » : **ecarte, et l'inverse est vrai pour D127.** Compter
+  les barres verticales ne mesure pas la structure d'un bloc Markdown. Passe au
+  rendu reel de GitHub, D127 sort en `<p>`. C'est le premier constat important
+  ci-dessus, trouve par une autre voie.
+- « Le commentaire d'en-tete de `en.ts` viole la regle des commentaires en
+  francais » : reclasse en suggestion, defaut preexistant, deja arbitre ainsi
+  aux rondes 1 et 2, et regle ambigue sur ce cas precis.
+- « Neuf pages anglaises portent les sigles nus sans les developper » : ecarte
+  comme defaut. Mesure a la main sur `dist/en`, corps hors `<head>` : toutes les
+  occurrences nues restantes sont des titres, des `meta.*`, des taglines de
+  navigation ou le pied de page partage, c'est-a-dire les categories que le
+  commentaire nomme comme exemptees par contrainte de place. Aucun paragraphe de
+  corps ne laisse un sigle nu en argumentant le point reglementaire.
+- « `pageTagline.productsPcs` contredit la definition de PCS dans `CLAUDE.md` » :
+  ecarte, decision explicite du fondateur consignee en D123 avec sa consequence,
+  et `PAGE-003` porte l'elargissement. D123 previent nommement la session qui
+  voudrait corriger ce point a rebours.
+- « La tagline PCS diverge entre `fr.ts` et `en.ts` » : ecarte, divergence
+  reelle mais explicitement dans le perimetre de `PAGE-003`, avec les deux
+  emplacements francais cites.
+
+### Summary
+
+Le blocker de la ronde 2 est leve, et bien leve : l'auteur a change le mode
+grammatical du commentaire plutot que sa formulation, a balaye une clause fausse
+que personne n'avait signalee, et a supprime le compte de versions, si bien que
+la classe de defaut qui a survecu a quatre reecritures n'a plus de surface ou
+vivre. Le site est propre a tous les postes mesures : build vert, parite exacte
+a 176 cles, palette, garde-fous editoriaux, SEO, accessibilite et fidelite a la
+maquette. Ce qui bloque est entierement documentaire et tient a une chose : la
+PR a livre `SITE-FIX-007` et redige cinq D-rows sans relire ce qu'elle laissait
+autour, si bien que D127 ne rend pas comme une ligne de tableau, que le backlog
+annonce encore le formulaire de contact comme un travail a faire, et que la
+ligne meme qui impose le « Suite » le laisse tomber a sa seconde mention.
