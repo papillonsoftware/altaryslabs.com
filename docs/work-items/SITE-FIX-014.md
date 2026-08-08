@@ -16,7 +16,7 @@ and it is neither the model's effort nor its care.
 | `docs/` | 13 322 lines, 66 files |
 | `src/` | 6 097 lines, 61 files |
 | review files alone | 4 662 lines, 35 per cent of `docs/` |
-| D-rows | 114 on the integration branch, 126 counting branches |
+| D-rows | 114 on the integration branch, 126 counting branches, as measured on 8 August 2026 |
 
 Distribution of BLOCKER and IMPORTANT findings over the four last reviews:
 
@@ -91,18 +91,46 @@ The last one lands on the exact line the reviewer cited.
 
 **Bench 2, commit `2678c6f`**, which carries the round 2 finding on a version
 count. The tool does **not** return it, as announced before the code was
-written. The same run shows the six findings above gone where the author fixed
-them, which validates the tool in both directions.
+written. The same run shows **five of the six** findings above gone where the
+author fixed them, which validates the tool in the reverse direction: a repaired
+document stops being reported.
+
+The sixth survives, and naming it matters more than rounding it up. The fiche
+still calls pull request 31 open, and the tool still returns it, at
+`I18N-FIX-002.md:43`. That is gap 2 of `SITE-FIX-016`, so the survivor is not a
+weakness of the bench but the same live defect seen from another commit. Round 1
+of this item's review measured it; the first version of this fiche claimed six
+and was wrong.
 
 `D-UNDEF` never fired on the real corpus, so it was proven on a synthetic tree
-instead: it catches the three reference forms and ignores the defined number,
-the range, the reservation line and the bare mention.
+instead: it catches the recognised reference forms and ignores the defined
+number, the range, the reservation line and the bare mention. Unlike the two
+benches, which anyone can replay from a commit hash, that proof needs its
+fixture rebuilt, so here is the recipe:
+
+```
+T=$(mktemp -d); mkdir -p "$T/docs/work-items"; cp docs/DECISIONS.md "$T/docs/"
+printf '**Decisions** D404, D405 and D406 here.\n\nSee D048.\n\nRenumbered from D115 to D119, reserved elsewhere.\n\nD995 bare.\n' \
+  > "$T/docs/work-items/SITE-FIX-999.md"
+bin/docs_check --root "$T"
+```
+
+Expect exactly three `D-UNDEF` lines, `D404`, `D405` and `D406`: `D048` is
+defined, the range and the reservation line are narrative, and `D995` carries no
+reference form.
+
+Two `ITEM-NOFILE` lines on `docs/DECISIONS.md` come with them, and they are an
+artefact of the fixture rather than a result: the copied decision log references
+items whose files the temporary tree does not have. `PR-STATE` also reports
+itself disabled, the fixture not being a git repository. Both are the tool
+saying what it did instead of hiding it, which is the behaviour round 1 of the
+review required.
 
 ## Delivery state
 
 Run on the integration branch at delivery, the tool returns **7 gaps, every one
 verified by hand as real**. None is fixed here. They are carried by
-`SITE-FIX-016`, with its own decision row, per the repository rule that an
+`SITE-FIX-016`, opened by D134, per the repository rule that an
 out-of-scope defect materialises as a work item plus a D-row rather than as a
 mention in a pull request body.
 

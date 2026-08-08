@@ -28,8 +28,11 @@
 //      qui ne correspond pas.
 //   2. Un commentaire affirmant une couverture qu'il n'a pas, ou un jumeau
 //      FR/EN laisse en arriere.
-//   3. Un compte ecrit dans un document et contredit par un autre (D119
-//      comptait quatre versions d'un commentaire la ou git log en montre trois).
+//   3. Un compte ecrit dans un document et contredit par un autre du meme
+//      commit, comme le constat de ronde 2 sur un nombre de versions d'un
+//      commentaire. La ligne D qui le porte vit sur une branche non fusionnee
+//      et n'est deliberement pas nommee ici : la citer ferait de cet en-tete un
+//      renvoi mort dans l'outil ecrit pour attraper les renvois morts.
 //
 // Les trois demandent de lire deux textes et de juger s'ils se recouvrent. Un
 // vert de cet outil ne dit donc PAS que la prose est saine : il dit que sa
@@ -89,7 +92,9 @@
 // USAGE
 //
 //   bin/docs_check                 rapport lisible, sortie 1 s'il reste un ecart
-//   bin/docs_check --check         silencieux, code de sortie seul, avant push
+//   bin/docs_check --check         rapport tu, code de sortie seul, avant push
+//                                  (un controle qui n'a pas tourne se signale
+//                                   quand meme sur stderr, dans tous les modes)
 //   bin/docs_check --root <dir>    balaye un autre arbre que la racine du depot
 //
 // --root sert au banc d'essai impose par D048 : on ne prouve rien en faisant
@@ -240,26 +245,51 @@ if (existsSync(decisionsAbs)) {
       vus.set(n, i + 1);
     }
   });
-} else {
-  console.error('docs/DECISIONS.md introuvable : D-UNDEF et D-DUP desactives');
 }
+
+// UN CONTROLE NE S'ETEINT JAMAIS EN SILENCE.
+//
+// Le premier jet se contentait de renoncer quand une entree manquait : un
+// DECISIONS.md sans aucune ligne D eteignait D-UNDEF et D-DUP, un
+// docs/work-items/ absent eteignait ITEM-NOFILE, et l'outil affichait quand meme
+// « AUCUN ECART » avant de sortir 0. Les deux cas sont atteignables par le mode
+// --root que cet en-tete recommande pour les bancs d'essai, donc un arbre
+// portant un vrai renvoi mort pouvait etre declare sain.
+//
+// C'est la faute que D132 interdit, une pretention de couverture plus large que
+// la couverture reelle, commise dans l'outil qui l'interdit. La reponse suit le
+// precedent de bin/og_images, qui refuse d'ecrire quand une police n'a pas
+// charge plutot que de livrer une vignette en Times : sortie 2, aucun verdict.
+// Un outil sans verdict est utilisable ; un verdict faux ne l'est pas.
+const refuser = (message) => {
+  console.error(`docs_check ne peut pas rendre de verdict : ${message}`);
+  process.exit(2);
+};
+
+if (!existsSync(decisionsAbs)) refuser('docs/DECISIONS.md est introuvable, D-UNDEF et D-DUP ne peuvent pas tourner');
+if (dDefinis.size === 0) refuser('docs/DECISIONS.md ne contient aucune ligne | Dnnn |, D-UNDEF et D-DUP ne peuvent pas tourner');
 
 // ------------------------------------------------------------ fiches d'items
 
 const ITEM_ID = '(?:SITE|PAGE|UI|I18N|SEO|FORM|OPS)-(?:FIX-|REF-|CHR-)?\\d{3}';
 const fichesDir = join(root, 'docs/work-items');
+if (!existsSync(fichesDir)) refuser('docs/work-items/ est introuvable, ITEM-NOFILE et STATUS ne peuvent pas tourner');
 const fichesExistantes = new Set(
-  existsSync(fichesDir)
-    ? readdirSync(fichesDir).filter((f) => f.endsWith('.md')).map((f) => f.slice(0, -3))
-    : [],
+  readdirSync(fichesDir).filter((f) => f.endsWith('.md')).map((f) => f.slice(0, -3)),
 );
+if (fichesExistantes.size === 0) refuser('docs/work-items/ ne contient aucune fiche, ITEM-NOFILE et STATUS ne peuvent pas tourner');
 
 // ------------------------------------------------------------------ D-UNDEF
 
 // Liste blanche des formes de renvoi. Une forme peut enchainer plusieurs
 // numeros (« See D048 and D055 »), d'ou la capture de la queue.
+// Le pluriel est reconnu : « **Decisions** D129, D130 and D131 » est la forme
+// standard de l'en-tete d'une fiche, et quinze fiches l'emploient. Le premier
+// jet ne portait que le singulier, si bien que l'outil ne voyait pas les renvois
+// de sa propre fiche. Les bornes \b evitent qu'un `per` ou un `under` se
+// declenche au milieu d'un mot plus long.
 const D_CITATION = new RegExp(
-  '(?:\\*\\*Decision\\*\\*|Decision|See|see|Voir|voir|per|under)\\s+' +
+  '(?:\\*\\*Decisions?\\*\\*|\\bDecisions?|\\bSee|\\bsee|\\bVoir|\\bvoir|\\bper|\\bunder)\\s+' +
     '(D\\d{3}(?:\\s*(?:,|and|et)\\s*D\\d{3})*)',
   'g',
 );
@@ -273,7 +303,6 @@ const D_RESERVATION = /reserv|renumber|renumerot|claims|holds|D-max|relach/i;
 const D_PLAGE = /D\d{3}\s*(?:-|to|a)\s*D?\d{3}/g;
 
 function verifierDUndef(fichierRel, lignes, dansCode) {
-  if (dDefinis.size === 0) return;
   lignes.forEach((l, i) => {
     if (dansCode[i]) return;
     if (D_RESERVATION.test(l)) return;
@@ -308,7 +337,6 @@ const ITEM_CITATION = new RegExp(
 const ITEM_CHEMIN = new RegExp('docs/work-items/(' + ITEM_ID + ')\\.md', 'g');
 
 function verifierItemNofile(fichierRel, lignes, dansCode) {
-  if (fichesExistantes.size === 0) return;
   const estBacklog = fichierRel === 'docs/BACKLOG.md';
   lignes.forEach((l, i) => {
     if (dansCode[i]) return;
@@ -372,7 +400,7 @@ function verifierMdBroken(fichierRel, lignes, dansCode) {
     return derniere;
   };
 
-  const clore = (fin) => {
+  const clore = () => {
     if (debut >= 0 && tampon.length) {
       const texte = tampon.join('\n');
       const backticksImpairs = (texte.match(/`/g) || []).length % 2 !== 0;
@@ -388,7 +416,12 @@ function verifierMdBroken(fichierRel, lignes, dansCode) {
       // backticks sont deja desequilibres, le retrait des spans est fausse et le
       // comptage des gras n'apprend plus rien : un seul defaut, un seul ecart.
       if (!backticksImpairs) {
-        const horsCode = texte.replace(/`[^`]*`/g, ' ');
+        // Le span est remplace par du blanc de MEME LONGUEUR, sauts de ligne
+        // conserves. Le remplacer par une seule espace ecrasait les sauts de
+        // ligne d'un span multi-ligne, si bien que le tableau passe a
+        // ligneOuvrante devenait plus court que le bloc et que le gras non ferme
+        // etait rapporte sur la mauvaise ligne.
+        const horsCode = texte.replace(/`[^`]*`/g, (m) => m.replace(/[^\n]/g, ' '));
         if ((horsCode.match(/\*\*/g) || []).length % 2 !== 0) {
           signaler(
             fichierRel,
@@ -405,20 +438,20 @@ function verifierMdBroken(fichierRel, lignes, dansCode) {
 
   lignes.forEach((l, i) => {
     if (dansCode[i] || l.trim() === '') {
-      clore(i);
+      clore();
       return;
     }
     if (l.startsWith('|')) {
-      clore(i);
+      clore();
       debut = i;
       tampon = [l];
-      clore(i + 1);
+      clore();
       return;
     }
     if (debut < 0) debut = i;
     tampon.push(l);
   });
-  clore(lignes.length);
+  clore();
 }
 
 // ------------------------------------------------------------ BACKLOG, tables
@@ -544,7 +577,13 @@ function etatsPr() {
     for (const pr of JSON.parse(brut)) map.set(String(pr.number), pr.state);
     return map;
   } catch (e) {
-    ghDesactive = e && e.code === 'ENOENT' ? 'gh absent du PATH' : 'gh present mais indisponible (authentification ?)';
+    // Ne pas deviner la cause : gh echoue aussi bien faute d'authentification
+    // que hors d'un depot git, ce qui est le cas courant sous --root pointant
+    // un arbre temporaire. Nommer une seule cause serait une affirmation de
+    // plus que ce que l'outil sait.
+    ghDesactive = e && e.code === 'ENOENT'
+      ? 'gh absent du PATH'
+      : "gh present mais sans reponse exploitable (hors depot git, ou authentification)";
     return null;
   }
 }
@@ -640,10 +679,15 @@ ecarts.sort((a, b) => a.fichier.localeCompare(b.fichier) || a.ligne - b.ligne);
 const bloquants = ecarts.filter((e) => e.bloquant);
 const avertissements = ecarts.filter((e) => !e.bloquant);
 
+// Cet avertissement sort dans TOUS les modes, y compris --check. « Silencieux »
+// porte sur le rapport, jamais sur le fait qu'un controle n'a pas tourne :
+// autrement --check pouvait sortir 0 sur six controles sur sept sans un seul
+// octet a l'ecran, dans le mode meme que l'en-tete recommande avant un push.
+if (ghDesactive) {
+  console.error(`AVERTISSEMENT : PR-STATE n'a pas tourne, ${ghDesactive}. Verdict rendu sur six controles sur sept.`);
+}
+
 if (!silencieux) {
-  if (ghDesactive) {
-    console.error(`AVERTISSEMENT : PR-STATE desactive, ${ghDesactive}. Les six autres controles decident seuls.`);
-  }
   if (avertissements.length) {
     console.error(`\n${avertissements.length} en avertissement (hors perimetre de SITE-FIX-014, voir SITE-FIX-015)`);
     for (const e of avertissements) {
@@ -656,7 +700,13 @@ if (!silencieux) {
       console.log(`  ${e.fichier}:${e.ligne}  [${e.controle}]  ${e.message}`);
     }
   } else {
-    console.log('\nAUCUN ECART, comptabilite de la prose juste');
+    // Ne jamais annoncer une comptabilite juste quand un controle n'a pas
+    // tourne : c'est la pretention de couverture que D132 interdit.
+    console.log(
+      ghDesactive
+        ? "\nAUCUN ECART sur les six controles qui ont tourne. PR-STATE n'a pas tourne, la comptabilite n'est donc pas entierement verifiee"
+        : '\nAUCUN ECART, comptabilite de la prose juste',
+    );
     console.log('Rappel : le sens n\'est pas verifie. Voir D132.');
   }
 }

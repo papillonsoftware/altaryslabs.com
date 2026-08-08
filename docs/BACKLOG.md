@@ -46,8 +46,8 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | 0 | `SITE-FIX-008` | nothing | `docs/work-items/SITE-FIX-008.md` |
 | 0 | `SITE-FIX-009` | nothing | `docs/work-items/SITE-FIX-009.md` |
 | 0 | `SITE-FIX-014` | nothing, implemented and in review | `docs/work-items/SITE-FIX-014.md` |
-| 0 | `SITE-FIX-016` | `SITE-FIX-014` | `docs/work-items/SITE-FIX-016.md` |
 | 1 | `UI-FIX-001` | nothing | `docs/work-items/UI-FIX-001.md` |
+| 1 | `SITE-FIX-016` | `SITE-FIX-014` | `docs/work-items/SITE-FIX-016.md` |
 | 1 | `SEO-FIX-001` | `I18N-FIX-001`, merged | `docs/work-items/SEO-FIX-001.md` |
 | 3 | `UI-FIX-002` | nothing, `UI-002` has merged | `docs/work-items/UI-FIX-002.md` |
 | 3 | `UI-REF-001` | nothing, `UI-002` has merged | `docs/work-items/UI-REF-001.md` |
@@ -170,6 +170,10 @@ files. Whoever picks this up is auditing history, not protecting the next item.
   accounting defects of the prose, which produced 58 of the 91 blocking findings
   of the last four rounds. It reports form only and never meaning: a green run
   says the accounting is right, not that the prose is sound. See D129 and D132.
+  **It exits 1 on the integration branch today**, on seven gaps no current
+  author caused, until `SITE-FIX-016` lands. Compare your gaps against the list
+  in that fiche rather than reading the exit code alone, otherwise the habit of
+  ignoring it sets in before the tool has earned anything.
 - **Run `bin/contrast_sweep` before declaring a UI item done.** Three review
   rounds in a row found colour classes that reading had missed. Measuring
   converges; enumerating does not. See D048.

@@ -2,7 +2,7 @@
 
 **Type** FIX | **Status** OPEN, not started | **Branch** none yet
 **Base** `refonte-multipages`
-**Decision** D129 in `docs/DECISIONS.md`
+**Decision** D134 in `docs/DECISIONS.md`
 
 `SITE-FIX-014` delivered `bin/docs_check` and deliberately repaired nothing.
 This item carries what the tool found, so that the finding is owned rather than
