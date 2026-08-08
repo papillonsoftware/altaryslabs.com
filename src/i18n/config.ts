@@ -15,7 +15,11 @@ export const OG_LOCALE: Record<Locale, string> = {
   en: 'en',
 };
 
-/** Libelles du selecteur de langue, toujours affiches dans la langue cible. */
+/**
+ * Nom de la langue cible, expose dans le libelle accessible du selecteur et
+ * JAMAIS affiche : le contenu visible du selecteur est le code `FR` ou `EN`,
+ * pose en `aria-hidden`. Ces valeurs n'atteignent donc qu'un lecteur d'ecran.
+ */
 export const LOCALE_LABEL: Record<Locale, string> = {
   fr: 'Français',
   en: 'English',
@@ -23,7 +27,10 @@ export const LOCALE_LABEL: Record<Locale, string> = {
 
 /**
  * Separateur des libelles composes de deux morceaux, du type
- * "Produits : Ouvrir le menu" ou "Change language: English".
+ * "Produits : Ouvrir le menu" cote francais et "Change language: Français"
+ * cote anglais. Les deux exemples sont reels, releves sur le HTML produit :
+ * la phrase est toujours dans la langue de la page et le nom de langue dans
+ * l'autre, si bien que "Change language: English" ne peut pas exister.
  *
  * C'EST UNE DONNEE DE LANGUE, PAS UNE DECORATION. Le francais met une espace
  * avant le deux-points, l'anglais non. Ecrit en dur dans un gabarit, le
@@ -37,9 +44,18 @@ export const LOCALE_LABEL: Record<Locale, string> = {
  * garantit qu'une cle existe des deux cotes, jamais qu'elle est juste.
  *
  * NE PAS DUPLIQUER DE CONDITION SUR LA LANGUE DANS UN COMPOSANT pour le
- * choisir : c'est exactement ainsi que les deux seules occurrences du motif ont
- * diverge sans que deux rondes de revue le voient. Les composants lisent cette
- * table, indexee par la langue de la page. Voir D124.
+ * choisir : c'est exactement ainsi que les occurrences du motif ont diverge
+ * sans que deux rondes de revue le voient. Les composants lisent cette table,
+ * indexee par la langue de la page.
+ *
+ * LE MOTIF EST PLUS REPANDU QU'IL N'EN A L'AIR, et il se lit mal a la source.
+ * La ronde 1 de cet item a trouve une troisieme occurrence que ma recherche
+ * avait manquee, `LegalPage.astro`, et le rebalayage qui a suivi en a trouve
+ * deux autres dans l'autre sens, `ProductCard.astro` et `ServiceCard.astro`,
+ * qui servaient un deux-points colle en francais. Un grep de la source ne les
+ * voit pas toutes : elles ne sont pas toutes dans un litteral gabarit, ni
+ * toutes dans un `aria-label`. **Le balayage qui fait foi se fait sur le HTML
+ * produit, dans les deux langues.** Voir D124 et la fiche I18N-FIX-003.
  */
 export const LABEL_SEPARATOR: Record<Locale, string> = {
   fr: ' : ',

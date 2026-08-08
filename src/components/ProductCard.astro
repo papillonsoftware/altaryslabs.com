@@ -3,8 +3,16 @@
  * Carte produit. Utilisee sur l'accueil et sur le hub Produits, avec le meme
  * contenu : une seule source, pas de divergence possible entre les deux pages.
  */
+import { LABEL_SEPARATOR, type Locale } from '../i18n/config';
+
 interface Props {
   name: string;
+  /**
+   * Langue de la page, pour le seul separateur du nom accessible du lien.
+   * Le deux-points y etait ecrit en dur, donc colle dans les deux langues, ce
+   * que le francais ne fait pas. Voir D124.
+   */
+  locale: Locale;
   /** Etiquette courte : disponibilite pour PCS, categorie pour les autres. */
   badge: string;
   /** Badge plein, reserve au produit le plus saillant du moment. */
@@ -23,6 +31,7 @@ interface Props {
 
 const {
   name,
+  locale,
   badge,
   badgeSolid = false,
   text,
@@ -41,7 +50,7 @@ const Heading = `h${headingLevel}` as 'h2' | 'h3';
   <p class="card-text">{text}</p>
   <a class="link-arrow" href={href}>
     {linkLabel}
-    <span class="visually-hidden">: {name}</span>
+    <span class="visually-hidden">{LABEL_SEPARATOR[locale]}{name}</span>
   </a>
 </article>
 

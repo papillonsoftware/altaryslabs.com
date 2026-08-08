@@ -7,8 +7,16 @@
  * n'a plus a s'effacer devant personne, elle reprend le fond des cartes
  * produits. C'est le parti pris du handoff, et il se tient.
  */
+import { LABEL_SEPARATOR, type Locale } from '../i18n/config';
+
 interface Props {
   name: string;
+  /**
+   * Langue de la page, pour le seul separateur du nom accessible du lien.
+   * Le deux-points y etait ecrit en dur, donc colle dans les deux langues, ce
+   * que le francais ne fait pas. Voir D124.
+   */
+  locale: Locale;
   text: string;
   href: string;
   linkLabel: string;
@@ -17,7 +25,7 @@ interface Props {
   headingLevel?: 2 | 3;
 }
 
-const { name, text, href, linkLabel, large = false, headingLevel = 3 } = Astro.props;
+const { name, locale, text, href, linkLabel, large = false, headingLevel = 3 } = Astro.props;
 
 const Heading = `h${headingLevel}` as 'h2' | 'h3';
 ---
@@ -27,7 +35,7 @@ const Heading = `h${headingLevel}` as 'h2' | 'h3';
   <p class="card-text">{text}</p>
   <a class="link-arrow" href={href}>
     {linkLabel}
-    <span class="visually-hidden">: {name}</span>
+    <span class="visually-hidden">{LABEL_SEPARATOR[locale]}{name}</span>
   </a>
 </article>
 
