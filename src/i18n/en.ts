@@ -1,49 +1,53 @@
 import type { Dictionary } from './fr';
 
 /**
- * English dictionary.
+ * Dictionnaire anglais.
  *
- * This is a re-adaptation, not a literal translation. It addresses three
- * audiences that the French version does not: anglophone African markets,
- * international investors and partners, and institutional funders and NGOs.
+ * C'est une réadaptation, non une traduction littérale. Il s'adresse à trois
+ * publics que la version française ne vise pas : les marchés africains
+ * anglophones, les investisseurs et partenaires internationaux, et les
+ * bailleurs institutionnels et les ONG.
  *
- * Practical consequences:
- *  - Expand OHADA and CIMA in body copy when a page argues the regulatory
- *    point: the acronyms carry no meaning for a reader in Accra, Lagos or
- *    Nairobi. The house form is "the OHADA business-law zone and the CIMA
- *    insurance zone".
- *    Keep the bare acronyms where the expansion does not fit: a title a search
- *    engine truncates around 60 characters, a heading that would wrap to a
- *    third line, a column too narrow to hold it.
- *    These lines are written as instructions, and they name constraints rather
- *    than keys, on purpose. Every earlier version described the file instead:
- *    which pages expanded the acronyms, how many did not, which surfaces were
- *    exempt and why. Every one of those descriptions was found false, some only
- *    after shipping. No build step reads a comment, so a description drifts from
- *    what it describes and nothing says so. An instruction can be poor advice;
- *    it cannot be factually wrong.
- *    This paragraph therefore does not say which pages expand them. Measure it:
+ * Conséquences pratiques :
+ *  - Développer OHADA et CIMA dans le corps de texte quand une page argumente
+ *    sur le terrain réglementaire : les sigles ne disent rien à un lecteur
+ *    d'Accra, de Lagos ou de Nairobi. La forme maison est
+ *    "the OHADA business-law zone and the CIMA insurance zone".
+ *    Garder les sigles nus là où la forme développée ne tient pas : un titre
+ *    qu'un moteur de recherche tronque vers 60 caractères, un intitulé qui
+ *    passerait à une troisième ligne, une colonne trop étroite pour le porter.
+ *    Ces lignes sont écrites comme des instructions, et elles nomment des
+ *    contraintes plutôt que des clés, délibérément. Chaque version antérieure
+ *    décrivait le fichier à la place : quelles pages développaient les sigles,
+ *    combien ne le faisaient pas, quelles surfaces étaient exemptées et
+ *    pourquoi. Chacune de ces descriptions s'est révélée fausse, certaines
+ *    seulement après livraison. Aucune étape de build ne lit un commentaire :
+ *    une description dérive donc de ce qu'elle décrit sans que rien ne le
+ *    signale. Une instruction peut être un mauvais conseil, elle ne peut pas
+ *    être factuellement fausse.
+ *    Ce paragraphe ne dit donc pas quelles pages les développent. Mesurer :
  *      grep -rl "business-law zone" dist/en --include=index.html
  *      grep -rl "insurance zone"    dist/en --include=index.html
- *    Run BOTH. The two halves do not travel together: when this paragraph was
- *    written the first returned the HR page and not PCS, and the second
- *    returned PCS and not HR. A single-marker grep is what let a false claim
- *    through more than once.
- *    Both also match the `<head>`, where a meta description carries the phrase
- *    on a page whose body never shows it. That is how PCS was once listed among
- *    the pages that expand. For body copy only:
+ *    Lancer LES DEUX. Les deux moitiés ne voyagent pas ensemble : quand ce
+ *    paragraphe a été écrit, la première renvoyait la page HR et pas PCS, et
+ *    la seconde renvoyait PCS et pas HR. C'est un grep à marqueur unique qui a
+ *    laissé passer une affirmation fausse plus d'une fois.
+ *    Les deux capturent aussi le `<head>`, où une meta description porte la
+ *    formule sur une page dont le corps ne la montre jamais. C'est ainsi que
+ *    PCS s'est retrouvé un jour parmi les pages qui développent. Pour le corps
+ *    de texte seul :
  *      node -e 'const fs=require("fs");for(const f of process.argv.slice(1)){
  *      const h=fs.readFileSync(f,"utf8"),i=h.indexOf("</head>");
  *      if(i<0)throw new Error("no </head> in "+f);
  *      if(/business-law zone|insurance zone/.test(h.slice(i)))console.log(f)}' \
  *      $(find dist/en -name index.html)
- *    Per D075, the sweep itself is verified key by key against `fr.ts`, never
- *    by grepping markers.
- *  - Emphasis shifts to what travels across borders (offline-first design,
- *    multi-country deployment, configurable compliance) rather than to
- *    Ivorian-specific schemes such as CNPS or ITS.
- *  - No client names, no performance figures, no testimonials. Credibility is
- *    carried by clarity, never by fabricated proof.
+ *    Conformément à D075, le balayage lui-même se vérifie clé par clé contre
+ *    `fr.ts`, jamais en grepant des marqueurs.
+ *  - L'accent se déplace vers ce qui passe les frontières (conception
+ *    offline-first, déploiement multi-pays, conformité paramétrable) plutôt que
+ *    vers les dispositifs propres à la Côte d'Ivoire comme la CNPS ou l'ITS.
+ *  - Aucun nom de client, aucun chiffre de performance, aucun témoignage. La
+ *    crédibilité est portée par la clarté, jamais par une preuve fabriquée.
  */
 export const en: Dictionary = {
   common: {
@@ -55,8 +59,9 @@ export const en: Dictionary = {
   },
 
   /**
-   * Papillon Collection Solution availability, defined here and nowhere else.
-   * One line to change on launch day. Never an exact date on a public page.
+   * Disponibilité de Papillon Collection Solution, définie ici et nulle part
+   * ailleurs. Une seule ligne à changer le jour du lancement. Jamais de date
+   * exacte sur une page publique.
    */
   availability: {
     pcs: 'Available Q3 2026',

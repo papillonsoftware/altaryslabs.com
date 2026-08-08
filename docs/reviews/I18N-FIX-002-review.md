@@ -1107,3 +1107,41 @@ consciemment accepte de laisser.
 haut au sujet de D119 est un calque de l'anglais* count. *Lire « le decompte »
 ou « le nombre de versions annonce ». Le texte de la ronde n'est pas corrige,
 pour la meme raison que le reste.*
+
+### Arbitrage revise - 2026-08-08, apres la fusion de la PR #38
+
+Ajoute apres la section ci-dessus, qui **n'est pas modifiee** : elle enregistre
+fidelement ce que le fondateur a decide au moment ou il l'a decide.
+
+**L'important 4 est retabli et traite : le commentaire d'en-tete d'`en.ts` passe
+en francais.** La PR #38 (`SITE-FIX-011`) a fusionne dans `refonte-multipages`
+apres l'arbitrage ci-dessus, et elle a reecrit la regle sur laquelle l'exemption
+reposait. `CLAUDE.md` disait « All specs, documentation, code comments and commit
+messages : French for comments and commits on this repo, English for specs ».
+Il dit desormais, sur sa propre ligne :
+
+> **Code comments and commit messages**: French
+
+**D116**, fusionnee par la meme PR, trace la frontiere de langue du depot :
+documentation de conception en anglais, `docs/kb/` en francais et hors perimetre
+de revue, `docs/reviews/` en anglais. Les commentaires de code n'entrent dans
+aucune exception. L'exemption que le fondateur avait accordee n'a donc plus de
+regle a excepter : elle est tombee avec la reecriture, et non parce que le
+fondateur aurait change d'avis sur le fond.
+
+Aucune D-row n'est ouverte pour cette traduction. Ce n'est pas une decision,
+c'est l'application d'une regle qui vient d'etre durcie ; une D-row qui redirait
+`CLAUDE.md` serait la septieme copie d'un fait qui bouge, ce que D110 et D116
+interdisent tous les deux.
+
+**Ce que la ronde 5 doit savoir.** Le bloc a ete traduit et non reecrit : chaque
+phrase falsifiable a ete transposee terme a terme, les deux `grep` et le
+`node -e` sont laisses **verbatim**, la forme maison reste citee en anglais
+`"the OHADA business-law zone and the CIMA insurance zone"` parce que c'est la
+chaine a greper, et les trois recettes ont ete rejouees sur `dist/` apres
+traduction. Le commentaire d'`availability`, anglais lui aussi et signale par
+personne, est traduit dans le meme mouvement. Les accents sont portes, sur le
+modele du fichier frere `fr.ts` et non des composants `.astro`, qui commentent
+sans accents.
+
+**L'important 3 reste ecarte** : la dette `SITE-FIX-014` est inchangee.
