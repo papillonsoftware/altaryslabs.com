@@ -28,9 +28,16 @@ export const LOCALE_LABEL: Record<Locale, string> = {
 /**
  * Separateur des libelles composes de deux morceaux, du type
  * "Produits : Ouvrir le menu" cote francais et "Change language: Français"
- * cote anglais. Les deux exemples sont reels, releves sur le HTML produit :
- * la phrase est toujours dans la langue de la page et le nom de langue dans
- * l'autre, si bien que "Change language: English" ne peut pas exister.
+ * cote anglais.
+ *
+ * LES DEUX EXEMPLES NE SE RELEVENT PAS AU MEME ENDROIT, et c'est deja une
+ * illustration de la regle enoncee plus bas. "Produits : Ouvrir le menu" est un
+ * `aria-label` plat : il se lit tel quel dans `dist/`. "Change language:
+ * Français" n'y figure nulle part et ne le peut pas, ce nom vivant depuis D128
+ * dans deux spans voisins ; il ne se releve qu'a la mesure, par
+ * `Accessibility.getFullAXTree`. La phrase est toujours dans la langue de la
+ * page et le nom de langue dans l'autre, si bien que "Change language: English"
+ * ne peut pas exister.
  *
  * C'EST UNE DONNEE DE LANGUE, PAS UNE DECORATION. Le francais met une espace
  * avant le deux-points, l'anglais non. Ecrit en dur dans un gabarit, le
