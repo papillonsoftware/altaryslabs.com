@@ -2,7 +2,7 @@
 
 **Type** FIX | **Status** IMPLEMENTED, pending review | **Branch** `fix/docs-check`
 **Base** `refonte-multipages`
-**Decisions** D129, D130, D131 and D132 in `docs/DECISIONS.md`
+**Decisions** D129, D130, D131, D132 and D134 in `docs/DECISIONS.md`
 
 ## The defect
 
@@ -16,7 +16,7 @@ and it is neither the model's effort nor its care.
 | `docs/` | 13 322 lines, 66 files |
 | `src/` | 6 097 lines, 61 files |
 | review files alone | 4 662 lines, 35 per cent of `docs/` |
-| D-rows | 114 on the integration branch, 126 counting branches, as measured on 8 August 2026 |
+| D-rows | 114 on the integration branch, 129 counting the three unmerged branches. The note under the table in `docs/DECISIONS.md` enumerates them and is the authority |
 
 Distribution of BLOCKER and IMPORTANT findings over the four last reviews:
 
@@ -110,6 +110,8 @@ fixture rebuilt, so here is the recipe:
 
 ```
 T=$(mktemp -d); mkdir -p "$T/docs/work-items"; cp docs/DECISIONS.md "$T/docs/"
+printf '## Done\n\n| Item | What |\n|---|---|\n\n## Open, in dependency order\n\n| Order | Item |\n|---|---|\n| 0 | `SITE-FIX-999` |\n' \
+  > "$T/docs/BACKLOG.md"
 printf '**Decisions** D404, D405 and D406 here.\n\nSee D048.\n\nRenumbered from D115 to D119, reserved elsewhere.\n\nD995 bare.\n' \
   > "$T/docs/work-items/SITE-FIX-999.md"
 bin/docs_check --root "$T"
@@ -121,10 +123,15 @@ reference form.
 
 Two `ITEM-NOFILE` lines on `docs/DECISIONS.md` come with them, and they are an
 artefact of the fixture rather than a result: the copied decision log references
-items whose files the temporary tree does not have. `PR-STATE` also reports
-itself disabled, the fixture not being a git repository. Both are the tool
-saying what it did instead of hiding it, which is the behaviour round 1 of the
-review required.
+items whose files the temporary tree does not have. `PR-STATE` reports itself
+disabled, the fixture not being a git repository, and the run states it decided
+on 6 checks out of 7. That is the tool saying what it did instead of hiding it,
+which is what rounds 1 and 2 of the review required.
+
+The minimal `docs/BACKLOG.md` is not decoration. Without it the tool now refuses
+to give any verdict at all and exits 2, because `STATUS` could not run. The first
+version of this recipe omitted it, and round 2 found that same omission in the
+tool: `STATUS` used to fall silent instead of refusing.
 
 ## Delivery state
 

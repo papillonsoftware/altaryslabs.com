@@ -62,10 +62,13 @@
 // PERIMETRE
 //
 // docs/ decide du code de sortie. .claude/ et CLAUDE.md sont lus et rapportes en
-// avertissement seulement : les corriger appartient a SITE-FIX-015, et un outil
-// ne doit pas exiger une reparation que son propre item n'a pas le droit de
-// faire. La constante AVERTISSEMENT_SEUL ci-dessous les bascule en bloquants en
-// une ligne le jour ou cet item passe.
+// avertissement seulement : les corriger appartient a un item de changement des
+// regles de revue que le fondateur a reserve et qui n'est pas encore ecrit, et un
+// outil ne doit pas exiger une reparation que son propre item n'a pas le droit de
+// faire. Cet item n'est deliberement pas nomme ici : son identifiant ne resout
+// vers aucun fichier, et pointer l'utilisateur vers un identifiant vide est
+// precisement le defaut que cet outil cherche. La constante AVERTISSEMENT_SEUL
+// ci-dessous les bascule en bloquants en une ligne le jour ou il passe.
 //
 // docs/reviews/ est un JOURNAL DATE, et SEUL D-UNDEF s'y applique.
 //
@@ -145,7 +148,8 @@ if (!existsSync(join(root, 'docs'))) {
 // ---------------------------------------------------------------- perimetre
 
 // Chemins lus et rapportes, mais qui ne pesent pas sur le code de sortie.
-// SITE-FIX-015 les bascule en bloquants en vidant cette liste.
+// Vider cette liste les bascule en bloquants, le jour ou l'item de changement
+// des regles de revue passe. Voir l'en-tete.
 const AVERTISSEMENT_SEUL = ['.claude/', 'CLAUDE.md'];
 
 // Journal date : exempte des controles d'etat, voir l'en-tete.
@@ -258,9 +262,11 @@ if (existsSync(decisionsAbs)) {
 //
 // C'est la faute que D132 interdit, une pretention de couverture plus large que
 // la couverture reelle, commise dans l'outil qui l'interdit. La reponse suit le
-// precedent de bin/og_images, qui refuse d'ecrire quand une police n'a pas
-// charge plutot que de livrer une vignette en Times : sortie 2, aucun verdict.
-// Un outil sans verdict est utilisable ; un verdict faux ne l'est pas.
+// precedent de bin/og_images:40, qui sort 2 quand une precondition manque
+// (Chrome introuvable) au lieu de tenter un rendu ; le meme fichier reserve la
+// sortie 1 au refus d'ecrire une vignette dont les polices n'ont pas charge.
+// Ici la precondition manquante rend donc 2, sans verdict. Un outil sans verdict
+// est utilisable ; un verdict faux ne l'est pas.
 const refuser = (message) => {
   console.error(`docs_check ne peut pas rendre de verdict : ${message}`);
   process.exit(2);
@@ -289,7 +295,7 @@ if (fichesExistantes.size === 0) refuser('docs/work-items/ ne contient aucune fi
 // de sa propre fiche. Les bornes \b evitent qu'un `per` ou un `under` se
 // declenche au milieu d'un mot plus long.
 const D_CITATION = new RegExp(
-  '(?:\\*\\*Decisions?\\*\\*|\\bDecisions?|\\bSee|\\bsee|\\bVoir|\\bvoir|\\bper|\\bunder)\\s+' +
+  '(?:\\*\\*Decisions?\\*\\*|\\bDecisions?|\\bSee|\\bsee|\\bVoir|\\bvoir|\\bPer|\\bper|\\bUnder|\\bunder)\\s+' +
     '(D\\d{3}(?:\\s*(?:,|and|et)\\s*D\\d{3})*)',
   'g',
 );
@@ -458,7 +464,12 @@ function verifierMdBroken(fichierRel, lignes, dansCode) {
 
 function tablesBacklog() {
   const abs = join(root, 'docs/BACKLOG.md');
-  if (!existsSync(abs)) return null;
+  // Troisieme site du meme defaut. La ronde 1 a garde DECISIONS.md et
+  // work-items/ et laisse celui-ci : la correction avait ete appliquee aux
+  // instances nommees plutot qu'a la classe, et la ronde 2 a reproduit le trou
+  // en retirant seulement ce fichier. STATUS se taisait, l'outil annoncait
+  // AUCUN ECART et sortait 0 sur une contradiction bien presente.
+  if (!existsSync(abs)) refuser('docs/BACKLOG.md est introuvable, STATUS ne peut pas tourner');
   const { lignes, dansCode } = contenu(abs);
   const done = new Set();
   const ouverts = new Set();
@@ -484,17 +495,34 @@ function tablesBacklog() {
 
 const backlog = tablesBacklog();
 
+// Forme plus douce du meme trou : renommer les titres ## Done et ## Open laisse
+// deux ensembles vides, et la moitie fiche-contre-backlog de STATUS ne dit plus
+// rien, toujours en silence et toujours avec une sortie 0.
+if (backlog.done.size === 0 && backlog.ouverts.size === 0) {
+  refuser("docs/BACKLOG.md n'expose ni table ## Done ni table ## Open, STATUS ne peut pas tourner");
+}
+
 // ---------------------------------------------------------------- STATUS
 
-const STATUT_CLOS = /\b(DONE|DELIVERED|CLOSED)\b/;
-const STATUT_OUVERT = /\bOPEN\b/;
+// Le mot d'etat doit OUVRIR le champ. Une recherche de mot libre lisait
+// « NOT DONE » comme DONE et « not OPEN yet » comme OPEN, soit un faux positif
+// bloquant dans le niveau bloquant. Aucune fiche du depot n'emploie de forme
+// negative aujourd'hui, mais un outil qui crie faux se fait ignorer, et c'est la
+// raison meme pour laquelle la liste blanche de D131 sous-detecte.
+//
+// L'ancrage suffit et une regle de negation separee serait nuisible : le premier
+// jet de ce correctif refusait d'arbitrer toute ligne contenant « not », ce qui
+// faisait disparaitre « OPEN, not started », ou « not started » qualifie
+// l'avancement et non le statut. Avec l'ancrage, « NOT DONE » n'est simplement
+// classe ni clos ni ouvert, donc pas arbitre, ce qui est le comportement voulu.
+const STATUT_CLOS = /^\W*(DONE|DELIVERED|CLOSED)\b/;
+const STATUT_OUVERT = /^\W*OPEN\b/;
 // Marqueurs d'un item encore en attente, cherches dans la prose du BACKLOG.
 // La preposition est exigee : « waits on nothing technical » decrit une attente,
 // « the wait is over » decrit sa fin, et le premier jet signalait les deux.
 const MARQUEUR_ATTENTE = /\bwaits? on\b|\bwaiting on\b|\bawaiting\b|\bawaits\b|\bblocked by\b|\bis blocked\b/i;
 
 function verifierStatus() {
-  if (!backlog) return;
 
   for (const id of fichesExistantes) {
     const abs = join(fichesDir, `${id}.md`);
@@ -515,7 +543,7 @@ function verifierStatus() {
     // On ne juge que les deux contradictions non ambigues. Un statut
     // intermediaire (IN REVIEW, IMPLEMENTED) n'est pas arbitre : il est
     // legitime des deux cotes selon le moment de la journee.
-    const clos = STATUT_CLOS.test(texteStatut) && !STATUT_OUVERT.test(texteStatut);
+    const clos = STATUT_CLOS.test(texteStatut);
     const ouvert = STATUT_OUVERT.test(texteStatut);
 
     if (ouvert && backlog.done.has(id)) {
@@ -617,7 +645,10 @@ function verifierPrState(fichierRel, lignes, dansCode) {
 // D108 impose qu'un item ne d'une revue cite VERBATIM la phrase definissante du
 // reviewer plutot que de la paraphraser. Le marqueur de naissance est le renvoi
 // vers un fichier de docs/reviews/ ; la preuve de citation est un bloc de
-// citation markdown. Le modele de forme est UI-FIX-004.
+// citation markdown : un bloc introduit par `>` qui reproduit la phrase du
+// reviewer mot pour mot, sous un titre qui l'annonce. Aucun item n'est nomme ici
+// en exemple : le seul qui porte cette forme vit sur une branche non fusionnee,
+// et le citer ferait de ce commentaire un renvoi mort de plus.
 // La declaration de naissance est cherchee dans l'EN-TETE seulement, et doit
 // porter un verbe de naissance. D108 vise « a follow-up item's scope » : une
 // fiche qui renvoie a une revue au detour de son corps, vingt lignes plus bas,
@@ -683,13 +714,24 @@ const avertissements = ecarts.filter((e) => !e.bloquant);
 // porte sur le rapport, jamais sur le fait qu'un controle n'a pas tourne :
 // autrement --check pouvait sortir 0 sur six controles sur sept sans un seul
 // octet a l'ecran, dans le mode meme que l'en-tete recommande avant un push.
+// Le compte est DERIVE de ce qui a tourne, jamais ecrit en dur. La ronde 2 a
+// trouve les deux messages annoncant « six sur sept » alors que cinq avaient
+// tourne : un outil qui se trompe sur sa propre couverture est exactement ce que
+// D132 interdit.
+const TOTAL_CONTROLES = 7;
+const nonExecutes = ghDesactive ? ['PR-STATE'] : [];
+const executes = TOTAL_CONTROLES - nonExecutes.length;
+
 if (ghDesactive) {
-  console.error(`AVERTISSEMENT : PR-STATE n'a pas tourne, ${ghDesactive}. Verdict rendu sur six controles sur sept.`);
+  console.error(
+    `AVERTISSEMENT : ${nonExecutes.join(', ')} n'a pas tourne, ${ghDesactive}. ` +
+      `Verdict rendu sur ${executes} controles sur ${TOTAL_CONTROLES}.`,
+  );
 }
 
 if (!silencieux) {
   if (avertissements.length) {
-    console.error(`\n${avertissements.length} en avertissement (hors perimetre de SITE-FIX-014, voir SITE-FIX-015)`);
+    console.error(`\n${avertissements.length} en avertissement (hors perimetre de SITE-FIX-014)`);
     for (const e of avertissements) {
       console.error(`  ${e.fichier}:${e.ligne}  [${e.controle}]  ${e.message}`);
     }
@@ -704,7 +746,7 @@ if (!silencieux) {
     // tourne : c'est la pretention de couverture que D132 interdit.
     console.log(
       ghDesactive
-        ? "\nAUCUN ECART sur les six controles qui ont tourne. PR-STATE n'a pas tourne, la comptabilite n'est donc pas entierement verifiee"
+        ? `\nAUCUN ECART sur les ${executes} controles qui ont tourne. ${nonExecutes.join(', ')} n'a pas tourne, la comptabilite n'est donc pas entierement verifiee`
         : '\nAUCUN ECART, comptabilite de la prose juste',
     );
     console.log('Rappel : le sens n\'est pas verifie. Voir D132.');
