@@ -115,7 +115,7 @@ export const fr = {
        titre : une vignette ne doit pas pouvoir affirmer ce que le site ne dit
        pas. C'est le defaut trouve par la ronde 2 d'UI-004. Voir D101. */
     ogSubtitle:
-      'Logiciels SaaS en Assurance, Recouvrement, Corporate Finance et RH, Conseil IT, IA souveraine, projets logiciels sur mesure',
+      'Logiciels SaaS en Assurance, Recouvrement, Corporate Finance et RH, Conseil IT, IA souveraine, projets logiciels sur mesure.',
 
     productsLabel: 'Nos produits',
     productsTitle: "Trois suites SaaS pensées pour l'OHADA et le CIMA",
