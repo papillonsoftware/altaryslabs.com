@@ -30,17 +30,25 @@
     }
   ]
 
-  // TROIS variables a definir dans le dashboard Cloudflare Pages
-  // (Settings > Variables and Secrets), sur Production ET Preview, jamais en
-  // dur dans ce fichier. Toutes trois sont lues a l'EXECUTION par
-  // functions/api/contact.ts, jamais au build :
+  // VARIABLES DU FORMULAIRE DE CONTACT. Leur liste, leur caractere obligatoire
+  // ou facultatif et le comportement en leur absence sont enumeres a un seul
+  // endroit : l'interface "Env" de functions/api/contact.ts. Ce fichier n'en
+  // porte volontairement ni la liste ni le compte, qui ont deja diverge deux
+  // fois du code. Voir D110.
   //
-  //   CONTACT_NOTIFY_EMAIL   texte    adresse qui recoit les notifications
-  //   TURNSTILE_SECRET_KEY   secret   cle secrete anti-spam, verifiee cote serveur
-  //   RESEND_API_KEY         secret   cle API Resend, portee "Sending access" seule
+  // Ce qui appartient en propre a ce fichier, et ne se trouve nulle part
+  // ailleurs :
   //
-  // Les deux dernieres sont des SECRETS : type "Secret" dans le dashboard, et
-  // jamais "Text". Un secret en clair est lisible par quiconque ouvre l'ecran.
+  //   - Les variables se posent dans le dashboard Cloudflare Pages
+  //     (Settings > Variables and Secrets), sur Production ET Preview, jamais en
+  //     dur ici.
+  //   - Les cles se posent avec le type "Secret", et jamais "Text". Un secret en
+  //     clair est lisible par quiconque ouvre l'ecran, et se retrouve dans la
+  //     premiere capture partagee pour demander de l'aide.
+  //   - Une variable de type "Text" est INERTE sur ce projet, pour la raison
+  //     expliquee juste en dessous. Ne pas en creer une en croyant qu'elle sera
+  //     lue : c'est ce qui a coute trois demandes de contact sans notification.
+  //     Voir D100 et D106.
   //
   // IL N'Y A PLUS AUCUNE VARIABLE DE BUILD, et c'est deliberé. La cle de site
   // Turnstile vit desormais dans src/i18n/config.ts. Le piege qui a impose ce

@@ -58,12 +58,14 @@ La commande retourne un `database_id`. Elle propose aussi d'ecrire elle-meme
 le binding dans `wrangler.jsonc` ; en session non interactive elle repond
 "no" par defaut, donc l'edition reste manuelle.
 
-## 2. Reactiver le binding dans `wrangler.jsonc`
+## 2. Declarer le binding dans `wrangler.jsonc`
 
-Le fichier de ce depot porte volontairement un bloc D1 commente en attendant
-cette etape, avec l'avertissement suivant conserve tel quel : un bloc
-`d1_databases` avec un `database_id` factice fait echouer le build Cloudflare
-Pages, pas seulement le binding local.
+**Fait sur ce depot depuis le 2026-08-07** : `wrangler.jsonc` porte un bloc
+`d1_databases` actif, avec le `database_id` reel de `altaryslabs-contact`. Il
+n'y a rien a reactiver ici. La forme du bloc est conservee ci-dessous pour un
+autre projet, avec l'avertissement qui la justifie : un bloc `d1_databases`
+avec un `database_id` factice fait echouer le build Cloudflare Pages, pas
+seulement le binding local.
 
 ```jsonc
 {
@@ -136,13 +138,23 @@ Un projet dont le domaine personnalise n'est pas encore attache (bascule DNS
 non faite) ne tourne qu'en Preview : oublier cet environnement bloque toute
 verification avant la mise en production.
 
-Trois variables, toutes lues a l'**execution** par la fonction Pages :
+Les deux cles, lues a l'**execution** par la fonction Pages :
 
 | Variable | Type | Valeur |
 |---|---|---|
 | `TURNSTILE_SECRET_KEY` | **Secret** | Secret Key de l'etape 3. |
 | `RESEND_API_KEY` | **Secret** | Cle API de l'etape 5. |
-| `CONTACT_NOTIFY_EMAIL` | Texte | Adresse qui recoit chaque notification (pas necessairement l'adresse publique du site). |
+
+**Sur ce depot, la liste complete des variables attendues est tenue a un seul
+endroit**, l'interface `Env` de `functions/api/contact.ts` : elle nomme chacune,
+dit si elle est obligatoire ou facultative, et ce qui se passe en son absence.
+Ce tutoriel n'en porte que la procedure de saisie. Voir D110.
+
+**Un mot sur les variables en clair.** Sur un projet dont `wrangler.jsonc` porte
+`pages_build_output_dir`, ce fichier devient la source de verite de la
+configuration et une variable de type Texte posee au dashboard n'atteint pas le
+projet. Les Secrets, eux, continuent de fonctionner. C'est pourquoi ce tableau
+ne liste que des Secrets. Voir D100 et D106.
 
 **Le type Secret n'est pas cosmetique.** Une cle posee en type Texte reste
 lisible en clair par quiconque ouvre l'ecran, et se retrouve dans la premiere
@@ -231,7 +243,7 @@ Avant de considerer l'integration terminee :
 3. Le build Cloudflare Pages lui-meme vert (un vert local ne prouve rien sur
    la resolution des secrets cote plateforme).
 4. Une soumission reelle depuis l'URL de deploiement cree une ligne en base et
-   declenche un email recu a `CONTACT_NOTIFY_EMAIL`. Le hostname de cette URL
+   declenche un email recu a l'adresse de notification. Le hostname de cette URL
    doit figurer dans la liste du widget Turnstile, sinon le widget refuse de se
    rendre et le test est impossible pour une raison sans rapport avec le code.
 5. Une soumission avec jeton Turnstile absent ou invalide est rejetee cote

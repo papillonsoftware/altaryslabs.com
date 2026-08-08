@@ -1,6 +1,6 @@
 # FORM-001 - Contact form submission
 
-**Type** STORY | **Status** IMPLEMENTED, pending end-to-end verification on the deployed preview | **Branch** `feat/formulaire-contact`
+**Type** STORY | **Status** DONE, proven end to end on the deployed preview on 2026-08-07 | **Branch** `feat/formulaire-contact`
 **Base** `refonte-multipages` at `75820e2`, after `PAGE-002` and `UI-003`
 
 ## Goal
@@ -46,10 +46,12 @@ which is a reusable tutorial rather than a record of this item.
 
 - D1 database `altaryslabs-contact`, region WEUR, binding `DB` active in
   `wrangler.jsonc` with its real `database_id`.
-- **Three runtime variables** on the Pages project, in Production **and**
-  Preview: `TURNSTILE_SECRET_KEY` and `RESEND_API_KEY`, both of which **must
-  carry the Secret type**, plus `CONTACT_NOTIFY_EMAIL` as plain text. The item
-  started with a fourth, `PUBLIC_TURNSTILE_SITE_KEY`, read at build time; it was
+- **Runtime variables** on the Pages project, in Production **and** Preview,
+  the keys carrying the Secret type and never Text. The list itself is not
+  repeated here: it is enumerated in one place only, the `Env` interface of
+  `functions/api/contact.ts`, and the count in this paragraph was already wrong
+  when `FORM-FIX-001` made `CONTACT_NOTIFY_EMAIL` optional. See D110. The item
+  started with a build-time variable, `PUBLIC_TURNSTILE_SITE_KEY`; it was
   retired by D100 and the project now has no build-time variable at all.
 - Resend domain verified, DKIM and SPF passing.
 
@@ -57,12 +59,12 @@ which is a reusable tutorial rather than a record of this item.
 
 | # | Criterion | Status |
 |---|---|---|
-| 1 | A submission from the live preview stores a row in D1 and produces an email | **pending the deployed preview**. Verified locally against a local D1: rows written with correct nulls, timestamps and page keys |
+| 1 | A submission from the live preview stores a row in D1 and produces an email | **met**. Proven on 2026-08-07 on the deployed preview: a real submission wrote a row **and** produced a received email, `Reply-To` set to the visitor's address and the subject carrying the interest label derived from `pageName`. It also proves the sender constant `formulaire@altaryslabs.com` matches the domain verified in Resend, which was the open question of point 3 below. Previously verified locally against a local D1: rows written with correct nulls, timestamps and page keys |
 | 2 | A submission with a missing or invalid Turnstile token is rejected server side, and the page says so in its own language | **met**. Verified locally: no token gives `303` to `/contact?statut=erreur` in French and `/en/contact?statut=erreur` in English |
 | 3 | Storage access is confined to one module, and swapping the provider requires editing only that file | **met**. `grep -rln -e "INSERT INTO" -e ".prepare(" functions server src` returns `server/contact-store.ts` alone |
 | 4 | No secret appears anywhere in the repository | **met, and worth reading precisely.** No secret is committed. The Turnstile **site** key is, as a constant, and that is deliberate: it is not a secret and cannot be one, since Turnstile requires it in the rendered HTML where every visitor already receives it. The two actual secrets stay on the platform, and `.gitignore` now covers `.env`, `.env.*`, `.dev.vars` and `.dev.vars.*`. See D098 and D100 |
 | 5 | The failure path shows a usable message in both languages, never a raw error | **met**. Both states reuse the existing panels, which end on `contact.fallbackText` and a real `mailto:` from `config.ts`. See D082 |
-| 6 | `npm run build` and `npm run check` clean, and the Cloudflare build succeeds with the D1 binding active | **partly met**. Both clean locally, and `npx wrangler pages functions build` compiles the Worker. The Cloudflare build itself is pending the merge |
+| 6 | `npm run build` and `npm run check` clean, and the Cloudflare build succeeds with the D1 binding active | **met**. Both clean locally, and `npx wrangler pages functions build` compiles the Worker. The Cloudflare build is proven by the 2026-08-07 submission itself: a request that writes to D1 on the deployment is a build that resolved the binding and the platform secrets |
 
 ## Local verification performed
 
@@ -122,22 +124,31 @@ the fallback and the guard are gone because the key can no longer be absent. See
 D100, which supersedes D094. Two secrets were also found stored as Text rather
 than Secret, and were rotated.
 
-## Still to verify after the merge
+## Verified on the deployment, 2026-08-07
 
-1. The Cloudflare Pages build green with the D1 binding active, which a local
-   green does not prove about platform secret resolution. Verified locally with
-   `env -u PUBLIC_TURNSTILE_SITE_KEY npm run build`, which now succeeds and emits
-   the key on both contact pages.
-2. A real submission on **`altaryslabscom.pages.dev`** writing a row and
-   producing an email at `contact@altaryslabs.com`. That is a stable URL rather
-   than a per-commit hash, because the project's production branch is
-   `refonte-multipages` and not `main`.
-3. The Resend sender constant matching the domain actually verified in Resend.
-   A mismatch surfaces as an HTTP 403 in the function log, so the failure is
-   loud rather than silent.
-4. Rendering at 360, 768 and 1440 px, which this session could not re-check
-   because both browser drivers were unavailable. No CSS rule changed and
-   `.turnstile-slot` already reserved the widget's exact height by construction.
+Everything this section previously listed as pending has happened, and the
+section is kept as the record rather than deleted.
+
+1. **The Cloudflare Pages build, green with the D1 binding active.** A local
+   green proved nothing about platform secret resolution; a submission that
+   reached D1 on the deployment proves both.
+2. **A real submission on `altaryslabscom.pages.dev`**, writing a row and
+   producing an email. That is a stable URL rather than a per-commit hash,
+   because the project's production branch is `refonte-multipages` and not
+   `main`.
+3. **The Resend sender constant matches the domain verified in Resend.** The
+   email arrived, so the 403 that a mismatch produces did not.
+
+One point remains, and it belongs to the follow-up rather than here: rendering at
+360, 768 and 1440 px, which this session could not re-check because both browser
+drivers were unavailable. Both review rounds of `FORM-FIX-001` have since
+captured the two contact pages at all three widths in both languages.
+
+**What the deployment also exposed**, and what `FORM-FIX-001` carries: the first
+three submissions were stored with no notification sent, because
+`CONTACT_NOTIFY_EMAIL` had never been set and could not be, and a second POST
+fired before the redirect showed an error panel for a request that had actually
+succeeded. See D106 and D112.
 
 ## Candidate for the review rounds, deliberately not done here
 

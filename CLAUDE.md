@@ -150,10 +150,19 @@ in the order below.
     exactly the six fields section 2 of `/confidentialite` enumerates, plus a
     server timestamp and the page language. **Never the IP, the user-agent or
     `CF-IPCountry`**: the published policy closes that list. See D093.
-  - **Three runtime variables** must exist on the Pages project, in Production
-    **and** Preview: `CONTACT_NOTIFY_EMAIL` (text), plus `TURNSTILE_SECRET_KEY`
-    and `RESEND_API_KEY`, which are **secrets and must carry the Secret type,
-    never Text**. There is **no build-time variable at all**.
+  - **The environment variables are enumerated in exactly one place**: the `Env`
+    interface of `functions/api/contact.ts`, which names each one, says whether
+    it is required or optional and states what happens in its absence. This
+    file, `wrangler.jsonc` and `.gitignore` deliberately carry neither the list
+    nor its count: the scattered descriptions drifted from the code twice, once
+    when D100 removed a variable and once when D106 made one optional. Read the
+    interface, never a copy of it. `docs/kb/turnstile-d1-resend-setup.md` is
+    **outside this rule and does list what to type**, being a portable tutorial
+    for any project rather than a description of this one; it is not
+    authoritative on what this project expects. See D110.
+  - What holds regardless: they are posed on the Pages project in Production
+    **and** Preview, the keys **must carry the Secret type, never Text**, and
+    there is **no build-time variable at all**.
   - **The Turnstile site key is a constant in `src/i18n/config.ts`**, not an
     environment variable. It is not a secret and cannot be one: Turnstile
     requires it in the rendered HTML. Committing it publishes nothing that was

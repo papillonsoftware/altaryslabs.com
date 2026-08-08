@@ -1,8 +1,11 @@
 /**
  * Notification email d'une demande de contact, via Resend.
  *
- * Ce message est interne : il part vers `CONTACT_NOTIFY_EMAIL` et n'est jamais
- * lu par le visiteur. Il est donc redige en francais, langue de travail du
+ * Ce message est interne : il part vers `CONTACT_NOTIFY_EMAIL` ou, a defaut,
+ * vers `CONTACT_EMAIL`, et n'est jamais lu par le visiteur. Le repli est ce qui
+ * rend la variable facultative, voir D106 et l'interface `Env` de
+ * `functions/api/contact.ts`, enumeration de reference des variables du
+ * formulaire. Il est donc redige en francais, langue de travail du
  * depot, quelle que soit la langue de la page d'ou vient la demande. La langue
  * du visiteur figure en clair dans le corps, parce qu'elle dicte la langue de
  * la reponse commerciale.
@@ -13,6 +16,7 @@
  * jamais une exception, et c'est le gestionnaire qui journalise. Voir D097.
  */
 
+import { CONTACT_EMAIL } from '../src/i18n/config';
 import { fr } from '../src/i18n/fr';
 import type { ContactRequest } from './contact-store';
 
@@ -91,9 +95,33 @@ export async function sendContactNotification(
   notifyEmail: string | undefined,
   request: ContactRequest,
 ): Promise<boolean> {
-  if (!apiKey || !notifyEmail) {
-    console.error('[contact] notification non envoyee : RESEND_API_KEY ou CONTACT_NOTIFY_EMAIL absente');
+  /* UN SEUL MOTIF PAR MESSAGE. L'ancienne version nommait deux variables dans la
+     meme ligne de journal, "RESEND_API_KEY ou CONTACT_NOTIFY_EMAIL absente", et
+     ce "ou" a envoye l'enquete du cote de la cle Resend alors que le probleme
+     etait le destinataire. Un journal qui laisse choisir entre deux causes ne
+     fait que la moitie du travail. Voir D106. */
+  if (!apiKey) {
+    console.error("[contact] notification non envoyee : RESEND_API_KEY absente de l'environnement");
     return false;
+  }
+
+  /* LE DESTINATAIRE NE PEUT PLUS MANQUER.
+     `CONTACT_NOTIFY_EMAIL` reste un remplacement, pour le cas ou les
+     notifications doivent partir ailleurs que vers l'adresse publique du site,
+     mais ce n'est plus une dependance : en son absence on notifie
+     `CONTACT_EMAIL`, qui vit dans le depot et sert deja le pied de page et la
+     page Contact.
+
+     Cette variable a coute trois demandes reelles. Elle n'avait jamais ete
+     posee, et le meme piege de plateforme que D100 l'expliquait : une variable
+     en clair ne passe pas par le dashboard sur un projet configure par
+     `wrangler.jsonc`. Meme classe d'erreur que la cle de site : une valeur non
+     secrete, deja connue du depot, transformee en dependance de plateforme qui
+     peut disparaitre en silence. Voir D106. */
+  const recipient = notifyEmail?.trim() || CONTACT_EMAIL;
+
+  if (recipient !== notifyEmail?.trim()) {
+    console.warn(`[contact] CONTACT_NOTIFY_EMAIL absente, repli sur ${CONTACT_EMAIL}`);
   }
 
   const subject = singleLine(
@@ -109,7 +137,7 @@ export async function sendContactNotification(
       },
       body: JSON.stringify({
         from: FROM,
-        to: [notifyEmail],
+        to: [recipient],
         /* Le commercial repond depuis sa boite au visiteur, sans copier une
            adresse a la main. Nom de champ impose par l'API Resend. */
         reply_to: request.email,
