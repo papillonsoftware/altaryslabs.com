@@ -35,11 +35,11 @@ The infix drives the branch prefix and the tracking doc:
 
 ## Worktree setup (MANDATORY - do this FIRST)
 
-`refonte-multipages` is the integration branch and receives no direct commits. Every work item lands through a PR targeting it.
+`post-refonte` is the integration branch and receives no direct commits. Every work item lands through a PR targeting it.
 
 ```
 git fetch origin
-git worktree add .claude/worktrees/<slug> -b <type>/<slug> origin/refonte-multipages
+git worktree add .claude/worktrees/<slug> -b <type>/<slug> origin/post-refonte
 ```
 
 If the branch already exists, omit `-b`:
@@ -80,6 +80,6 @@ Confirm these with the founder at the start of Phase 0 if any is ambiguous.
 
 ## Done
 
-When the founder approves the Done gate, invoke `/commit-push-pr` to commit, push and open the PR against `refonte-multipages`. Commit messages are written in French per the repository language rule.
+When the founder approves the Done gate, invoke `/commit-push-pr` to commit, push and open the PR against `post-refonte`. Commit messages are written in French per the repository language rule.
 
 Then run Phase 5 of the personality: launch an independent reviewer with `bin/reviewer "<ID> (PR #<num>)"`, or `bin/autonomous_reviewer "<ID> (PR #<num>)"` in the background. You never review your own work.

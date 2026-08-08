@@ -21,8 +21,17 @@ the switch on 2026-08-07: the default background is cream, every section
 declares its surface explicitly rather than inheriting, and the footer is five
 columns. Nothing about the palette is pending any more.
 
-`main` still serves the legacy one-page site through GitHub Pages. Nothing has
-been merged into it. The rebuild lives on `refonte-multipages`.
+**`OPS-002` landed on 2026-08-08.** `refonte-multipages` merged into `main` (PR
+#2), the DNS cutover moved `altaryslabs.com` and `www.altaryslabs.com` to
+Cloudflare Pages, and `main` is now the live production branch, deployed
+automatically on every push. GitHub Pages served the legacy site until then and
+its removal from the DNS zone and repository settings is being confirmed as a
+close-out step, not assumed done just because the cutover landed.
+
+The integration branch, freed of its GitHub Pages constraint, is renamed
+**`post-refonte`** the same day (D100): same role, no direct commits, every
+item through a PR against it, but merging it into `main` now means an
+immediate production deploy rather than a one-time founder-gated switch.
 
 ## Done
 

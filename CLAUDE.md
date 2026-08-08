@@ -9,16 +9,18 @@ built with Astro and deployed to Cloudflare Pages. ALTARYS LABS is an Ivorian
 SASU publishing SaaS products and selling consulting services across the OHADA
 and CIMA zones.
 
-The site is currently being rebuilt. `main` still serves the legacy one-page
-site through GitHub Pages and must not receive the rebuild until the DNS cutover
-(the rebuild deletes `CNAME`).
+The rebuild shipped and the DNS cutover happened on 2026-08-08: `main` is the
+live production branch, deployed automatically by Cloudflare Pages on every
+push. `CNAME` and GitHub Pages are gone.
 
 ## Branching
 
-`refonte-multipages` is the integration branch and receives **no direct commits**.
+`post-refonte` is the integration branch and receives **no direct commits**.
 Every unit of work lives in its own branch or worktree and lands through a PR
-targeting `refonte-multipages`. That branch will itself be merged into `main`
-only once the rebuild is complete and validated on the Cloudflare preview URL.
+targeting `post-refonte`. **Merging `post-refonte` into `main` deploys to the
+live site immediately** (Cloudflare Pages' production branch is `main`): unlike
+the pre-cutover era, there is no GitHub Pages safety net behind it. Treat that
+merge with the same deliberateness as before, for a different reason.
 
 ## Development Workflow (read first)
 
