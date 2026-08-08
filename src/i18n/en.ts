@@ -8,32 +8,36 @@ import type { Dictionary } from './fr';
  * international investors and partners, and institutional funders and NGOs.
  *
  * Practical consequences:
- *  - OHADA and CIMA are expanded in body copy wherever a page argues the
- *    regulatory point, because the acronyms carry no meaning for a reader in
- *    Accra, Lagos or Nairobi. The house form is "the OHADA business-law zone
- *    and the CIMA insurance zone".
- *    The bare acronyms stand where the expansion does not fit: a title a search
- *    engine truncates around 60 characters, a heading that would wrap to a third
- *    line, a column too narrow to hold it.
- *    This paragraph names the constraints and not the keys that meet them, on
- *    purpose. A list of exempt surfaces is a coverage claim like any other and
- *    goes stale the same way; it would also be untrue as stated, because room is
- *    not the only reason a value keeps the acronyms. D072 records a founder
- *    preference for the bare form in the home descriptions, which is a choice
- *    and not a constraint.
- *    Not every page expands them, and this comment does not say which do. Any
- *    statement of coverage decays the next time a page gains or loses the
- *    phrase, and no build step reads a comment. Three earlier versions of these
- *    lines asserted a coverage and all three were false; two of them shipped,
- *    and a review caught the third before it did. Measure instead:
+ *  - Expand OHADA and CIMA in body copy when a page argues the regulatory
+ *    point: the acronyms carry no meaning for a reader in Accra, Lagos or
+ *    Nairobi. The house form is "the OHADA business-law zone and the CIMA
+ *    insurance zone".
+ *    Keep the bare acronyms where the expansion does not fit: a title a search
+ *    engine truncates around 60 characters, a heading that would wrap to a
+ *    third line, a column too narrow to hold it.
+ *    These lines are written as instructions, and they name constraints rather
+ *    than keys, on purpose. Every earlier version described the file instead:
+ *    which pages expanded the acronyms, how many did not, which surfaces were
+ *    exempt and why. Every one of those descriptions was found false, some only
+ *    after shipping. No build step reads a comment, so a description drifts from
+ *    what it describes and nothing says so. An instruction can be poor advice;
+ *    it cannot be factually wrong.
+ *    This paragraph therefore does not say which pages expand them. Measure it:
  *      grep -rl "business-law zone" dist/en --include=index.html
  *      grep -rl "insurance zone"    dist/en --include=index.html
  *    Run BOTH. The two halves do not travel together: when this paragraph was
  *    written the first returned the HR page and not PCS, and the second
- *    returned PCS and not HR. A single-marker grep is what let the false claim
- *    through twice. It also matches the `<head>`, so exclude it before
- *    concluding anything about body copy. Per D075, the sweep itself is
- *    verified key by key against `fr.ts`, never by grepping markers.
+ *    returned PCS and not HR. A single-marker grep is what let a false claim
+ *    through more than once.
+ *    Both also match the `<head>`, where a meta description carries the phrase
+ *    on a page whose body never shows it. That is how PCS was once listed among
+ *    the pages that expand. For body copy only:
+ *      node -e 'const fs=require("fs");for(const f of process.argv.slice(1)){
+ *      const h=fs.readFileSync(f,"utf8");if(/business-law zone|insurance zone/
+ *      .test(h.slice(h.indexOf("</head>"))))console.log(f)}' \
+ *      $(find dist/en -name index.html)
+ *    Per D075, the sweep itself is verified key by key against `fr.ts`, never
+ *    by grepping markers.
  *  - Emphasis shifts to what travels across borders (offline-first design,
  *    multi-country deployment, configurable compliance) rather than to
  *    Ivorian-specific schemes such as CNPS or ITS.

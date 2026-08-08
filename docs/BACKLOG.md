@@ -34,6 +34,7 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | `I18N-001` | The handoff copy deltas: both heroes, the consulting service name, the English leadership role |
 | `PAGE-002` | Contact pages FR and EN, inert form, three states, `PageScaffold` deleted |
 | `I18N-FIX-001` | The residual-string sweep: fourteen values still carrying the pre-handoff positioning, plus two stale comments |
+| `SITE-FIX-007` | The two `REVIEWER.md` lines contradicting `CLAUDE.md`, delivered by `I18N-FIX-002`. See D127 |
 | `SEO-FIX-001` | The two Open Graph thumbnails, **delivered by `UI-FIX-003`** rather than under its own branch: `bin/og_images` regenerates them from the dictionaries, so the class is closed and not the instance. See D101 |
 
 ## Open, in dependency order
@@ -43,7 +44,6 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | 0 | `I18N-FIX-002` | delivered, PR #39 awaiting review | `docs/work-items/I18N-FIX-002.md` |
 | 0 | `SITE-FIX-002` | nothing, and see below | `docs/work-items/SITE-FIX-002.md` |
 | 0 | `SITE-CHR-002` | nothing | `docs/work-items/SITE-CHR-002.md` |
-| 0 | `SITE-FIX-007` | nothing | `docs/work-items/SITE-FIX-007.md` |
 | 0 | `SITE-FIX-008` | nothing | `docs/work-items/SITE-FIX-008.md` |
 | 0 | `SITE-FIX-009` | nothing | `docs/work-items/SITE-FIX-009.md` |
 | 1 | `UI-FIX-001` | nothing | `docs/work-items/UI-FIX-001.md` |
@@ -54,11 +54,11 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | 4 | `FORM-001` | `PAGE-002` | `docs/work-items/FORM-001.md` |
 | 5 | `OPS-002` | everything above | `docs/work-items/OPS-002.md` |
 
-**`SITE-FIX-007` is order 0 for the same reason `SITE-FIX-002` is.** It corrects
-two lines of `REVIEWER.md` that contradict `CLAUDE.md`, one of which tells every
-reviewer that Services come before Products. Until it lands, each round can raise
-a blocker against a correct site, and an unattended round has nobody to catch it.
-Run it before the next review, not after.
+**`SITE-FIX-007` is closed**, delivered by `I18N-FIX-002` rather than on its own
+branch. It corrected two lines of `REVIEWER.md` that contradicted `CLAUDE.md`,
+one of which told every reviewer that Services come before Products, so each
+round could raise a blocker against a correct site with nobody to catch it in an
+unattended round. See D127.
 
 **`SITE-FIX-009` is order 0 for a sharper version of the same reason.**
 `bin/review_shots` throws away `Page.navigate`'s `errorText`, so when the preview
