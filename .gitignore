@@ -76,6 +76,5 @@ dist/
 # functions/api/contact.ts ; ne pas la recopier ici. Voir D110.
 .env
 .env.*
-!.env.example
 .dev.vars
 .dev.vars.*

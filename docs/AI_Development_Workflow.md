@@ -228,7 +228,7 @@ A superseded clause in an existing D-row is **not** a defect. A D-row is a dated
 9. **Three products only**: Papillon Collection Solution, Papillon HR Suite, Papillon Corporate Finance. ALTARYS ENTERPRISE no longer exists.
 10. **Never merge into `main` before the DNS cutover.**
 11. **One work item at a time.** No umbrella branches.
-12. **Code comments and commit messages in French**, specs and documentation in English.
+12. **Code comments and commit messages in French**, design documentation in English. The frontier runs between documentation and learning material: **`docs/kb/` holds tutorials and reference notes written in French for the founder as their only reader, and is excluded from review scope entirely.** Everything else under `docs/` is English and is reviewed normally, **`docs/reviews/` included**: a review file is written for the next reviewing agent, not for the founder alone. See D116.
 
 ---
 
