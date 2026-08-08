@@ -58,7 +58,7 @@ D033 removed this delegation: the skill was not installed and could not be invok
 - [ ] No invented client reference, result figure, testimonial, headcount or award. Every factual claim traces to a document under `docs/vitrine/` or to a founder decision recorded in `docs/DECISIONS.md`.
 - [ ] The About page names one person only: Emmanuel Blonvia, Fondateur et President. No org chart, no headcount, no bios.
 - [ ] Papillon HR Suite is presented as 12 business-facing module labels. No internal technical code (PAYROL, QRCONTR and the like) appears on a public page, and no module availability is silently promoted.
-- [ ] Only the three current products appear: Papillon Collection Solution, Papillon HR Suite, **Papillon Corporate Finance Suite**, which keeps its "Suite" per `CLAUDE.md`, D017 and D031. **Any mention of ALTARYS ENTERPRISE is a blocker**: that product line no longer exists, it was replaced by Papillon Corporate Finance. Older documents under `docs/vitrine/` still name it; `CLAUDE.md` wins.
+- [ ] Only the three current products appear: Papillon Collection Solution, Papillon HR Suite, **Papillon Corporate Finance Suite**, which keeps its "Suite" per `CLAUDE.md`, D017 and D031. **Any mention of ALTARYS ENTERPRISE is a blocker**: that product line no longer exists, it was replaced by Papillon Corporate Finance Suite. Older documents under `docs/vitrine/` still name it; `CLAUDE.md` wins.
 
 ### Brand compliance
 

@@ -9,7 +9,11 @@ product's scope in the same exchange.
 
 ## The reviewer's defining sentence
 
-Quoted verbatim per D108, from `docs/reviews/I18N-FIX-001-review.md:184-194`:
+Quoted verbatim per D108, from `docs/reviews/I18N-FIX-001-review.md`. **No line
+range**: the quotation is verbatim and therefore greppable, while a range goes
+stale the moment a line is inserted above it. The range this document carried
+until round 3 was wrong at both ends, copied from the review file without being
+measured.
 
 > `pageTagline.productsPcs` passe de
 > `Insurance premium collection across Central and West Africa` a

@@ -33,8 +33,9 @@ import type { Dictionary } from './fr';
  *    on a page whose body never shows it. That is how PCS was once listed among
  *    the pages that expand. For body copy only:
  *      node -e 'const fs=require("fs");for(const f of process.argv.slice(1)){
- *      const h=fs.readFileSync(f,"utf8");if(/business-law zone|insurance zone/
- *      .test(h.slice(h.indexOf("</head>"))))console.log(f)}' \
+ *      const h=fs.readFileSync(f,"utf8"),i=h.indexOf("</head>");
+ *      if(i<0)throw new Error("no </head> in "+f);
+ *      if(/business-law zone|insurance zone/.test(h.slice(i)))console.log(f)}' \
  *      $(find dist/en -name index.html)
  *    Per D075, the sweep itself is verified key by key against `fr.ts`, never
  *    by grepping markers.

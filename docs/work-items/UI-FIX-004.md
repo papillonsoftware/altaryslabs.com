@@ -10,8 +10,8 @@ carries it.
 ## The reviewer's defining sentence
 
 > `dist/en/legal-notice`, `dist/en/privacy` - Les fragments francais
-> `Societe par Actions Simplifiee Unipersonnelle` et
-> `Derriere la pharmacie Redemption` sont rendus dans une page `lang="en"` sans
+> `Société par Actions Simplifiée Unipersonnelle` et
+> `Derrière la pharmacie Rédemption` sont rendus dans une page `lang="en"` sans
 > `lang="fr"` inline. WCAG 3.1.2 exempte les noms propres et les termes
 > techniques, et une forme juridique ivoirienne comme une adresse tombent
 > plausiblement sous l'exemption ; c'est pour cela que ce n'est pas un blocage.
@@ -42,8 +42,8 @@ inconsistently.
 
 Candidate fragments, to be enumerated by measurement rather than from this list:
 
-- `Societe par Actions Simplifiee Unipersonnelle`, the legal form
-- `Derriere la pharmacie Redemption`, part of the address
+- `Société par Actions Simplifiée Unipersonnelle`, the legal form
+- `Derrière la pharmacie Rédemption`, part of the address
 - the RCCM number's `CI-ABJ` prefix, if it is read as text rather than a code
 
 ## Scope
