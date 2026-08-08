@@ -45,6 +45,8 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | 0 | `SITE-FIX-007` | nothing | `docs/work-items/SITE-FIX-007.md` |
 | 0 | `SITE-FIX-008` | nothing | `docs/work-items/SITE-FIX-008.md` |
 | 0 | `SITE-FIX-009` | nothing | `docs/work-items/SITE-FIX-009.md` |
+| 0 | `SITE-FIX-014` | nothing, implemented and in review | `docs/work-items/SITE-FIX-014.md` |
+| 0 | `SITE-FIX-016` | `SITE-FIX-014` | `docs/work-items/SITE-FIX-016.md` |
 | 1 | `UI-FIX-001` | nothing | `docs/work-items/UI-FIX-001.md` |
 | 1 | `SEO-FIX-001` | `I18N-FIX-001`, merged | `docs/work-items/SEO-FIX-001.md` |
 | 3 | `UI-FIX-002` | nothing, `UI-002` has merged | `docs/work-items/UI-FIX-002.md` |
@@ -164,6 +166,10 @@ files. Whoever picks this up is auditing history, not protecting the next item.
   it merged.
 - **The prototypes are wrong on six points.** `CLAUDE.md` lists them with their
   decision rows. The repository wins on all six.
+- **Run `bin/docs_check` before opening a pull request.** It returns the
+  accounting defects of the prose, which produced 58 of the 91 blocking findings
+  of the last four rounds. It reports form only and never meaning: a green run
+  says the accounting is right, not that the prose is sound. See D129 and D132.
 - **Run `bin/contrast_sweep` before declaring a UI item done.** Three review
   rounds in a row found colour classes that reading had missed. Measuring
   converges; enumerating does not. See D048.
