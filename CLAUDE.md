@@ -188,14 +188,13 @@ in the order below.
 - **Code comments and commit messages**: French
 - **Design documentation in English, learning material in French.** English
   covers everything written to be read by an agent or a future maintainer: the
-  workflow, `DECISIONS.md`, the work items, the specs under `docs/vitrine/`,
-  and **`docs/reviews/`**. Review files are written for the next reviewing
-  agent, not for the founder alone, so they sit on the English side. The
-  existing files are mixed, French and English; they are left as they are, and
-  no new round may add to the mix. **No count is given here on purpose**: a
-  number that can drift will drift, which is the same reason D110 removed the
-  variable count.
-- **`docs/kb/` is the only French side of that frontier, and it is excluded
+  workflow, `DECISIONS.md`, the work items and **`docs/reviews/`**. Review files
+  are written for the next reviewing agent, not for the founder alone, so they
+  sit on the English side. The existing files are mixed, French and English;
+  they are left as they are, and no new round may add to the mix. **No count is
+  given here on purpose**: a number that can drift will drift, which is the same
+  reason D110 removed the variable count.
+- **`docs/kb/` is the French side named here, and it is excluded
   from review scope.** It holds tutorials and reference notes the founder asks
   for to build his own knowledge base; he is their only reader. Do not review
   them, do not report on their language, do not translate them. Reviewing a

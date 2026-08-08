@@ -129,7 +129,7 @@ The visual reference for the rebuild is the claude.ai/design project `53d1c228-d
 - [ ] Static output preserved. No adapter added without an explicit decision.
 - [ ] Any Pages Function lives under `/functions` and is not bundled by the Astro build
 - [ ] Build output is still `./dist`
-- [ ] The D1 binding in `wrangler.jsonc` stays commented out until the contact-form work lands. If the PR reactivates it, the `database_id` must be real and the comma after `pages_build_output_dir` must be present: an unresolved identifier or a missing comma fails the Cloudflare build and is a blocker.
+- [ ] The D1 binding in `wrangler.jsonc` is live since `FORM-001` and stays live. If the PR touches it, the `database_id` must stay the real one and the comma after `pages_build_output_dir` must be present: a placeholder identifier or a missing comma fails the Cloudflare build and is a blocker.
 - [ ] No secret, API key or token committed
 - [ ] The PR targets `refonte-multipages`, the integration branch, and not `main`. `main` still serves the legacy site through GitHub Pages and the rebuild deletes `CNAME`; merging early breaks the live site immediately.
 

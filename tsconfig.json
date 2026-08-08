@@ -5,7 +5,7 @@
   "compilerOptions": {
     "strictNullChecks": true,
 
-    /* PAS DE "baseUrl" ICI, ET NE PAS LE REMETTRE. Depuis TypeScript 4.4 les
+    /* PAS DE "baseUrl" ICI, ET NE PAS LE REMETTRE. Depuis TypeScript 4.1 les
        chemins de "paths" se resolvent relativement au repertoire de ce fichier
        quand "baseUrl" est absent, donc l'alias fonctionne sans lui. TypeScript
        6 rend l'option depreciee et fait echouer `npx tsc --noEmit` en TS5101,

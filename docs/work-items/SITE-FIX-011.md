@@ -26,16 +26,28 @@ The same truncation had already produced a failure: `CONTACT_NOTIFY_EMAIL`
 could not even be **created** as Text, so it never existed, and three real
 contact requests were stored with no notification sent.
 
-The truncated sentence lived in two files, both corrected here:
+The truncated sentence had spread through the operative files, corrected here:
 
 - `CLAUDE.md`, the Build and Deploy bullet, which is what the next session
   reads before the code.
 - `wrangler.jsonc`, where round 2 of `FORM-FIX-001` added "a Text variable is
   INERT on this project, for the reason explained just below" above a paragraph
   explaining the build case only. The cross-reference pointed at nothing.
+- `src/i18n/config.ts`, the `TURNSTILE_SITE_KEY` comment, **found by round 2 of
+  this item**. It is the file a developer opens when asking why the site key is
+  a constant, which is exactly the question that leads into the trap, and it
+  closed on "Voir D100" rather than on D115.
 
-Both now carry an explicit instruction not to repeat the short form.
+Each now carries an explicit instruction not to repeat the short form.
 D100 is **annotated** to point at D115, never rewritten.
+
+**No total is written**, and round 2 is the reason it is not merely corrected
+from two to three. A count in a D-row that is never rewritten can only be fixed
+by a second row, which is the finding round 1 already produced on the review
+corpus. A total would also be false as soon as it is read: the historical
+accounts still narrate the build half, `docs/work-items/FORM-001.md` where it
+recounts the build failure and D100 itself, and those are records rather than
+instructions. They are annotated or left alone, not edited.
 
 **No list of variables and no count is added anywhere**, per D110. The single
 enumeration stays the `Env` interface of `functions/api/contact.ts`.
@@ -112,9 +124,10 @@ by `FORM-FIX-001` under D110.
 
 ## Acceptance criteria
 
-1. The complete platform rule is stated identically in D115, `CLAUDE.md` and
-   `wrangler.jsonc`; D100 is annotated and its original text intact; no file
-   gains a list of variables or a count.
+1. The complete platform rule is stated identically in D115, `CLAUDE.md`,
+   `wrangler.jsonc` and `src/i18n/config.ts`; no operative file left carrying
+   the short form; D100 is annotated and its original text intact; no file gains
+   a list of variables or a count.
 2. The frontier is written into `CLAUDE.md`, `REVIEWER.md` and
    `AI_Development_Workflow.md`; `docs/kb/` is named out of review scope and
    `docs/reviews/` is named English.
@@ -131,7 +144,7 @@ by `FORM-FIX-001` under D110.
 | `npx tsc --noEmit` | exit 0 |
 | `npm run check` | 0 errors, 0 warnings, 0 hints, 65 files |
 | `npm run build` | 26 pages |
-| Worker bundle, `npx wrangler pages functions build` | **44 KB before, 28 KB after** |
+| Worker bundle, `npx wrangler pages functions build` | **smaller after, by roughly a third**. The absolute figure is not recorded: it depends on the invocation, this session read 44 KB before and 28 KB after, round 2 read 25.0 KiB after with `--outfile`. The direction and the order of magnitude reproduce; the number does not, so the two string probes below are what the criterion rests on |
 | Dictionary absent from bundle | `Aller au contenu principal` not found |
 | Labels still present in bundle | `Papillon Corporate Finance Suite` found |
 | `~/*` alias | resolves, 26 pages built from `src/pages/**` |
@@ -152,6 +165,34 @@ required. `fr.ts` is edited but every key and every value is unchanged: the
   interface code and would force a full visual pass on a documentary PR.
 - Any edit to `docs/kb/`, on the founder's instruction.
 - Any page, component, style, route or dictionary key.
+- **Round 2's second blocker, the language frontier over `docs/vitrine/`.**
+  Deferred on the founder's explicit instruction and owned by `SITE-FIX-017`,
+  which has a fiche rather than a mention. See below.
+
+## Round 2's second blocker, deferred to `SITE-FIX-017`
+
+Round 2 found that the frontier this item writes declares `docs/vitrine/`
+English while the majority of that directory is French, the primary spec
+included. The founder deferred it to a separate PR, because settling it means
+deciding what the frontier actually governs and not merely editing a sentence.
+
+Two things were done here rather than left, both of them minimal and neither of
+them settling the question:
+
+- D116 says "the French side **named here**" instead of "the **only** French
+  side", and records that the row settles `docs/kb/` and `docs/reviews/` only.
+  D116 is still a draft on this branch, so correcting it now is free; once
+  merged it could only be corrected by a second row, which is the whole argument
+  of round 2's first blocker.
+- `CLAUDE.md` no longer names `docs/vitrine/` in its list of English documents.
+  Nothing is added in its place: `REVIEWER.md` and `AI_Development_Workflow.md`
+  keep the generic sentence they already had, so the three seeded files stay
+  consistent with each other and `SITE-FIX-017` gets to word all three at once.
+
+**Known consequence, accepted:** `REVIEWER.md` still says everything else under
+`docs/` is reviewed in English, so a round seeded before `SITE-FIX-017` lands
+may raise the French primary spec as a language violation. That is the recurring
+finding D116 exists to retire, and it is retired by `SITE-FIX-017`, not here.
 
 ## Relationship to `SITE-FIX-012`
 
