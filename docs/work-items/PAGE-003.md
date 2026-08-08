@@ -7,6 +7,25 @@
 `docs/reviews/I18N-FIX-001-review.md`, finding 6, once the founder widened the
 product's scope in the same exchange.
 
+## The reviewer's defining sentence
+
+Quoted verbatim per D108, from `docs/reviews/I18N-FIX-001-review.md:184-194`:
+
+> `pageTagline.productsPcs` passe de
+> `Insurance premium collection across Central and West Africa` a
+> `Premium collection in the CIMA zone`. Le remplacement de la geographie par la
+> zone est juste, la perte du mot `Insurance` ne l'est pas. En anglais,
+> `Premium collection` se lit d'abord comme la collecte d'un supplement ou d'une
+> gamme superieure, pas comme l'encaissement de primes d'assurance ; les deux
+> taglines voisines nomment toujours leur domaine (`HR and payroll`,
+> `Budgeting`), et `Papillon Collection Solution` ne le dit pas non plus, si bien
+> que l'assurance disparait de la navigation anglaise.
+
+The founder answered it by widening the product rather than by restoring the
+word: PCS collects credit instalments as well as insurance premiums. **The
+reviewer's underlying point survives that answer** and is what this item carries.
+The navigation must name the domain, and every surface must name the same one.
+
 ## The gap
 
 The founder stated during `I18N-FIX-002` that Papillon Collection Solution now
@@ -66,8 +85,17 @@ Do not derive any of the three. Ask.
 
 ## Out of scope
 
-- `pageTagline.productsPcs`, already shipped by `I18N-FIX-002`. Verify it agrees
-  with whatever this item settles; do not rewrite it without a reason.
+- `pageTagline.productsPcs` **in `en.ts` only**, already shipped by
+  `I18N-FIX-002`. Verify it agrees with whatever this item settles; do not
+  rewrite it without a reason.
+
+  **The French twin is IN scope and must not be read as covered by that line.**
+  `fr.ts:60` still says `Recouvrement de primes en zone CIMA` and `fr.ts:414`
+  repeats it in `meta.productsPcs.title`. The same dropdown therefore describes
+  a different product scope in each language, on 13 pages a side, and French is
+  the primary market's language. D123 records that the **English** navigation
+  runs ahead of the PCS page; it says nothing about French, which is simply
+  behind. Widening it needs the founder's own words, like the English one did.
 - The external link to papillon-collection.com and the teaser format. PCS stays
   a teaser page with one external link.
 - `availability.pcs`, the single availability constant. Untouched.

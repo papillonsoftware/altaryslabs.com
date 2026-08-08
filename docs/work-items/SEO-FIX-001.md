@@ -1,10 +1,19 @@
 # SEO-FIX-001 - The Open Graph thumbnails carry the pre-handoff positioning
 
-**Type** FIX | **Status** OPEN, not started | **Branch to create** `fix/vignettes-og`
+**Type** FIX | **Status** **DONE**, delivered by `UI-FIX-003` on 2026-08-07
 **Base** `refonte-multipages`
 
-**Decision** D075 in `docs/DECISIONS.md`. Raised as a blocker by the `I18N-001`
+**Decision** D101 in `docs/DECISIONS.md`. Raised as a blocker by the `I18N-001`
 round 1 review, `docs/reviews/I18N-001-review.md`.
+
+`UI-FIX-003` closed this without opening `fix/vignettes-og`, and closed the class
+rather than the instance: `bin/og_images` renders both PNGs through headless
+Chrome from `home.heroTitle`, `home.heroEmphasis` and `home.ogSubtitle` in the
+dictionaries, so a share preview can no longer say what the site does not. The
+founder ruling this item was waiting for is therefore spent in the dictionaries,
+not in a design tool. The specification below is kept as the record of what the
+defect was. **This item cited D075 until `I18N-FIX-002`**; D075 names only
+`SEO-FIX-001` and `SITE-FIX-007` as follow-ups and never covered the export.
 
 ## The defect
 

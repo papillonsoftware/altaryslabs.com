@@ -12,16 +12,20 @@ import type { Dictionary } from './fr';
  *    regulatory point, because the acronyms carry no meaning for a reader in
  *    Accra, Lagos or Nairobi. The house form is "the OHADA business-law zone
  *    and the CIMA insurance zone".
- *    Some surfaces keep the bare acronyms, for room rather than by preference,
- *    and the constraint is structural in each case: `meta.*.title`, truncated by
- *    search engines around 60 characters; page `h1`s, where the expansion wraps
- *    to a third line; `footer.tagline` and `pageTagline.*`, both laid out in a
- *    narrow column; and `meta.*.description`, where it crowds out the sentence
- *    that earns the click.
- *    NOT EVERY PAGE EXPANDS THEM, AND THIS COMMENT DOES NOT SAY WHICH DO. Any
+ *    The bare acronyms stand where the expansion does not fit: a title a search
+ *    engine truncates around 60 characters, a heading that would wrap to a third
+ *    line, a column too narrow to hold it.
+ *    This paragraph names the constraints and not the keys that meet them, on
+ *    purpose. A list of exempt surfaces is a coverage claim like any other and
+ *    goes stale the same way; it would also be untrue as stated, because room is
+ *    not the only reason a value keeps the acronyms. D072 records a founder
+ *    preference for the bare form in the home descriptions, which is a choice
+ *    and not a constraint.
+ *    Not every page expands them, and this comment does not say which do. Any
  *    statement of coverage decays the next time a page gains or loses the
- *    phrase, and no build step reads a comment. Two earlier versions of these
- *    lines asserted a coverage and both shipped false. Measure instead:
+ *    phrase, and no build step reads a comment. Three earlier versions of these
+ *    lines asserted a coverage and all three were false; two of them shipped,
+ *    and a review caught the third before it did. Measure instead:
  *      grep -rl "business-law zone" dist/en --include=index.html
  *      grep -rl "insurance zone"    dist/en --include=index.html
  *    Run BOTH. The two halves do not travel together: when this paragraph was

@@ -40,7 +40,7 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 
 | Order | Item | Blocked by | Doc |
 |---|---|---|---|
-| 0 | `I18N-FIX-002` | delivered, PR #31 awaiting review | `docs/work-items/I18N-FIX-002.md` |
+| 0 | `I18N-FIX-002` | delivered, PR #39 awaiting review | `docs/work-items/I18N-FIX-002.md` |
 | 0 | `SITE-FIX-002` | nothing, and see below | `docs/work-items/SITE-FIX-002.md` |
 | 0 | `SITE-CHR-002` | nothing | `docs/work-items/SITE-CHR-002.md` |
 | 0 | `SITE-FIX-007` | nothing | `docs/work-items/SITE-FIX-007.md` |
@@ -78,9 +78,11 @@ The `I18N-FIX-001` / `PAGE-002` collision this file used to warn about is
 resolved: `PAGE-002` merged first with its `contact` block, and `I18N-FIX-001`
 merged on top of it, its footer and meta keys sitting far from those.
 
-**`SEO-FIX-001` waits on nothing technical**, only on the copy: the two Open Graph
-thumbnails must carry the wording `I18N-FIX-001` settled, so they are exported
-after it merges. It needs a founder ruling on the line each thumbnail carries.
+**`SEO-FIX-001` is closed**, delivered by `UI-FIX-003` rather than under its own
+branch. This paragraph used to say it waited only on a founder ruling about the
+line each thumbnail carries; that is no longer true. `bin/og_images` renders both
+PNGs from `home.heroTitle`, `home.heroEmphasis` and `home.ogSubtitle`, so the
+wording is settled in the dictionaries and the export is a command. See D101.
 
 **Watch the D-numbers, and watch the item IDs too.** On 7 August alone, four
 collisions had to be resolved by hand. `PAGE-002` merged with D064 to D071 while
