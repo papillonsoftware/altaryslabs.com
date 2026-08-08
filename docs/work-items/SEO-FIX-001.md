@@ -3,7 +3,7 @@
 **Type** FIX | **Status** OPEN, not started | **Branch to create** `fix/vignettes-og`
 **Base** `refonte-multipages`
 
-**Decision** D073 in `docs/DECISIONS.md`. Raised as a blocker by the `I18N-001`
+**Decision** D075 in `docs/DECISIONS.md`. Raised as a blocker by the `I18N-001`
 round 1 review, `docs/reviews/I18N-001-review.md`.
 
 ## The defect
@@ -59,7 +59,7 @@ separately: the current one lists the three services and would become
 `Suites SaaS, Conseil IT, RH & Corporate Finance, developpement sur mesure`,
 which is long for the space.
 
-**The capital of `Africaines`** is locked by D072 and reproduces as-is if the
+**The capital of `Africaines`** is locked by D074 and reproduces as-is if the
 hero line is used. That is deliberate, not a defect to silently normalise.
 
 ## Constraints

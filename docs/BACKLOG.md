@@ -33,7 +33,7 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | `UI-002` | Light-surface switch across the whole site, five-column footer |
 | `I18N-001` | The handoff copy deltas: both heroes, the consulting service name, the English leadership role |
 | `PAGE-002` | Contact pages FR and EN, inert form, three states, `PageScaffold` deleted |
-| `I18N-FIX-001` | The residual-string sweep: nine values still carrying the pre-handoff positioning, plus a stale comment |
+| `I18N-FIX-001` | The residual-string sweep: fourteen values still carrying the pre-handoff positioning, plus two stale comments |
 
 ## Open, in dependency order
 
@@ -43,6 +43,8 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | 0 | `SITE-FIX-002` | nothing, and see below | `docs/work-items/SITE-FIX-002.md` |
 | 0 | `SITE-CHR-002` | nothing | `docs/work-items/SITE-CHR-002.md` |
 | 0 | `SITE-FIX-007` | nothing | `docs/work-items/SITE-FIX-007.md` |
+| 0 | `SITE-FIX-008` | nothing | `docs/work-items/SITE-FIX-008.md` |
+| 0 | `SITE-FIX-009` | nothing | `docs/work-items/SITE-FIX-009.md` |
 | 1 | `UI-FIX-001` | nothing | `docs/work-items/UI-FIX-001.md` |
 | 1 | `SEO-FIX-001` | `I18N-FIX-001`, merged | `docs/work-items/SEO-FIX-001.md` |
 | 3 | `UI-FIX-002` | nothing, `UI-002` has merged | `docs/work-items/UI-FIX-002.md` |
@@ -55,6 +57,14 @@ two lines of `REVIEWER.md` that contradict `CLAUDE.md`, one of which tells every
 reviewer that Services come before Products. Until it lands, each round can raise
 a blocker against a correct site, and an unattended round has nobody to catch it.
 Run it before the next review, not after.
+
+**`SITE-FIX-009` is order 0 for a sharper version of the same reason.**
+`bin/review_shots` throws away `Page.navigate`'s `errorText`, so when the preview
+server is down it screenshots Chrome's error page and reports the run as
+successful. It did exactly that during round 2 of `I18N-FIX-001`: fifteen images
+of `ERR_CONNECTION_REFUSED`, announced as fifteen captures. Until it is fixed, a
+round can certify visual fidelity when no page ever rendered. `bin/contrast_sweep`
+got this guard in D060; its sibling never did.
 
 **Next up, not yet written as an item**: the footer reorganisation. The updated
 `Footer.dc.html` moves the contact details into their own column, sends `About`
@@ -70,17 +80,23 @@ merged on top of it, its footer and meta keys sitting far from those.
 thumbnails must carry the wording `I18N-FIX-001` settled, so they are exported
 after it merges. It needs a founder ruling on the line each thumbnail carries.
 
-**Watch the D-numbers.** `PAGE-002` merged with D064 to D071, and this branch had
-already reserved D070 and D071 for other decisions, so it was renumbered to D072
-to D075 on merge. **Two unmerged branches still claim rows that now exist**:
-`fix/procedure-de-revue` holds D064 to D066 and `fix/worktree-de-revue-r3` D064
-to D065. Both will have to renumber before they land.
+**Watch the D-numbers, and watch the item IDs too.** On 7 August alone, four
+collisions had to be resolved by hand. `PAGE-002` merged with D064 to D071 while
+`I18N-FIX-001` held D070 and D071 for other decisions, renumbered to D072 to
+D075. `SITE-FIX-002` then landed D078 to D081. And two sessions independently
+created a **`SITE-FIX-008`** for unrelated defects: the `bin/tech-lead` freshness
+guard kept the number, the `bin/review_shots` fix became `SITE-FIX-009`.
+
+The gap D076 and D077 left by that renumbering has since been filled by `UI-003`,
+so the log runs unbroken from D060 to D083. This paragraph claimed the gap was
+permanent and was wrong within the hour, which is itself the point being made.
 
 The lesson is not "grep harder", which the header of `DECISIONS.md` already tells
-you to do and which this branch did do. It is that **a reservation goes stale the
-moment another branch merges**. Re-check immediately before opening the pull
-request, not only when reserving, and rebase rather than assuming the base has
-not moved.
+you to do and which every one of these branches did do. It is that **a
+reservation goes stale the moment another branch merges**. Re-check immediately
+before opening the pull request, and again before pushing a fix onto an open one;
+merge the base in rather than assuming it has not moved. `fix/procedure-de-revue`
+is the branch still in flight today.
 
 **Order 0 touches no page and no token.** `SITE-FIX-002` edits the review
 procedure, `SITE-CHR-002` edits a review file. Both are safe at any moment and
