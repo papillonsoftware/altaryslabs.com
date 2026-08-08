@@ -179,6 +179,40 @@ on the same foundation; `UI-002` merged on 2026-08-07 with three review rounds o
 its own, so the `UI-001` findings are now buried under a rewrite of the same
 files. Whoever picks this up is auditing history, not protecting the next item.
 
+### The contact pages ship 4.5 KB of French comments to every visitor
+
+The built `/contact` and `/en/contact` carry 9498 bytes of inline script, of
+which **4582 bytes are French `//` comments**: about 16 percent of a 29 KB
+document, on the site's only conversion page, served to every visitor including
+those on 3G. The prose is genuinely valuable and explains the draft restore, the
+focus move and the double-submission guard; it simply belongs where it does not
+travel over the wire. Moving it to the `.astro` frontmatter or a sibling document
+and leaving short pointers in the shipped script costs nothing and is the whole
+of the fix.
+
+Pre-existing, from `FORM-001`. Raised as a suggestion by round 1 of
+`I18N-FIX-003`, which does not touch those pages.
+
+### The contact form cannot tell a visitor that their message was too long
+
+`readField` in `functions/api/contact.ts` returns `null` for an absent field and
+for one longer than its maximum alike. A message over 5000 characters therefore
+comes back as the **generic** error panel: the input is preserved, the reason is
+not, and nothing on the page suggests that shortening the message would help.
+Someone who has just written at length about a tender is told only that it
+failed.
+
+**This is knowingly not fixed, and it is not an open work item**, because the
+correction has no place to land yet: the Contact page carries two static panels
+whose text is fixed at build time, so there is nothing that can carry a reason.
+Giving the error state a variable cause is a larger piece of work than the
+defect, and it is that piece of work, not this line, that someone should plan.
+
+Raised as a non-blocking suggestion by round 1 of `FORM-001`, put out of scope
+of `FORM-FIX-001`, then deferred to a `SITE-FIX-011` that did not exist at the
+time. It was tracked nowhere for a day, which is why it is written down here
+rather than left in a review file. See D126.
+
 ## Working rules that cost time when forgotten
 
 - **Read the prototypes at the ROOT** of the claude.ai/design project, never the

@@ -69,7 +69,16 @@ the severity that reviewer assigned. **Only 6 and 7 remain open.**
 5. **[IMPORTANT]** `docs/DECISIONS.md`, D100 - the rule left incomplete by D106.
    D100 still says the project has "only three runtime ones", which stopped
    being true when `CONTACT_NOTIFY_EMAIL` became an optional override.
-6. **[IMPORTANT]** `src/components/LangSwitcher.astro:25`,
+6. **DELIVERED by `I18N-FIX-003`, D124 and D125.** Kept in full below, struck
+   through in intent rather than deleted, for the same reason points 1 to 5
+   are: a reduction that erases its own history is how a deferral becomes an
+   abandonment. **This item no longer carries it.** The correction landed as a
+   `LABEL_SEPARATOR` table in `src/i18n/config.ts` read by both components,
+   rather than in the dictionaries as suggested below, and with a plain space
+   on the French side rather than a non-breaking one; both departures from the
+   suggested shape are argued in D124. `Francais` regained its cedilla in the
+   same change.
+   ~~**[IMPORTANT]** `src/components/LangSwitcher.astro:25`,
    `src/components/Header.astro:60`, `src/i18n/config.ts:20` - French colon
    spacing in three English `aria-label`s, on **every** `/en/` page:
    `aria-label="Change language : Francais"`, `aria-label="Products : Open menu"`
@@ -81,7 +90,7 @@ the severity that reviewer assigned. **Only 6 and 7 remain open.**
    among the surfaces where a string must not leak from one language into the
    other.** Suggested shape: carry the separator in the dictionaries, `fr.ts`
    with its non-breaking space and `en.ts` without one, rather than in the
-   template.
+   template.~~
 7. **[IMPORTANT]** `src/styles/tokens.css:34-35` - `--ok: #2e7d52` and
    `--err: #b93838`, declared and **never used**: `var(--ok)` and `var(--err)`
    return nothing in `src/`, and the built CSS contains only their
@@ -100,15 +109,22 @@ call, taken during `FORM-FIX-001`, because they were both confirmed in the same
 round and both fall outside a documentary PR. They can be split out later
 without renumbering anything.
 
+**Point 6 was split out on 2026-08-08, exactly as that paragraph allowed**, and
+is delivered by `I18N-FIX-003`. Nothing was renumbered. **Point 7 is therefore
+the only point this item still owns**: it changes the CSS served on every page
+of the site, a different blast radius and a different verification from three
+accessible names, so grouping the two would have dragged a three-attribute fix
+into a full visual pass. See D125.
+
 Point 4 was the only one that could not be started before a founder decision.
 That decision was taken on 2026-08-08 and is recorded as D116.
 
 ## Acceptance criteria
 
-To be written when the item is planned. Now that the scope is points 6 and 7
-only, it carries at least: no `aria-label` mixes the typographic conventions of
-two languages, and `Francais` regains its cedilla; and `tokens.css` declares no
-colour outside the navy and gold palette without an explicit reservation.
+To be written when the item is planned. **The scope is point 7 alone**, points 1
+to 5 having landed with `SITE-FIX-011` and point 6 with `I18N-FIX-003`, so it
+carries at least: `tokens.css` declares no colour outside the navy and gold
+palette without an explicit reservation.
 
 ## Out of scope
 
