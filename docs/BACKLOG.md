@@ -1,6 +1,6 @@
 # Backlog - altaryslabs.com rebuild
 
-State of play at the close of 7 August 2026. This index exists so a session that
+State of play at the close of 8 August 2026. This index exists so a session that
 resumes the work does not have to reconstruct it from a conversation it cannot
 read. Item details live in `docs/work-items/`; decisions in `docs/DECISIONS.md`.
 
@@ -10,8 +10,10 @@ read. Item details live in `docs/work-items/`; decisions in `docs/DECISIONS.md`.
 `PAGE-002` delivered the two Contact pages and deleted `PageScaffold.astro`, the
 provisional scaffold, which no longer exists in the tree.
 
-What is not final is the contact form's **submission**: the markup ships inert
-behind a guard script, and `FORM-001` makes it actually send. See D064.
+The contact form **submits**. `FORM-001` and `FORM-FIX-001` landed on 2026-08-07
+and the flow is proven end to end on the deployed preview: Turnstile verified
+server side, the request stored in D1, a notification sent through Resend. D064
+described the inert markup that preceded it and is closed.
 
 **The site is light.** The July 2026 handoff turns it into an alternation of
 cream and navy. `UI-001` installed that foundation dormant and `UI-002` threw
@@ -34,29 +36,39 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | `I18N-001` | The handoff copy deltas: both heroes, the consulting service name, the English leadership role |
 | `PAGE-002` | Contact pages FR and EN, inert form, three states, `PageScaffold` deleted |
 | `I18N-FIX-001` | The residual-string sweep: fourteen values still carrying the pre-handoff positioning, plus two stale comments |
+| `SITE-FIX-007` | The two `REVIEWER.md` lines contradicting `CLAUDE.md`, delivered by `I18N-FIX-002`. See D127 |
+| `SEO-FIX-001` | The two Open Graph thumbnails, **delivered by `UI-FIX-003`** rather than under its own branch: `bin/og_images` regenerates them from the dictionaries, so the class is closed and not the instance. See D101 |
+| `UI-003` | Footer reorganised: a Contact column publishing the email and phone, About moved into Legal |
+| `UI-004` | The web logomark: thicker diamond, wordmark in real HTML text. Authoritative source moved to the design project, D086 |
+| `UI-FIX-003` | `bin/og_images`: the two share images generated from the dictionaries instead of hand-drawn. D101 |
+| `UI-005` | Open Graph images on the new logomark, **delivered by `UI-FIX-003`** rather than on its own branch |
+| `FORM-001` | The contact form actually sends: Pages Function, Turnstile, D1, Resend |
+| `FORM-FIX-001` | Round 2 of the form: widget language, input preserved, focus, notification, token binding, double submission blocked |
+| `SITE-FIX-010` | Follow-up items must quote the reviewer's defining sentence; a D-number is re-checked before committing. D108 and D109 |
 
 ## Open, in dependency order
 
 | Order | Item | Blocked by | Doc |
 |---|---|---|---|
-| 0 | `I18N-FIX-002` | nothing, PR #31 is open | `docs/work-items/I18N-FIX-002.md` |
+| 0 | `I18N-FIX-002` | delivered, PR #39 awaiting review | `docs/work-items/I18N-FIX-002.md` |
 | 0 | `SITE-FIX-002` | nothing, and see below | `docs/work-items/SITE-FIX-002.md` |
 | 0 | `SITE-CHR-002` | nothing | `docs/work-items/SITE-CHR-002.md` |
-| 0 | `SITE-FIX-007` | nothing | `docs/work-items/SITE-FIX-007.md` |
 | 0 | `SITE-FIX-008` | nothing | `docs/work-items/SITE-FIX-008.md` |
 | 0 | `SITE-FIX-009` | nothing | `docs/work-items/SITE-FIX-009.md` |
+| 0 | `SITE-FIX-012` | nothing | `docs/work-items/SITE-FIX-012.md` |
+| 0 | `SITE-FIX-013` | nothing | `docs/work-items/SITE-FIX-013.md` |
 | 1 | `UI-FIX-001` | nothing | `docs/work-items/UI-FIX-001.md` |
-| 1 | `SEO-FIX-001` | `I18N-FIX-001`, merged | `docs/work-items/SEO-FIX-001.md` |
+| 1 | `PAGE-003` | three founder rulings, listed in the doc | `docs/work-items/PAGE-003.md` |
+| 1 | `UI-FIX-004` | one founder ruling on the WCAG 3.1.2 exemption | `docs/work-items/UI-FIX-004.md` |
 | 3 | `UI-FIX-002` | nothing, `UI-002` has merged | `docs/work-items/UI-FIX-002.md` |
 | 3 | `UI-REF-001` | nothing, `UI-002` has merged | `docs/work-items/UI-REF-001.md` |
-| 4 | `FORM-001` | `PAGE-002` | `docs/work-items/FORM-001.md` |
 | 5 | `OPS-002` | everything above | `docs/work-items/OPS-002.md` |
 
-**`SITE-FIX-007` is order 0 for the same reason `SITE-FIX-002` is.** It corrects
-two lines of `REVIEWER.md` that contradict `CLAUDE.md`, one of which tells every
-reviewer that Services come before Products. Until it lands, each round can raise
-a blocker against a correct site, and an unattended round has nobody to catch it.
-Run it before the next review, not after.
+**`SITE-FIX-007` is closed**, delivered by `I18N-FIX-002` rather than on its own
+branch. It corrected two lines of `REVIEWER.md` that contradicted `CLAUDE.md`,
+one of which told every reviewer that Services come before Products, so each
+round could raise a blocker against a correct site with nobody to catch it in an
+unattended round. See D127.
 
 **`SITE-FIX-009` is order 0 for a sharper version of the same reason.**
 `bin/review_shots` throws away `Page.navigate`'s `errorText`, so when the preview
@@ -76,9 +88,20 @@ The `I18N-FIX-001` / `PAGE-002` collision this file used to warn about is
 resolved: `PAGE-002` merged first with its `contact` block, and `I18N-FIX-001`
 merged on top of it, its footer and meta keys sitting far from those.
 
-**`SEO-FIX-001` waits on nothing technical**, only on the copy: the two Open Graph
-thumbnails must carry the wording `I18N-FIX-001` settled, so they are exported
-after it merges. It needs a founder ruling on the line each thumbnail carries.
+**`SEO-FIX-001` is closed**, delivered by `UI-FIX-003` rather than under its own
+branch. This paragraph used to say it waited only on a founder ruling about the
+line each thumbnail carries; that is no longer true. `bin/og_images` renders both
+PNGs from `home.heroTitle`, `home.heroEmphasis` and `home.ogSubtitle`, so the
+wording is settled in the dictionaries and the export is a command. See D101.
+
+**Watch the item statuses exactly as you watch the D-numbers.** Round 3 of
+`I18N-FIX-002` found this file listing `FORM-001` as work still to do while the
+contact form was live in production, plus five merged items missing from Done and
+a heading dated the day before. Two open items, `SITE-FIX-012` and `SITE-FIX-013`,
+were in neither table. Nothing checks this file against the repository, so it
+drifts every time an item lands somewhere other than its own branch, which has now
+happened three times: `SEO-FIX-001` by `UI-FIX-003`, `UI-005` by `UI-FIX-003`,
+`SITE-FIX-007` by `I18N-FIX-002`. `SITE-FIX-014` makes the check mechanical.
 
 **Watch the D-numbers, and watch the item IDs too.** On 7 August alone, four
 collisions had to be resolved by hand. `PAGE-002` merged with D064 to D071 while

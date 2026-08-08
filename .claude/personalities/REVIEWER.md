@@ -58,7 +58,7 @@ D033 removed this delegation: the skill was not installed and could not be invok
 - [ ] No invented client reference, result figure, testimonial, headcount or award. Every factual claim traces to a document under `docs/vitrine/` or to a founder decision recorded in `docs/DECISIONS.md`.
 - [ ] The About page names one person only: Emmanuel Blonvia, Fondateur et President. No org chart, no headcount, no bios.
 - [ ] Papillon HR Suite is presented as 12 business-facing module labels. No internal technical code (PAYROL, QRCONTR and the like) appears on a public page, and no module availability is silently promoted.
-- [ ] Only the three current products appear: Papillon Collection Solution, Papillon HR Suite, Papillon Corporate Finance. **Any mention of ALTARYS ENTERPRISE is a blocker**: that product line no longer exists, it was replaced by Papillon Corporate Finance. Older documents under `docs/vitrine/` still name it; `CLAUDE.md` wins.
+- [ ] Only the three current products appear: Papillon Collection Solution, Papillon HR Suite, **Papillon Corporate Finance Suite**, which keeps its "Suite" per `CLAUDE.md`, D017 and D031. **Any mention of ALTARYS ENTERPRISE is a blocker**: that product line no longer exists, it was replaced by Papillon Corporate Finance Suite. Older documents under `docs/vitrine/` still name it; `CLAUDE.md` wins.
 
 ### Brand compliance
 
@@ -68,7 +68,7 @@ D033 removed this delegation: the skill was not installed and could not be invok
 - [ ] Colors come from `tokens.css`. No hardcoded hex in a component or a page.
 - [ ] Typography respected: Cormorant Garamond for marketing headings, DM Sans for body and buttons, Space Mono for eyebrows, badges and technical labels
 - [ ] Logomark reused from `src/components/Logo.astro` as-is, never redrawn. Its geometry is defined by the design project since D086; `docs/vitrine/altarys-brand-identity-v3.1.html` is obsolete in full since D102 and still shows the thin pre-D086 diamond, the abandoned amber and teal palette and ALTARYS ENTERPRISE. Do not check anything against it
-- [ ] Visual hierarchy holds: Services first, Products second. The page speaks to an executive evaluating a contractor, not to a SaaS early adopter.
+- [ ] Visual hierarchy holds: **Products before Services**, a deliberate positioning choice locked by `CLAUDE.md` and D016. This line said the reverse until `I18N-FIX-002`, so a reviewer seeded with it raised a blocker against a correct site. The page speaks to an executive evaluating a contractor, not to a SaaS early adopter.
 - [ ] No stock photography. Visuals are typographic and geometric compositions derived from the diamond.
 
 ### Visual fidelity to the mockup (mandatory when a mockup exists)
@@ -166,6 +166,10 @@ This exclusion is bounded to that one directory and is the only exception to the
 Write to `docs/reviews/<ID>-review.md`. The file ships **on the work item's branch**, but you do not write it there directly: `.claude/commands/review.md` step 3 opens the review worktree on a disposable `review-<id-lowercase>` branch, and step 11 pushes the commit onto the item branch with an explicit refspec. Write in the review worktree, push by refspec.
 
 If the file already exists from a previous round, **append** a new round section. Never overwrite. Never commit a review file on `main` or on `refonte-multipages`.
+
+**The filename always derives from the ID under review, and a `-FIX-` item opens its own file.** Rounds of one continuous thread therefore land in several files: `I18N-001`, `I18N-FIX-001` and `I18N-FIX-002` are one body of work and hold three. That is deliberate; the alternative asks every reviewer to guess which item a thread started from. See D121.
+
+**So when the item under review continues an earlier one, open the file with a `Continuity` line naming the previous rounds and their files, before the first round section.** It is the only thing standing between the next reader and the conclusion that no history exists. A reader who opens the file of a `-FIX-` item and finds nothing does not go looking; that is exactly what happened on round 1 of `I18N-FIX-001`. If the thread starts here, say so instead: one sentence, never a blank.
 
 ### Round format
 

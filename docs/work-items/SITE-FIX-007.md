@@ -1,11 +1,22 @@
 # SITE-FIX-007 - `REVIEWER.md` contradicts `CLAUDE.md` on two locked points
 
-**Type** FIX | **Status** OPEN, not started | **Branch to create** `fix/checklist-reviewer`
+**Type** FIX | **Status** **DONE**, delivered by `I18N-FIX-002` on 2026-08-08
 **Base** `refonte-multipages`
 
-**Decision** D075 in `docs/DECISIONS.md`. Raised by the `I18N-001` round 1
-review, `docs/reviews/I18N-001-review.md`, as a latent defect outside that PR's
-scope.
+**Decision** D127 in `docs/DECISIONS.md`. Raised by the `I18N-001` round 1
+review as a latent defect outside that PR's scope, and raised again by round 2 of
+`docs/reviews/I18N-FIX-002-review.md`, the maximal bar blocking on a verified
+defect whatever its origin.
+
+`I18N-FIX-002` closed it without opening `fix/checklist-reviewer`. Three reasons:
+that PR was already editing `REVIEWER.md` under D121; both corrections **apply
+decisions already locked elsewhere** (D016 for the order, D017 and D031 for the
+"Suite") rather than taking new ones; and the defect makes reviewers raise false
+blockers against a correct site, which is the cost the whole thread exists to
+remove. The specification below is kept as the record of what the defect was.
+
+**This item cited D075 until then**, legitimately: D075 names it as one of its
+two follow-ups. D127 records the delivery.
 
 ## The defect
 
