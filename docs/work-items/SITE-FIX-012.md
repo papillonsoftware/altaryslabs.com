@@ -23,9 +23,11 @@ fiche was opened, held by a parallel session, which is the reason D114 skipped
 to `012` in the first place. That session covered points 1 to 5 and landed them
 with D115 to D118. This item is therefore **reduced to points 6 and 7**.
 
-Points 1 to 5 are kept below, struck through, for the record: a reduction that
-deletes its own history is how a deferral becomes an abandonment, which is the
-exact failure this fiche exists to prevent.
+Points 1 to 5 are **kept below intact and unedited**, and the mapping table
+here is what marks them settled: a reduction that deletes its own history is how
+a deferral becomes an abandonment, which is the exact failure this fiche exists
+to prevent. Read the list below as the scope **as originally written**, not as
+the scope that remains.
 
 | Point | Settled by |
 |---|---|
@@ -58,8 +60,12 @@ the severity that reviewer assigned. **Only 6 and 7 remain open.**
    the review corpus is itself mixed, `FORM-001-review.md` and
    `PAGE-002-review.md` in English, `UI-004-review.md` and
    `FORM-FIX-001-review.md` in French. Raised three times without a D-row.
-   **This needs a founder decision covering both families, then the D-row, in
-   one direction or the other.**
+   ~~This needs a founder decision covering both families, then the D-row, in
+   one direction or the other.~~ **SETTLED on 2026-08-08 by D116**: `docs/kb/`
+   is French learning material excluded from review scope, `docs/reviews/`
+   stays English, existing files left as they are. The file counts quoted in
+   this paragraph were examples, not an inventory: the corpus held eleven
+   files, six of them French.
 5. **[IMPORTANT]** `docs/DECISIONS.md`, D100 - the rule left incomplete by D106.
    D100 still says the project has "only three runtime ones", which stopped
    being true when `CONTACT_NOTIFY_EMAIL` became an optional override.

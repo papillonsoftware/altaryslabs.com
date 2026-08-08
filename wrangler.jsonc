@@ -50,7 +50,7 @@
   //     lue : c'est ce qui a coute trois demandes de contact sans notification.
   //     Voir D100 et D106.
   //
-  // IL N'Y A PLUS AUCUNE VARIABLE DE BUILD, et c'est deliberé. La cle de site
+  // IL N'Y A PLUS AUCUNE VARIABLE DE BUILD, et c'est delibere. La cle de site
   // Turnstile vit desormais dans src/i18n/config.ts. Le piege qui a impose ce
   // choix, et qui explique aussi l'inertie annoncee plus haut : des lors que ce
   // fichier porte "pages_build_output_dir", il devient la source de verite de la

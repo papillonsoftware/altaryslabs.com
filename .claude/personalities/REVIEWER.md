@@ -155,7 +155,7 @@ It holds tutorials and reference notes the founder asks for to build **his own k
 
 This exclusion is bounded to that one directory and is the only exception to the maximal bar above. Everything else under `docs/` is reviewed normally, in English, and a factually wrong sentence there still blocks.
 
-**Your own review file is on the English side.** `docs/reviews/` is written for the next reviewing agent, not for the founder alone, so **write every new round in English**. Four existing files are French (`UI-004-review.md`, `FORM-FIX-001-review.md`) or English (`FORM-001-review.md`, `PAGE-002-review.md`); the mix is known, the existing files are left alone, and no new round may add to it. See **D116**.
+**Your own review file is on the English side.** `docs/reviews/` is written for the next reviewing agent, not for the founder alone, so **write every new round in English**. The existing files are mixed, French and English; the mix is known, those files are left alone, and no new round may add to it. Neither a count nor a list is given here on purpose: both drift, and the rule does not need them. See **D116**.
 
 ---
 

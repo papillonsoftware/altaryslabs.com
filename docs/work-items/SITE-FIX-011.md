@@ -63,8 +63,11 @@ Founder's decision. The repository rule gains an explicit frontier:
   severity. It holds tutorials and reference notes the founder asks for to
   build his own knowledge base; he is their only reader.
 - **`docs/reviews/` stays English**, being written for the next reviewing agent
-  rather than for the founder alone. The four existing files are mixed, are
-  left as they are, and no new round may add to the mix.
+  rather than for the founder alone. The existing files are mixed, French and
+  English, are left as they are, and no new round may add to the mix. **No
+  count is written anywhere**: round 1 blocked on exactly that, the first draft
+  having said "four" by reading `SITE-FIX-012`'s illustrative enumeration as an
+  inventory, when the corpus held eleven files of which six were French.
 
 Written into the three files a round is seeded from: `CLAUDE.md`,
 `.claude/personalities/REVIEWER.md` and `docs/AI_Development_Workflow.md`.
