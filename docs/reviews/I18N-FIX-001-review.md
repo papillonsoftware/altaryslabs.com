@@ -1,5 +1,15 @@
 # I18N-FIX-001 - Revue
 
+**Continuite.** Ce fil compte des rondes anterieures, ecrites ailleurs. Voir
+`docs/reviews/I18N-001-review.md` : `## Round 1` porte sur l'item `I18N-001`
+(PR #25), `## Round 2` porte en realite sur `I18N-FIX-001` (PR #29). La ronde 1
+ci-dessous est donc chronologiquement la troisieme passe sur cette matiere. Les
+rondes suivantes de ce fil sont dans `docs/reviews/I18N-FIX-002-review.md`.
+
+Renvoi ajoute par `I18N-FIX-002`, qui a fait de cette ligne une obligation de
+procedure plutot qu'une politesse. Voir D121. Le texte de la ronde 1 n'est pas
+modifie : une revue est un enregistrement, elle s'annote et ne se reecrit pas.
+
 ## Round 1 - 2026-08-07
 **Verdict**: CHANGES REQUESTED
 

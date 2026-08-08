@@ -154,6 +154,10 @@ Write to `docs/reviews/<ID>-review.md`. The file ships **on the work item's bran
 
 If the file already exists from a previous round, **append** a new round section. Never overwrite. Never commit a review file on `main` or on `refonte-multipages`.
 
+**The filename always derives from the ID under review, and a `-FIX-` item opens its own file.** Rounds of one continuous thread therefore land in several files: `I18N-001`, `I18N-FIX-001` and `I18N-FIX-002` are one body of work and hold three. That is deliberate; the alternative asks every reviewer to guess which item a thread started from. See D121.
+
+**So when the item under review continues an earlier one, open the file with a `Continuity` line naming the previous rounds and their files, before the first round section.** It is the only thing standing between the next reader and the conclusion that no history exists. A reader who opens the file of a `-FIX-` item and finds nothing does not go looking; that is exactly what happened on round 1 of `I18N-FIX-001`. If the thread starts here, say so instead: one sentence, never a blank.
+
 ### Round format
 
 ```markdown

@@ -114,7 +114,8 @@ export const fr = {
        Il vit ici et non dans le gabarit du script pour la meme raison que le
        titre : une vignette ne doit pas pouvoir affirmer ce que le site ne dit
        pas. C'est le defaut trouve par la ronde 2 d'UI-004. Voir D101. */
-    ogSubtitle: 'Suites SaaS, conseil IT, RH et Finance, développement sur mesure.',
+    ogSubtitle:
+      'Logiciels SaaS en Assurance, Recouvrement, Corporate Finance et RH, Conseil IT, IA souveraine, projets logiciels sur mesure',
 
     productsLabel: 'Nos produits',
     productsTitle: "Trois suites SaaS pensées pour l'OHADA et le CIMA",

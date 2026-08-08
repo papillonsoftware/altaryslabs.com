@@ -34,19 +34,21 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | `I18N-001` | The handoff copy deltas: both heroes, the consulting service name, the English leadership role |
 | `PAGE-002` | Contact pages FR and EN, inert form, three states, `PageScaffold` deleted |
 | `I18N-FIX-001` | The residual-string sweep: fourteen values still carrying the pre-handoff positioning, plus two stale comments |
+| `SEO-FIX-001` | The two Open Graph thumbnails, **delivered by `UI-FIX-003`** rather than under its own branch: `bin/og_images` regenerates them from the dictionaries, so the class is closed and not the instance. See D101 |
 
 ## Open, in dependency order
 
 | Order | Item | Blocked by | Doc |
 |---|---|---|---|
-| 0 | `I18N-FIX-002` | nothing, PR #31 is open | `docs/work-items/I18N-FIX-002.md` |
+| 0 | `I18N-FIX-002` | delivered, PR #31 awaiting review | `docs/work-items/I18N-FIX-002.md` |
 | 0 | `SITE-FIX-002` | nothing, and see below | `docs/work-items/SITE-FIX-002.md` |
 | 0 | `SITE-CHR-002` | nothing | `docs/work-items/SITE-CHR-002.md` |
 | 0 | `SITE-FIX-007` | nothing | `docs/work-items/SITE-FIX-007.md` |
 | 0 | `SITE-FIX-008` | nothing | `docs/work-items/SITE-FIX-008.md` |
 | 0 | `SITE-FIX-009` | nothing | `docs/work-items/SITE-FIX-009.md` |
 | 1 | `UI-FIX-001` | nothing | `docs/work-items/UI-FIX-001.md` |
-| 1 | `SEO-FIX-001` | `I18N-FIX-001`, merged | `docs/work-items/SEO-FIX-001.md` |
+| 1 | `PAGE-003` | three founder rulings, listed in the doc | `docs/work-items/PAGE-003.md` |
+| 1 | `UI-FIX-004` | one founder ruling on the WCAG 3.1.2 exemption | `docs/work-items/UI-FIX-004.md` |
 | 3 | `UI-FIX-002` | nothing, `UI-002` has merged | `docs/work-items/UI-FIX-002.md` |
 | 3 | `UI-REF-001` | nothing, `UI-002` has merged | `docs/work-items/UI-REF-001.md` |
 | 4 | `FORM-001` | `PAGE-002` | `docs/work-items/FORM-001.md` |

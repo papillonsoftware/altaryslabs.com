@@ -7,20 +7,29 @@ import type { Dictionary } from './fr';
  * audiences that the French version does not: anglophone African markets,
  * international investors and partners, and institutional funders and NGOs.
  *
- * Practical consequences, applied consistently across every English string:
+ * Practical consequences:
  *  - OHADA and CIMA are expanded in body copy wherever a page argues the
  *    regulatory point, because the acronyms carry no meaning for a reader in
  *    Accra, Lagos or Nairobi. The house form is "the OHADA business-law zone
- *    and the CIMA insurance zone". It is used today on the home page, the
- *    products hub, the HR and PCS product pages, and About.
- *    The bare acronyms are used where the expansion does not fit: `meta.*.title`
- *    values, which search engines truncate around 60 characters; page `h1`s,
- *    where it would wrap to a third line; and `footer.tagline`, which sits in a
- *    280px column.
- *    Known gap, measured rather than assumed: the three services pages, Contact
- *    and the two legal pages carry the bare acronyms in their footer and expand
- *    them nowhere. Verify with a grep for "business-law zone" over `dist/en`
- *    before claiming otherwise.
+ *    and the CIMA insurance zone".
+ *    Some surfaces keep the bare acronyms, for room rather than by preference,
+ *    and the constraint is structural in each case: `meta.*.title`, truncated by
+ *    search engines around 60 characters; page `h1`s, where the expansion wraps
+ *    to a third line; `footer.tagline` and `pageTagline.*`, both laid out in a
+ *    narrow column; and `meta.*.description`, where it crowds out the sentence
+ *    that earns the click.
+ *    NOT EVERY PAGE EXPANDS THEM, AND THIS COMMENT DOES NOT SAY WHICH DO. Any
+ *    statement of coverage decays the next time a page gains or loses the
+ *    phrase, and no build step reads a comment. Two earlier versions of these
+ *    lines asserted a coverage and both shipped false. Measure instead:
+ *      grep -rl "business-law zone" dist/en --include=index.html
+ *      grep -rl "insurance zone"    dist/en --include=index.html
+ *    Run BOTH. The two halves do not travel together: when this paragraph was
+ *    written the first returned the HR page and not PCS, and the second
+ *    returned PCS and not HR. A single-marker grep is what let the false claim
+ *    through twice. It also matches the `<head>`, so exclude it before
+ *    concluding anything about body copy. Per D075, the sweep itself is
+ *    verified key by key against `fr.ts`, never by grepping markers.
  *  - Emphasis shifts to what travels across borders (offline-first design,
  *    multi-country deployment, configurable compliance) rather than to
  *    Ivorian-specific schemes such as CNPS or ITS.
@@ -75,8 +84,8 @@ export const en: Dictionary = {
     home: '',
     products: '',
     productsHr: 'OHADA-compliant HR and payroll SaaS',
-    productsFinance: 'Budgeting aligned with the SYSCOHADA standard',
-    productsPcs: 'Premium collection in the CIMA zone',
+    productsFinance: 'Budgeting aligned with the SYSCOHADA accounting standard',
+    productsPcs: 'Premium and instalment collection in the CIMA zone',
     services: '',
     servicesConsulting: 'Information systems, HR and financial management',
     servicesDev: 'Web and mobile applications, and systems integration',
@@ -124,7 +133,8 @@ export const en: Dictionary = {
     heroSecondary: 'Explore our products',
 
     /* Voir le commentaire de `ogSubtitle` dans fr.ts. */
-    ogSubtitle: 'SaaS platforms, IT, HR and finance consulting, custom development.',
+    ogSubtitle:
+      'SaaS software for insurance, collections, corporate finance and HR. IT consulting, sovereign AI, custom software projects.',
 
     productsLabel: 'Our products',
     productsTitle: 'Three SaaS suites designed for OHADA and CIMA regulatory realities',
