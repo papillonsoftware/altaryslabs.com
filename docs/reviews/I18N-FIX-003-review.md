@@ -56,3 +56,75 @@ Discarded after confirmation: the CLAUDE.md pass, the shallow bug scan, the git-
 ### Summary
 
 The fix delivered is correct, well argued and verified on built output rather than on source, and D124 to D126 are exemplary. It is blocked on one thing: the sweep that the fiche presents as exhaustive missed `LegalPage.astro:39`, where the same hardcoded ` : ` renders `Last updated : 30 July 2026` as **visible text** on `/en/legal-notice` and `/en/privacy`, and both the fiche and the new docblock now assert in writing that only two occurrences exist. Three further findings are important: an unreachable example in the docblock, an `aria-label` whose element declares it to be in the wrong language, and a `LOCALE_LABEL` docblock that says its values are displayed when they never are.
+
+## Round 2 - 2026-08-08
+**Verdict**: CHANGES REQUESTED
+
+### What was verified in this round
+
+- `npm ci`, `npm run build` and `npm run check` run independently in a review worktree forked from `origin/fix/typographie-des-libelles-anglais` at `9b61736`. Build green, 26 pages. `astro check`: 0 errors, 0 warnings, 0 hints on 64 files.
+- `npm run preview` served on **port 4322**, not 4321. Ownership confirmed before any capture: `lsof -nP -iTCP:4322 -sTCP:LISTEN` gives pid 99054, and `lsof -a -p 99054 -d cwd` returns `.claude/worktrees/review-I18N-FIX-003`.
+- 24 captures via `bin/review_shots http://localhost:4322` at 360, 768 and 1440 px over `/`, `/en`, `/produits`, `/en/products`, `/services`, `/en/services`, `/mentions-legales`, `/en/legal-notice`. Header and footer compared with `Header.dc.html` and `Footer.dc.html` at the **ROOT** of design project `53d1c228-d274-4df3-8022-1a427dd96c15`.
+- Generic-correctness sweep delegated to the `code-review:code-review` plugin skill on PR #40. See its own subsection below.
+- **A sweep of computed accessible names over all 26 pages**, driven through the Chrome DevTools protocol (`Accessibility.getFullAXTree`) against the served site, rather than over the text of the built HTML. This is the check the fiche claims to have run, and it is what produced the first blocker below.
+- **A build of `origin/refonte-multipages` served in parallel on port 4399** and measured the same way, so every before/after claim in this round is a measured difference and not an inference.
+
+### Blockers
+
+- [ ] **[BLOCKER]** `src/components/ProductCard.astro:53` and `src/components/ServiceCard.astro:38` - **The twelve English card links still announce French colon spacing, exactly as they did before this PR. The change to these two components alters nothing at all, in either language.** Measured on the served pages through Chrome's own accessible-name computation, branch build on 4322 against a `refonte-multipages` build on 4399:
+
+  | Surface | Base `refonte-multipages` | This branch | Delta |
+  |---|---|---|---|
+  | `/en` card links | `Learn more : Papillon HR Suite` | `Learn more : Papillon HR Suite` | **none, still wrong** |
+  | `/en/products` | `Learn more : Papillon Collection Solution` | idem | **none, still wrong** |
+  | `/en/services` | `Learn more : Sovereign AI` | idem | **none, still wrong** |
+  | `/` card links | `En savoir plus : Papillon HR Suite` | idem | none, was already correct |
+  | `/en` header disclosures | `Products : Open menu` | `Products: Open menu` | fixed |
+  | `/en` language switcher | `Change language : Francais` | `Change language: Français` | fixed |
+
+  Twelve links across `/en`, `/en/products` and `/en/services`. **The cause is that an accessible name is not the HTML text.** When a name is computed from descendants, Chrome inserts a space at the inline element boundary whenever the accumulated text does not already end in whitespace. Astro strips the source whitespace, so `dist/en/index.html` really does read `>Learn more<span class="visually-hidden">: Papillon...`, which is why an inspection of the built markup passes it; the browser then re-adds a space and announces `Learn more : Papillon...`. A separator placed at the **start of a sibling span can therefore never produce** `Learn more: X`. On the French side the inserted space merges with the intended `' : '` and the result is right by accident, which is also why occurrences 4 and 5 were misdiagnosed: `En savoir plus: Papillon HR Suite` was never announced by anything.
+
+  The two shapes this PR gets right show the rule by contrast. `Header.astro` composes a flat `aria-label`, so no boundary exists. `LangSwitcher.astro` puts the separator at the **end** of the first span, so the accumulated text already ends in a space and none is added; the footer's `E-mail :` / `Email:` label works for the same reason, and announces correctly in both languages.
+
+  -> Give the card anchors a flat accessible name. Both halves are in the same language here, so D128's reason for refusing `aria-label` in `LangSwitcher`, that a flat string cannot carry a `lang` on one word, does not apply to these two components. Compose the whole name into a single `aria-label` on the `<a>`, joining `linkLabel`, `LABEL_SEPARATOR[locale]` and `name` in one template literal, and drop the visually hidden span. That produces `Learn more: Papillon HR Suite` and `En savoir plus : Papillon HR Suite`, and also removes the decorative arrow noted below. Whatever shape is chosen, re-verify it on computed accessible names, not on `dist/` text.
+
+- [ ] **[BLOCKER]** `docs/work-items/I18N-FIX-003.md`, `src/i18n/config.ts:52-58` and `docs/DECISIONS.md` D124 - **The verification method is asserted to be authoritative in three places, and it is not.** The fiche says the sweep "collects every accessible name" and "reports zero defects in both languages"; acceptance criterion 1 says no rendered string carries the other language's convention, "verified on the built HTML of all 26 pages"; the docblock says in bold that "le balayage qui fait foi se fait sur le HTML produit"; D124 says the same and adds that the five occurrences "share only what they render, which is why the built output is the authority". **The built output is the authority for visible text. It is not the authority for an accessible name**, which is a computed value and differs from the markup exactly in the case that matters here. The measurement above is the counter-example.
+
+  This is round 1's second blocker one level deeper, and it carries the same aggravating factor: the fiche again presents the sweep as something a later round need not repeat, so the miss is written down as a standing instruction to keep missing it. Concretely wrong today: the occurrence table's rows 4 and 5 describe a French defect that never existed; the twelve real English occurrences appear nowhere; "Cinq occurrences, not two" is again the wrong count.
+
+  -> Fix the two components, then correct the three documents to the measured result, and state the sweep in terms of computed accessible names, naming the tool that computes them. D124 is dated and must be annotated rather than rewritten, per the log's own rule and the precedent this item set for D113.
+
+### Important
+
+- [ ] **[IMPORTANT]** `src/styles/global.css:365-369` - `.link-arrow::after { content: ' \2192'; }` injects a purely decorative arrow into the accessible name of every card link, in both languages, on all six pages that carry cards: the measured names end `... Papillon HR Suite →` and `... Sovereign AI →`. Generated content is part of the name computation, so a screen reader announces the arrow as a character. Pre-existing and untouched by this PR, but it sits inside the exact string this item exists to get right, it was surfaced by this item's own subject matter, and it costs nothing to remove. -> `content: ' \2192' / '';`, the CSS alternative-text form, or let it disappear with the `aria-label` fix in the first blocker. If the author takes a shape that leaves it in place, it needs its own tracked follow-up rather than silence.
+
+- [ ] **[IMPORTANT]** `src/components/ProductCard.astro:11-17`, `src/components/ServiceCard.astro:11-17`, and the twelve `locale={locale}` call sites in `HomeContent.astro`, `ProductsHub.astro` and `ServicesHub.astro` - the new required `locale` prop and its twelve call-site edits currently change no rendered output and no announced name, per the measurement above, while the JSDoc on both props asserts a defect ("Le deux-points y etait ecrit en dur, donc colle dans les deux langues, ce que le francais ne fait pas") that the French side never exhibited. The prop becomes load-bearing as soon as the first blocker is fixed, so this is not a request to revert it; it is a request that the two JSDoc blocks stop describing a defect that was not there. -> Correct both prop docblocks once the real defect is fixed.
+
+### Correctness (code-review skill)
+
+The `code-review:code-review` plugin ran on PR #40: eligibility check, CLAUDE.md audit, shallow bug scan, git-history pass, prior-PR-comment pass, code-comment pass. **All five review agents returned clean and no finding reached the confidence threshold, so the skill posted no comment this round**, per step 6 of its own procedure. Its round 1 finding, the unreachable `"Change language: English"` docblock example, is confirmed fixed.
+
+Two of its results are worth recording because they were checked and are sound:
+
+- the git-history pass established that `lang` on the switcher anchor traces to the single Astro migration commit `12025d91` with no reasoning attached, so D128 undoes no deliberate decision;
+- the prior-review pass confirmed every round 1 finding is delivered and that `SITE-FIX-012` point 6 is correctly struck through rather than deleted.
+
+**One result is a false negative and is corrected by the first blocker above.** The shallow-bug agent and the code-comment agent both built the project and inspected `dist/`, and both concluded the card links were correct in both directions, quoting `Learn more: Papillon Collection Solution` from the markup. That string is in the markup and is not what is announced. They read the built HTML, which is precisely the blind spot the item's own sweep has, so the skill reproduced the defect's own reasoning rather than catching it. Worth knowing for future rounds: for any finding about an accessible name, the built HTML is not evidence.
+
+### What is correct and worth recording
+
+- Round 1's blocker on `LegalPage.astro` is properly fixed. `Last updated: 30 July 2026` read in the browser at 1440 px on `/en/legal-notice` and `/en/privacy`; `Dernière mise à jour : 30 juillet 2026` unchanged on the two French pages.
+- Round 1's four other findings are all delivered. The header disclosures announce `Products: Open menu` and `Services: Open menu` on all 13 English pages, measured; the two `config.ts` docblocks are now accurate; D128's shape is right and verified, `Change language: Français` on English pages and `Changer de langue : English` on French ones, with `lang` scoped to the language name alone and `hreflang` left on the anchor.
+- No layout movement from D128. `.visually-hidden` is `position: absolute`, and the 24 captures at 360, 768 and 1440 px in both languages show the switcher unchanged in place and size.
+- Brand rules hold: no CSS file changed, captures show navy and gold only, no amber, no teal, no violet in `dist/`, three products, no ALTARYS ENTERPRISE on any page. The only occurrence in the tree is a historical comment in `tokens.css` explaining the removal.
+- Editorial guardrails hold: no price, no client name, no exact date, `Disponible T3 2026` and `Available Q3 2026` still from the single dictionary constant, About unchanged.
+- Parity holds: no dictionary key added or removed, `Dictionary` still derived from `fr.ts`, `routes.ts` untouched, no cross-language URL hardcoded, hreflang reciprocal and `x-default` present, `<html lang>` correct on both sides.
+- SEO untouched and intact: both OG images exist in `public/`, `og:image` resolves per language, canonical and JSON-LD still central in `BaseLayout.astro`, no new route.
+- Deployment untouched: static output, `pages_build_output_dir` still `./dist` and still followed by its comma, the D1 binding carries the real `database_id`, no secret, PR targets `refonte-multipages`.
+- The D-number reservation note is accurate and was checked rather than trusted: `fix/conventions-variables-et-perimetre-de-revue` carries D115 to D118, and `fix/commentaire-en-ts` carries D119 to D123 **and D127**, in its commits and in its working tree. D124, D125, D126 and D128 collide with nothing.
+- `SITE-FIX-012` is amended correctly: point 6 struck through and marked delivered, point 7 retained, the acceptance criteria line reduced accordingly, nothing renumbered.
+- Typography rule respected: no em-dash and no interpunct anywhere in the diff.
+
+### Summary
+
+Four of round 1's five findings are properly fixed and verified, and D128 is the right shape for the language switcher. The item is blocked because its central claim is not true: the twelve card links on `/en`, `/en/products` and `/en/services` still announce `Learn more : Papillon HR Suite`, byte-identical to the base branch, because an accessible name is computed and not read off the markup, and Chrome inserts the space the English side must not have. The same misreading makes the fiche, the `config.ts` docblock and D124 describe a French defect that never existed while omitting the English one that does.
