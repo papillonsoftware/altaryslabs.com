@@ -120,7 +120,7 @@ The visual reference for the rebuild is the claude.ai/design project `53d1c228-d
 - [ ] Existing components reused rather than duplicated. `BaseLayout`, `Header`, `Footer`, `LangSwitcher` and `Logo` already exist.
 - [ ] No copy duplicated across FR pages that should live in a dictionary
 - [ ] No new dependency without justification recorded in the work item
-- [ ] Code comments and commit messages are in French per the repository language rule; specs and documentation are in English; user-facing strings are in the page's language
+- [ ] Code comments and commit messages are in French per the repository language rule; design documentation is in English; learning material under `docs/kb/` is in French **by decision (D116) and is not reviewed at all**, see the scope exclusion below; user-facing strings are in the page's language
 - [ ] Naming and file layout consistent with the existing tree
 - [ ] No dead code, no commented-out block left behind
 
@@ -143,6 +143,19 @@ Surface AND BLOCK on every genuine defect you find, **regardless of whether the 
 - **Gate on verification, not on origin and not on taste.** Only findings you have confirmed against the code or against a rendered page block. Two and only two things stay non-blocking `[SUGGESTION]`: findings you could not confirm, and purely subjective preferences (naming taste, ordering, formatting no tool enforces). Everything objectively wrong blocks at `[IMPORTANT]` or above, including a factually incorrect or now-misleading comment or document: it misleads future maintainers, so it is a real defect, not a style nit.
 - **Never silently downgrade.** Only the founder may consciously decide to merge anyway, accepting a tracked pre-existing defect as known debt. That override is a human decision recorded as such, never a reviewer-initiated reclassification.
 - **A blocker outside the current scope is still a blocker and is materialized as a tracked follow-up**: a work item under `docs/work-items/` plus a D-row, referenced in the review file. Tracking is in addition to the block, never a substitute for it.
+
+### The one bounded exception: `docs/kb/` is outside the review perimeter
+
+**Do not review anything under `docs/kb/`.** Not its language, not its accuracy, not its formatting. Do not read it, do not diff it, do not cite it in a finding, at any severity including `[SUGGESTION]`.
+
+It holds tutorials and reference notes the founder asks for to build **his own knowledge base**, written **in French because he is their only reader**. They describe general practice for any project, not this repository's state, so they are not authoritative on anything you review. Two reasons, and the first is the decisive one:
+
+- **Reviewing it produces nothing.** A document whose sole addressee is the founder does not need a second reader. The tokens spent reading it buy no defect the founder would not see first.
+- **Its French is a recorded decision, not a drift.** The repository language rule has a frontier: design documentation in English, learning material in French. `docs/kb/` sits on the French side by construction. Reporting it as a language violation is reporting the rule as if it were a bug, and that finding has already been raised once and answered. See **D116**.
+
+This exclusion is bounded to that one directory and is the only exception to the maximal bar above. Everything else under `docs/` is reviewed normally, in English, and a factually wrong sentence there still blocks.
+
+**Your own review file is on the English side.** `docs/reviews/` is written for the next reviewing agent, not for the founder alone, so **write every new round in English**. Four existing files are French (`UI-004-review.md`, `FORM-FIX-001-review.md`) or English (`FORM-001-review.md`, `PAGE-002-review.md`); the mix is known, the existing files are left alone, and no new round may add to it. See **D116**.
 
 ---
 

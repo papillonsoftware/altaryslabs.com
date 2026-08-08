@@ -52,10 +52,19 @@
   //
   // IL N'Y A PLUS AUCUNE VARIABLE DE BUILD, et c'est deliberé. La cle de site
   // Turnstile vit desormais dans src/i18n/config.ts. Le piege qui a impose ce
-  // choix : des lors que ce fichier porte "pages_build_output_dir", il devient
-  // la source de verite de la configuration du projet et Cloudflare cesse de
-  // lire les variables du dashboard pour le build. Le journal affiche alors
-  // "Build environment variables: (none found)" alors que la variable est bien
-  // posee dans les deux environnements, ce qui envoie chercher l'erreur du
-  // mauvais cote pendant longtemps. Voir D100.
+  // choix, et qui explique aussi l'inertie annoncee plus haut : des lors que ce
+  // fichier porte "pages_build_output_dir", il devient la source de verite de la
+  // configuration du projet, et AUCUNE VARIABLE EN CLAIR DU DASHBOARD N'ATTEINT
+  // PLUS LE PROJET, NI AU BUILD NI A L'EXECUTION. Seuls les secrets y restent
+  // gerables.
+  //
+  // Au build, le journal l'annonce : "Build environment variables: (none found)"
+  // alors que la variable est bien posee dans les deux environnements, ce qui
+  // envoie chercher l'erreur du mauvais cote pendant longtemps. A l'execution il
+  // n'y a aucun journal du tout, la fonction lit simplement undefined.
+  //
+  // NE PAS REPETER LA FORME COURTE de cette regle ("Cloudflare cesse de lire les
+  // variables du dashboard pour le build") : elle est vraie, incomplete, et
+  // laisse croire que l'execution, elle, fonctionne. Voir D115, qui complete
+  // D100.
 }

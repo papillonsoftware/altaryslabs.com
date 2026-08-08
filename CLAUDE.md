@@ -168,19 +168,36 @@ in the order below.
     requires it in the rendered HTML. Committing it publishes nothing that was
     not already served to every visitor, and rotating it always required a
     rebuild anyway, because the value is frozen into the static HTML.
-  - **The platform trap that forced this**, worth knowing before debugging any
-    future build: because `wrangler.jsonc` carries `pages_build_output_dir`, that
-    file is the source of truth for project configuration and Cloudflare stops
-    reading dashboard variables for the build. The log says
-    `Build environment variables: (none found)` while the dashboard clearly shows
-    the variable set in both environments. See D100, which supersedes D094.
+  - **The platform rule that forced this**, worth knowing before debugging any
+    build **or any missing notification**: because `wrangler.jsonc` carries
+    `pages_build_output_dir`, that file is the source of truth for project
+    configuration and **no plain-text dashboard variable reaches the project at
+    all: not at build time, not at runtime**. Only secrets stay manageable
+    there. At build the log says `Build environment variables: (none found)`
+    while the dashboard clearly shows the variable set in both environments; at
+    runtime there is no log at all, the function simply reads `undefined`.
+    **Do not repeat the short form of this rule** - "Cloudflare stops reading
+    dashboard variables *for the build*" - which is true, incomplete, and sends
+    the next investigation to the wrong side: it implies runtime still works.
+    See **D115**, which completes D100; D100 stated the build half only.
 
 ## Critical Rules
 
 ### Language
 - **All user-facing text**: French on root routes, English under `/en/`
-- **All specs, documentation, code comments and commit messages**: French for
-  comments and commits on this repo, English for specs
+- **Code comments and commit messages**: French
+- **Design documentation in English, learning material in French.** English
+  covers everything written to be read by an agent or a future maintainer: the
+  workflow, `DECISIONS.md`, the work items, the specs under `docs/vitrine/`,
+  and **`docs/reviews/`**. Review files are written for the next reviewing
+  agent, not for the founder alone, so they sit on the English side. Four
+  existing ones are French and are left as they are; no new one may be.
+- **`docs/kb/` is the only French side of that frontier, and it is excluded
+  from review scope.** It holds tutorials and reference notes the founder asks
+  for to build his own knowledge base; he is their only reader. Do not review
+  them, do not report on their language, do not translate them. Reviewing a
+  document whose sole addressee is the founder spends tokens and produces
+  nothing. See **D116**.
 
 ### Routing and i18n
 - `src/i18n/routes.ts` is the **single source of truth** for routing. French sits

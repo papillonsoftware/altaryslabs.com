@@ -17,7 +17,7 @@
  */
 
 import { CONTACT_EMAIL } from '../src/i18n/config';
-import { fr } from '../src/i18n/fr';
+import { INTEREST_OTHER_FR, PAGE_NAMES_FR } from '../src/i18n/page-names';
 import type { ContactRequest } from './contact-store';
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
@@ -40,15 +40,21 @@ const LOCALE_LABELS: Record<string, string> = {
 /**
  * Intitule lisible de l'offre visee.
  *
- * Derive de `pageName`, donc identique a l'intitule du menu et a celui du
- * select : un renommage de page arrive ici sans que personne y pense, comme le
- * voulait D068. Volontairement total : une valeur inattendue est rendue telle
- * quelle plutot que de produire un `undefined` dans un email.
+ * Derive de la meme table que `pageName`, donc identique a l'intitule du menu
+ * et a celui du select : un renommage de page arrive ici sans que personne y
+ * pense, comme le voulait D068. Volontairement total : une valeur inattendue
+ * est rendue telle quelle plutot que de produire un `undefined` dans un email.
+ *
+ * La table est importee depuis `page-names.ts` et non depuis `fr.ts` : ce
+ * module ne tire ainsi que quatorze chaines dans le bundle du Worker au lieu
+ * du dictionnaire entier. Recopier ces libelles ici serait la seule facon de
+ * faire diverger l'email du menu, dans le seul endroit ou personne ne verrait
+ * la divergence. Voir D118.
  */
 function interestLabel(interest: string): string {
-  if (interest === 'other') return fr.contact.interestOther;
+  if (interest === 'other') return INTEREST_OTHER_FR;
 
-  const labels = fr.pageName as Record<string, string | undefined>;
+  const labels = PAGE_NAMES_FR as Record<string, string | undefined>;
   return labels[interest] ?? interest;
 }
 

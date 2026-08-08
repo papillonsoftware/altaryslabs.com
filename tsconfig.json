@@ -4,9 +4,18 @@
   "exclude": ["dist", "legacy", "node_modules"],
   "compilerOptions": {
     "strictNullChecks": true,
-    "baseUrl": ".",
+
+    /* PAS DE "baseUrl" ICI, ET NE PAS LE REMETTRE. Depuis TypeScript 4.4 les
+       chemins de "paths" se resolvent relativement au repertoire de ce fichier
+       quand "baseUrl" est absent, donc l'alias fonctionne sans lui. TypeScript
+       6 rend l'option depreciee et fait echouer `npx tsc --noEmit` en TS5101,
+       echec invisible de `npm run check` ; TypeScript 7 la supprimera.
+
+       La contrepartie est le "./" de la cible ci-dessous, qui n'est pas
+       cosmetique : sans "baseUrl", une cible non relative est refusee en
+       TS5090. Retirer l'un exige donc d'ajouter l'autre. Voir D117. */
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": ["./src/*"]
     }
   }
 }

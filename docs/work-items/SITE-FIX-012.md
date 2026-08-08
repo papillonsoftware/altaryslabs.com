@@ -16,10 +16,33 @@ discharge it.
 This fiche exists so that the seven points below are owned rather than
 mentioned. It is deliberately opened without being started.
 
-## Scope, seven points named one by one
+## Points 1 to 5 are delivered by `SITE-FIX-011`, not by this item
+
+**Scope reduced on 2026-08-08.** `SITE-FIX-011` was already in flight when this
+fiche was opened, held by a parallel session, which is the reason D114 skipped
+to `012` in the first place. That session covered points 1 to 5 and landed them
+with D115 to D118. This item is therefore **reduced to points 6 and 7**.
+
+Points 1 to 5 are kept below, struck through, for the record: a reduction that
+deletes its own history is how a deferral becomes an abandonment, which is the
+exact failure this fiche exists to prevent.
+
+| Point | Settled by |
+|---|---|
+| 1. `tsconfig.json`, `baseUrl` | `SITE-FIX-011`, D117 |
+| 2. `notify-resend.ts` imports `fr` | `SITE-FIX-011`, D118 |
+| 3. `.gitignore`, `!.env.example` | `SITE-FIX-011` |
+| 4. Language frontier, both families | `SITE-FIX-011`, D116 |
+| 5. D100 incomplete | `SITE-FIX-011`, D115 |
+
+**Point 4 was the one needing a founder decision, and it was taken**: `docs/kb/`
+is French learning material excluded from review scope, `docs/reviews/` stays
+English. See D116.
+
+## Scope as originally written, seven points
 
 Each is quoted from the round that raised it rather than summarised, and carries
-the severity that reviewer assigned.
+the severity that reviewer assigned. **Only 6 and 7 remain open.**
 
 1. **[SUGGESTION]** `tsconfig.json` - the `baseUrl` deprecation. Raised by
    `FORM-001` round 1.
@@ -71,19 +94,19 @@ call, taken during `FORM-FIX-001`, because they were both confirmed in the same
 round and both fall outside a documentary PR. They can be split out later
 without renumbering anything.
 
-Point 4 is the only one that cannot be started before a founder decision: the
-other six have a determined answer, this one has two defensible ones.
+Point 4 was the only one that could not be started before a founder decision.
+That decision was taken on 2026-08-08 and is recorded as D116.
 
 ## Acceptance criteria
 
-To be written when the item is planned. It carries at least: no `aria-label`
-mixes the typographic conventions of two languages; `tokens.css` declares no
-colour outside the navy and gold palette without an explicit reservation; D100
-describes the current variable contract; and the language frontier has a D-row
-settling it.
+To be written when the item is planned. Now that the scope is points 6 and 7
+only, it carries at least: no `aria-label` mixes the typographic conventions of
+two languages, and `Francais` regains its cedilla; and `tokens.css` declares no
+colour outside the navy and gold palette without an explicit reservation.
 
 ## Out of scope
 
-Anything `FORM-FIX-001` already fixed. `docs/kb/` content edits beyond the
-language question, that directory being deliberately outside D110's
-single-enumeration rule.
+Anything `FORM-FIX-001` already fixed, and **anything `SITE-FIX-011` delivered**,
+which is points 1 to 5 above. `docs/kb/` content edits of any kind: that
+directory is outside D110's single-enumeration rule and, since D116, outside
+the review perimeter entirely.
