@@ -1062,3 +1062,48 @@ Ce qui bloque est de nouveau entierement documentaire, et de nouveau de la meme
 famille : `5edc74f` a corrige six affirmations fausses et en a ecrit une
 nouvelle, « a month » la ou il y a un jour, tout en laissant le compte de D119
 vieillir d'un cran en modifiant le fichier qu'il compte.
+
+### Arbitrage du fondateur - 2026-08-08
+
+Ajoute apres la publication de la ronde 4. **Le texte des constats ci-dessus
+n'est pas modifie** : une revue est un enregistrement, elle s'annote et ne se
+reecrit pas. C'est la regle que cette meme ronde a confirmee au sujet de la
+plage de lignes laissee dans sa ronde 1.
+
+Le fondateur a lu les quatre constats importants et en a **ecarte deux**.
+
+- **Important 3, `SITE-FIX-014` nomme sans fiche ni D-row** (`docs/BACKLOG.md:104`
+  et `docs/work-items/UI-002.md:8`) : **ecarte**. Le constat reste vrai tel qu'il
+  est ecrit ; le fondateur accepte le renvoi en l'etat, l'item existant
+  reellement sur `origin/fix/docs-check`. Dette connue, assumee, non corrigee.
+- **Important 4, le commentaire d'en-tete d'`en.ts` en anglais**
+  (`src/i18n/en.ts:3-47`) : **ecarte, et c'est l'arbitrage que les rondes 1, 2 et
+  3 attendaient**. Le fondateur tranche que le bloc **reste en anglais** et que
+  ce n'est pas un defaut a corriger. La question posee quatre fois est donc
+  close. Une ronde ulterieure qui la rouvrirait ne trouverait rien de nouveau :
+  elle doit lire cette ligne et passer.
+
+**Restent a traiter, et eux seuls :**
+
+1. **`docs/work-items/UI-002.md:6`** - « a month after the branch shipped » la ou
+   il y a moins de 21 heures entre la fusion `1291501` du 2026-08-07 et la
+   correction `5edc74f` du 2026-08-08. La ligne 3 du meme fichier porte deja la
+   bonne date. -> Remplacer par la duree reelle, ou retirer la duree.
+2. **`docs/DECISIONS.md:134`** - D119 annonce **quatre** versions anterieures du
+   commentaire d'en-tete alors que la mesure en donne **cinq** : `c7cc75f` manque
+   a l'enumeration `12025d9`, `5873c71`, `1818413`, `2678c6f`. -> Retirer le
+   chiffre et ne garder que l'enumeration des versions **fausses**, qui elle ne
+   bougera plus quel que soit le nombre de retouches ulterieures du commentaire.
+
+La suggestion sur la longueur de ligne d'`I18N-FIX-001.md:66` reste une
+suggestion et n'engage rien.
+
+**Le verdict de la ronde 4 reste CHANGES REQUESTED**, deux constats verifies
+subsistant. Le reviewer ne le releve pas de lui-meme : seul le fondateur decide
+de fusionner malgre un constat, et cette section est la trace de ce qu'il a
+consciemment accepte de laisser.
+
+*Note de vocabulaire, pour le lecteur suivant : le mot « compte » employe plus
+haut au sujet de D119 est un calque de l'anglais* count. *Lire « le decompte »
+ou « le nombre de versions annonce ». Le texte de la ronde n'est pas corrige,
+pour la meme raison que le reste.*
