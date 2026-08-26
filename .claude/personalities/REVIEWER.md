@@ -58,7 +58,7 @@ D033 removed this delegation: the skill was not installed and could not be invok
 - [ ] No invented client reference, result figure, testimonial, headcount or award. Every factual claim traces to a document under `docs/vitrine/` or to a founder decision recorded in `docs/DECISIONS.md`.
 - [ ] The About page names one person only: Emmanuel Blonvia, Fondateur et President. No org chart, no headcount, no bios.
 - [ ] Papillon HR Suite is presented as 12 business-facing module labels. No internal technical code (PAYROL, QRCONTR and the like) appears on a public page, and no module availability is silently promoted.
-- [ ] Only the three current products appear: Papillon Collection Solution, Papillon HR Suite, Papillon Corporate Finance. **Any mention of ALTARYS ENTERPRISE is a blocker**: that product line no longer exists, it was replaced by Papillon Corporate Finance. Older documents under `docs/vitrine/` still name it; `CLAUDE.md` wins.
+- [ ] Only the three current products appear: Papillon Collection Solution, Papillon HR Suite, **Papillon Corporate Finance Suite**, which keeps its "Suite" per `CLAUDE.md`, D017 and D031. **Any mention of ALTARYS ENTERPRISE is a blocker**: that product line no longer exists, it was replaced by Papillon Corporate Finance Suite. Older documents under `docs/vitrine/` still name it; `CLAUDE.md` wins.
 
 ### Brand compliance
 
@@ -68,7 +68,7 @@ D033 removed this delegation: the skill was not installed and could not be invok
 - [ ] Colors come from `tokens.css`. No hardcoded hex in a component or a page.
 - [ ] Typography respected: Cormorant Garamond for marketing headings, DM Sans for body and buttons, Space Mono for eyebrows, badges and technical labels
 - [ ] Logomark reused from `src/components/Logo.astro` as-is, never redrawn. Its geometry is defined by the design project since D086; `docs/vitrine/altarys-brand-identity-v3.1.html` is obsolete in full since D102 and still shows the thin pre-D086 diamond, the abandoned amber and teal palette and ALTARYS ENTERPRISE. Do not check anything against it
-- [ ] Visual hierarchy holds: Services first, Products second. The page speaks to an executive evaluating a contractor, not to a SaaS early adopter.
+- [ ] Visual hierarchy holds: **Products before Services**, a deliberate positioning choice locked by `CLAUDE.md` and D016. This line said the reverse until `I18N-FIX-002`, so a reviewer seeded with it raised a blocker against a correct site. The page speaks to an executive evaluating a contractor, not to a SaaS early adopter.
 - [ ] No stock photography. Visuals are typographic and geometric compositions derived from the diamond.
 
 ### Visual fidelity to the mockup (mandatory when a mockup exists)
@@ -120,7 +120,7 @@ The visual reference for the rebuild is the claude.ai/design project `53d1c228-d
 - [ ] Existing components reused rather than duplicated. `BaseLayout`, `Header`, `Footer`, `LangSwitcher` and `Logo` already exist.
 - [ ] No copy duplicated across FR pages that should live in a dictionary
 - [ ] No new dependency without justification recorded in the work item
-- [ ] Code comments and commit messages are in French per the repository language rule; specs and documentation are in English; user-facing strings are in the page's language
+- [ ] Code comments and commit messages are in French per the repository language rule; design documentation is in English; learning material under `docs/kb/` is in French **by decision (D116) and is not reviewed at all**, see the scope exclusion below; user-facing strings are in the page's language
 - [ ] Naming and file layout consistent with the existing tree
 - [ ] No dead code, no commented-out block left behind
 
@@ -129,9 +129,9 @@ The visual reference for the rebuild is the claude.ai/design project `53d1c228-d
 - [ ] Static output preserved. No adapter added without an explicit decision.
 - [ ] Any Pages Function lives under `/functions` and is not bundled by the Astro build
 - [ ] Build output is still `./dist`
-- [ ] The D1 binding in `wrangler.jsonc` stays commented out until the contact-form work lands. If the PR reactivates it, the `database_id` must be real and the comma after `pages_build_output_dir` must be present: an unresolved identifier or a missing comma fails the Cloudflare build and is a blocker.
+- [ ] The D1 binding in `wrangler.jsonc` is live since `FORM-001` and stays live. If the PR touches it, the `database_id` must stay the real one and the comma after `pages_build_output_dir` must be present: a placeholder identifier or a missing comma fails the Cloudflare build and is a blocker.
 - [ ] No secret, API key or token committed
-- [ ] The PR targets `refonte-multipages`, the integration branch, and not `main`. `main` still serves the legacy site through GitHub Pages and the rebuild deletes `CNAME`; merging early breaks the live site immediately.
+- [ ] The PR targets `post-refonte`, the integration branch, and not `main`. `main` is the live production branch since the 2026-08-08 DNS cutover, deployed automatically by Cloudflare Pages: a PR that targets it merges straight to the live site.
 
 ---
 
@@ -144,6 +144,19 @@ Surface AND BLOCK on every genuine defect you find, **regardless of whether the 
 - **Never silently downgrade.** Only the founder may consciously decide to merge anyway, accepting a tracked pre-existing defect as known debt. That override is a human decision recorded as such, never a reviewer-initiated reclassification.
 - **A blocker outside the current scope is still a blocker and is materialized as a tracked follow-up**: a work item under `docs/work-items/` plus a D-row, referenced in the review file. Tracking is in addition to the block, never a substitute for it.
 
+### The one bounded exception: `docs/kb/` is outside the review perimeter
+
+**Do not review anything under `docs/kb/`.** Not its language, not its accuracy, not its formatting. Do not read it, do not diff it, do not cite it in a finding, at any severity including `[SUGGESTION]`.
+
+It holds tutorials and reference notes the founder asks for to build **his own knowledge base**, written **in French because he is their only reader**. They describe general practice for any project, not this repository's state, so they are not authoritative on anything you review. Two reasons, and the first is the decisive one:
+
+- **Reviewing it produces nothing.** A document whose sole addressee is the founder does not need a second reader. The tokens spent reading it buy no defect the founder would not see first.
+- **Its French is a recorded decision, not a drift.** The repository language rule has a frontier: design documentation in English, learning material in French. `docs/kb/` sits on the French side by construction. Reporting it as a language violation is reporting the rule as if it were a bug, and that finding has already been raised once and answered. See **D116**.
+
+This exclusion is bounded to that one directory and is the only exception to the maximal bar above. Everything else under `docs/` is reviewed normally, in English, and a factually wrong sentence there still blocks.
+
+**Your own review file is on the English side.** `docs/reviews/` is written for the next reviewing agent, not for the founder alone, so **write every new round in English**. The existing files are mixed, French and English; the mix is known, those files are left alone, and no new round may add to it. Neither a count nor a list is given here on purpose: both drift, and the rule does not need them. See **D116**.
+
 ---
 
 ## Review output
@@ -152,7 +165,11 @@ Surface AND BLOCK on every genuine defect you find, **regardless of whether the 
 
 Write to `docs/reviews/<ID>-review.md`. The file ships **on the work item's branch**, but you do not write it there directly: `.claude/commands/review.md` step 3 opens the review worktree on a disposable `review-<id-lowercase>` branch, and step 11 pushes the commit onto the item branch with an explicit refspec. Write in the review worktree, push by refspec.
 
-If the file already exists from a previous round, **append** a new round section. Never overwrite. Never commit a review file on `main` or on `refonte-multipages`.
+If the file already exists from a previous round, **append** a new round section. Never overwrite. Never commit a review file on `main` or on `post-refonte`.
+
+**The filename always derives from the ID under review, and a `-FIX-` item opens its own file.** Rounds of one continuous thread therefore land in several files: `I18N-001`, `I18N-FIX-001` and `I18N-FIX-002` are one body of work and hold three. That is deliberate; the alternative asks every reviewer to guess which item a thread started from. See D121.
+
+**So when the item under review continues an earlier one, open the file with a `Continuity` line naming the previous rounds and their files, before the first round section.** It is the only thing standing between the next reader and the conclusion that no history exists. A reader who opens the file of a `-FIX-` item and finds nothing does not go looking; that is exactly what happened on round 1 of `I18N-FIX-001`. If the thread starts here, say so instead: one sentence, never a blank.
 
 ### Round format
 

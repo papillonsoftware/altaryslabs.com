@@ -61,7 +61,7 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
      || { echo "detached HEAD, stop"; exit 1; }
    ```
    **All subsequent work MUST happen inside `.claude/worktrees/review-<ID>/`.** Use absolute paths. You are **read-only on source**: never modify a source file, never fix a defect yourself. You report; the author fixes.
-4. `git diff origin/refonte-multipages...origin/<branch> --stat`, then read every changed file. The base is `refonte-multipages`, the integration branch, never `main`. Diff `origin/<branch>`, the same ref step 3 forked the review worktree from, not the local `<branch>`: the two coincide almost always, and reviewing one content while diffing another is exactly the class of silent divergence this procedure exists to remove.
+4. `git diff origin/post-refonte...origin/<branch> --stat`, then read every changed file. The base is `post-refonte`, the integration branch, never `main`. Diff `origin/<branch>`, the same ref step 3 forked the review worktree from, not the local `<branch>`: the two coincide almost always, and reviewing one content while diffing another is exactly the class of silent divergence this procedure exists to remove.
 5. Read the relevant context:
    - `CLAUDE.md` - the authoritative contract
    - `docs/vitrine/refonte/PROMPT_altaryslabs-com-refonte.md` - the primary spec for the rebuild
@@ -93,11 +93,12 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
    - **Accessibility** - WCAG AA contrast, heading hierarchy, alt text, keyboard navigation, 44px targets, colour never the sole carrier of meaning
    - **Performance** - page weight, no gratuitous client-side JavaScript, image and font strategy
    - **Code quality** - components reused, copy in the dictionaries, French comments, no dead code
-   - **Deployment** - static output, Functions under `/functions`, D1 binding still commented out, no secret, PR targets `refonte-multipages`
+   - **Deployment** - static output, Functions under `/functions`, D1 binding live since `FORM-001` (real `database_id`, no placeholder), no secret, PR targets `post-refonte`
    - **Maximal bar** - block on every verified defect whatever its origin
 10. Write the review to `docs/reviews/<ID>-review.md` **where the round is running**, which is the review worktree when step 3 opened one. Step 11 is what puts it on the work item's branch:
     - If the file already exists from a previous round, **append** a new `## Round N` section. Never overwrite.
     - Determine N by counting existing `## Round` headings and adding 1.
+    - **If you are creating the file and the item continues an earlier one** (any `<PFX>-FIX-NNN` closing the findings of a `<PFX>-NNN`, or of a lower `-FIX-`), open it with a `**Continuity.**` line naming the previous rounds and the files holding them, before `## Round 1`. Find them with `ls docs/reviews/` plus the "Where things stand" section of the item doc. If the thread genuinely starts here, write one sentence saying so. Never leave the question open: a reader who finds an empty history concludes there is none. See D121.
     - Use the round format from `.claude/personalities/REVIEWER.md`.
     - Delegate the write itself to the `file-writer` subagent once the content is final, per the personality's token-efficiency rule.
 11. Commit the review file, message in French, and push it explicitly onto the work item's branch with a refspec. The review worktree sits on its own `review-<id-lowercase>` branch, and `git worktree add -b ... origin/<branch>` **does** configure an upstream for it, `origin/<branch>` itself. That upstream simply does not carry the same name as the local branch, so under the default `push.default=simple` a bare `git push` is refused outright ("the upstream branch of your current branch does not match the name of your current branch"), and under another `push.default` it could push somewhere you did not intend. Naming the destination removes the question:
@@ -135,7 +136,7 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
 
 ## If no ID was provided (`/review` with no argument)
 
-1. `git diff origin/refonte-multipages...HEAD --stat` to see the branch's changes.
+1. `git diff origin/post-refonte...HEAD --stat` to see the branch's changes.
 2. Infer the ID from the branch name, the PR title or the changed paths.
 3. Follow steps 5 to 13 above, with three of them inapplicable on this path rather than merely skipped by a step number: **steps 3, 4 and 13 do not apply.** This path reviews the branch already checked out, so no review worktree is opened and there is nothing to tear down. Step 11 is unchanged and still uses the explicit refspec, which works as written from the checked-out branch.
 
@@ -143,6 +144,6 @@ If the prefix is not in this table, STOP and flag: a new prefix is added to `doc
 
 ## Reminders
 
-- **Never commit a review file on `main` or on `refonte-multipages`.** The review lives on the work item's branch so it ships with the code under review.
+- **Never commit a review file on `main` or on `post-refonte`.** The review lives on the work item's branch so it ships with the code under review.
 - **You never merge.** The founder merges.
 - Never use the em-dash or the interpunct in the review file, the commit message or the PR comment.

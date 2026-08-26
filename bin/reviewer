@@ -16,7 +16,7 @@ set -euo pipefail
 RACINE="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$RACINE"
 
-# Refuse de demarrer si cet arbre est en retard sur origin/refonte-multipages :
+# Refuse de demarrer si cet arbre est en retard sur origin/post-refonte :
 # les instructions du relecteur seraient perimees. Voir bin/lib/fraicheur.sh.
 . "$RACINE/bin/lib/fraicheur.sh"
 verifier_fraicheur

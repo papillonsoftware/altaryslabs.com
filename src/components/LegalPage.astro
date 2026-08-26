@@ -11,7 +11,7 @@
  * pas se vendre.
  */
 import PageHeader from './PageHeader.astro';
-import type { Locale } from '../i18n/config';
+import { LABEL_SEPARATOR, type Locale } from '../i18n/config';
 import { useTranslations } from '../i18n/utils';
 import type { PageKey } from '../i18n/routes';
 
@@ -36,7 +36,10 @@ const t = useTranslations(locale);
 <section class="section section--light legal-section">
   <div class="container">
     <div class="legal-body">
-      <p class="legal-updated mono">{t.legal.lastUpdated} : {t.legal.updatedOn}</p>
+      {/* Separateur lu dans la langue, jamais ecrit ici : cette ligne servait
+          "Last updated : 30 July 2026" sur les deux pages legales anglaises, et
+          c'est du texte visible, non un libelle accessible. Voir D124. */}
+      <p class="legal-updated mono">{t.legal.lastUpdated}{LABEL_SEPARATOR[locale]}{t.legal.updatedOn}</p>
 
       {
         /* La version anglaise est fournie a titre informatif. Le dire est

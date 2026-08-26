@@ -7,8 +7,17 @@
  * n'a plus a s'effacer devant personne, elle reprend le fond des cartes
  * produits. C'est le parti pris du handoff, et il se tient.
  */
+import { LABEL_SEPARATOR, type Locale } from '../i18n/config';
+
 interface Props {
   name: string;
+  /**
+   * Langue de la page, pour le separateur du nom accessible du lien.
+   * Meme raison que dans `ProductCard.astro`, ou elle est expliquee : le nom
+   * est un `aria-label` plat parce qu'un nom calcule depuis les descendants se
+   * voit inserer une espace a la frontiere des elements en ligne. Voir D133.
+   */
+  locale: Locale;
   text: string;
   href: string;
   linkLabel: string;
@@ -17,7 +26,7 @@ interface Props {
   headingLevel?: 2 | 3;
 }
 
-const { name, text, href, linkLabel, large = false, headingLevel = 3 } = Astro.props;
+const { name, locale, text, href, linkLabel, large = false, headingLevel = 3 } = Astro.props;
 
 const Heading = `h${headingLevel}` as 'h2' | 'h3';
 ---
@@ -25,9 +34,9 @@ const Heading = `h${headingLevel}` as 'h2' | 'h3';
 <article class:list={['card', large ? 'card--prominent card--large' : 'card--service']}>
   <Heading class="card-title">{name}</Heading>
   <p class="card-text">{text}</p>
-  <a class="link-arrow" href={href}>
+  {/* Nom accessible PLAT, et non compose de descendants. Voir D133. */}
+  <a class="link-arrow" href={href} aria-label={`${linkLabel}${LABEL_SEPARATOR[locale]}${name}`}>
     {linkLabel}
-    <span class="visually-hidden">: {name}</span>
   </a>
 </article>
 

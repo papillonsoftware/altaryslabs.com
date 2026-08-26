@@ -1,3 +1,4 @@
+import { INTEREST_OTHER_FR, PAGE_NAMES_FR } from './page-names';
 import type { PageKey } from './routes';
 
 /**
@@ -34,22 +35,15 @@ export const fr = {
     home: 'Accueil',
   },
 
-  /** Libellé court de chaque page, utilisé en navigation et en fil d'Ariane. */
-  pageName: {
-    home: 'Accueil',
-    products: 'Produits',
-    productsHr: 'Papillon HR Suite',
-    productsFinance: 'Papillon Corporate Finance Suite',
-    productsPcs: 'Papillon Collection Solution',
-    services: 'Services',
-    servicesConsulting: 'Conseil IT, RH & Corporate Finance',
-    servicesDev: 'Développement sur mesure',
-    servicesAi: 'IA souveraine',
-    about: 'À propos',
-    contact: 'Contact',
-    legalNotice: 'Mentions légales',
-    privacy: 'Politique de confidentialité',
-  } satisfies Record<PageKey, string>,
+  /**
+   * Libellé court de chaque page, utilisé en navigation et en fil d'Ariane.
+   *
+   * La table vit dans `page-names.ts` et non ici : la fonction Pages en a
+   * besoin pour nommer l'offre dans la notification interne, et l'importer
+   * depuis ce fichier tirait tout le dictionnaire dans le bundle du Worker.
+   * Une seule table, deux lecteurs. Voir D118.
+   */
+  pageName: PAGE_NAMES_FR,
 
   /** Accroche courte de chaque page, affichée dans les menus déroulants. */
   pageTagline: {
@@ -114,7 +108,8 @@ export const fr = {
        Il vit ici et non dans le gabarit du script pour la meme raison que le
        titre : une vignette ne doit pas pouvoir affirmer ce que le site ne dit
        pas. C'est le defaut trouve par la ronde 2 d'UI-004. Voir D101. */
-    ogSubtitle: 'Suites SaaS, conseil IT, RH et Finance, développement sur mesure.',
+    ogSubtitle:
+      'Logiciels SaaS en Assurance, Recouvrement, Corporate Finance et RH, Conseil IT, IA souveraine, projets logiciels sur mesure.',
 
     productsLabel: 'Nos produits',
     productsTitle: "Trois suites SaaS pensées pour l'OHADA et le CIMA",
@@ -355,7 +350,9 @@ export const fr = {
        envoyée sans ouvrir la liste est enregistrée comme une piste PCS, le
        seul produit qui n'est pas encore commercialisé. */
     interestPrompt: 'Choisissez une option',
-    interestOther: 'Autre',
+    /* Même origine que les six autres options : `page-names.ts`, que la
+       notification interne lit aussi. Voir D118. */
+    interestOther: INTEREST_OTHER_FR,
     messageLabel: 'Message',
     messagePlaceholder: 'Décrivez votre besoin',
 

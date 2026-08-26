@@ -3,8 +3,13 @@
 **Type** FIX | **Status** OPEN, not started | **Branch to create** `fix/review-shots-errortext`
 **Base** `refonte-multipages`
 
-**Decision** D075 in `docs/DECISIONS.md`. Raised as a blocker by round 2 of
+**Decision** D120 in `docs/DECISIONS.md`. Raised as a blocker by round 2 of
 `docs/reviews/I18N-001-review.md`, reproduced live during that round.
+
+This item cited D075 until `I18N-FIX-002`. D075 is the residual-string sweep: it
+names `SEO-FIX-001` and `SITE-FIX-007` as its two follow-ups and mentions neither
+`bin/review_shots` nor `errorText`. A reader following that citation landed on a
+decision unrelated to the tooling change it authorised. D120 is the clean row.
 
 ## The defect
 
