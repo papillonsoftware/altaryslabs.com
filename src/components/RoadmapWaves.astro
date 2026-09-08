@@ -81,17 +81,20 @@ const { sectionLabel, title, intro, waves } = Astro.props;
     border-top-color: var(--gold-40);
   }
 
+  /* La vague est posee sur --navy-card #36639c depuis D136, ou --gold-light
+     ne rend que 3.24:1 a 10px. --gold-pale y rend 4.98:1. */
   .wave-label {
     font-size: 10px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--gold-light);
+    color: var(--gold-pale);
     margin-bottom: 10px;
   }
 
+  /* Meme surface : --ink-80 y tombe a 4.02:1 a 14px, --ink-100 rend 5.01:1. */
   .wave-text {
     font-size: 14px;
-    color: var(--ink-80);
+    color: var(--ink-100);
     line-height: 1.7;
   }
 

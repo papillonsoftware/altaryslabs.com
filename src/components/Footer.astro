@@ -140,13 +140,16 @@ const legalColumn = { title: t.footer.columnLegal, keys: [...LEGAL_KEYS, 'about'
     line-height: 1.75;
   }
 
+  /* Le handoff pose --gold #c8922a, qui ne rend que 2.46:1 sur le pied de page
+     eclairci (D136). --gold-pale y rend 5.52:1. Meme divergence deliberee que
+     D029 et D030 : la maquette perd contre le seuil AA. */
   .footer-column-title {
     font-family: var(--font-mono);
     font-size: 10px;
     font-weight: 400;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--gold-pale);
     margin-bottom: 18px;
   }
 
@@ -166,8 +169,9 @@ const legalColumn = { title: t.footer.columnLegal, keys: [...LEGAL_KEYS, 'about'
     transition: color var(--ease);
   }
 
+  /* --gold-light ne rend que 3.60:1 sur --navy-footer. */
   .footer-column a:hover {
-    color: var(--gold-light);
+    color: var(--gold-pale);
   }
 
   /* Libelle au-dessus de la valeur plutot qu'a cote : la colonne est etroite et
@@ -198,11 +202,13 @@ const legalColumn = { title: t.footer.columnLegal, keys: [...LEGAL_KEYS, 'about'
   }
 
   /* --ink-25 ne donnait que 2.09:1 a 10.5px, tres au-dessous du seuil AA.
-     --ink-60 monte a 5.90:1 en restant une mention discrete. D029. */
+     --ink-60 rendait alors 5.90:1 sur l'ancien pied quasi noir ; sur
+     --navy-footer #2c5c97 il retombe a 3.08:1, d'ou --ink-100 et ses 5.34:1.
+     D029, puis D136. */
   .footer-legal p {
     font-family: var(--font-mono);
     font-size: 10.5px;
-    color: var(--ink-60);
+    color: var(--ink-100);
   }
 
   .footer-legal .mono {

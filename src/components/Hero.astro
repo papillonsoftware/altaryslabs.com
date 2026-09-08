@@ -124,11 +124,15 @@ const { badge, title, emphasis, subtitle, primary, secondary } = Astro.props;
     flex-shrink: 0;
   }
 
+  /* Le libelle est pose sur la pastille, soit --gold-10 compose sur
+     --navy-deep : ce voile eclaircit le fond et --gold-light y retombe a
+     4.45:1 a 11px, juste sous le seuil AA. Sur le bleu nu il rendrait 4.83:1,
+     ce qui explique que les sur-titres voisins gardent --gold-light. D136. */
   .hero-badge-text {
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.1em;
-    color: var(--gold-light);
+    color: var(--gold-pale);
   }
 
   .hero-title {

@@ -109,8 +109,15 @@ const OR = '#c8922a'; // --gold
 const OR_CLAIR = '#e5b55a'; // --gold-light, texte dore sur fond sombre
 const OR_PROFOND = '#8b5e1b'; // --gold-deeper
 const IVOIRE = '#faf7f2'; // --ivory
-const ATTENUE = '#9aa7be'; // --muted, corps de texte sur fond sombre
-const MARINE = '#07111e'; // --navy-deep
+const ATTENUE = '#ffffff'; // --muted, corps de texte sur fond sombre
+const MARINE = '#12478a'; // --navy-deep
+
+/* Ces deux valeurs ont suivi les jetons quand D136 a eclairci les surfaces
+   sombres. Sans cela l'apercu de partage serait reste sur l'ancien navy
+   #07111e pendant que le site peint #12478a, et `--check` ne l'aurait pas vu :
+   il compare le rendu aux constantes de ce fichier, pas a tokens.css.
+   OR_CLAIR est conserve sur "LABS" et sur l'italique : sur --navy-deep il rend
+   4.83:1, exactement la raison pour laquelle le site l'y garde aussi. */
 
 const echapper = (s) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
