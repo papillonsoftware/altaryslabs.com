@@ -6,24 +6,58 @@
    ========================================================================== */
 
 :root {
-  /* --- Fonds ------------------------------------------------------------ */
-  --navy-deep: #07111e; /* fond principal du site */
-  --navy: #0f1724; /* fond de section secondaire */
-  --navy-mid: #1a2740; /* cartes produits */
-  --navy-card: #101d30; /* cartes services, plus discretes */
+  /* --- Fonds -------------------------------------------------------------
+     Le handoff de septembre 2026 eclaircit toutes les surfaces sombres : le
+     fondateur trouvait le hero et le pied de page trop sombres. Les valeurs
+     ci-dessous sont relevees dans `index.dc.html` et `Footer.dc.html` a la
+     racine du projet claude.ai/design. Voir D136.
+
+     Consequence a connaitre avant de poser un texte ici : ces bleus sont
+     nettement plus clairs que l'ancien navy, donc tout gris attenue et tout
+     or sature y perdent leur contraste. Les regles qui en decoulent sont
+     ecrites au fil des jetons de texte plus bas. */
+  --navy-deep: #12478a; /* fond principal du site : hero et .section--deep */
+  --navy: #0f2847; /* fin du degrade du bandeau d'appel a l'action */
+  --navy-cta: #1d3f6e; /* debut du meme degrade */
+  --navy-mid: #36639c; /* cartes sur fond sombre */
+  --navy-card: #36639c; /* cartes services : le handoff ne pose qu'un ton de
+                           carte sur le nouveau bleu, les deux jetons gardent
+                           des roles distincts et la meme valeur */
   --navy-soft: #253550;
-  --navy-footer: #040c16; /* pied de page, un cran sous le fond principal */
+  --navy-footer: #2c5c97; /* pied de page */
+
+  /* Ancienne valeur de --navy-deep, gelee pour un seul emploi : le TEXTE pose
+     sur un aplat or (bouton plein, badge plein, lien d'evitement, appel a
+     l'action du header). Les deux roles divergent depuis que le fond passe au
+     bleu : #12478a sur #c8922a ne vaut que 3.31:1, quand #07111e y garde
+     6.86:1. Ce jeton n'est JAMAIS un fond. Voir D136. */
+  --navy-ink: #07111e;
 
   /* --- Accent ----------------------------------------------------------- */
   --gold: #c8922a;
+  /* Or en TEXTE sur fond sombre, et la valeur depend de la surface depuis que
+     les fonds ont ete eclaircis (D136) :
+       - sur --navy-deep #12478a, --gold-light rend 4.83:1, il est conserve ;
+       - sur --navy-card #36639c il tombe a 3.24:1 et sur --navy-footer
+         #2c5c97 a 3.60:1 : ces deux surfaces prennent --gold-pale, qui y rend
+         4.98:1 et 5.52:1.
+     --gold seul (#c8922a) ne vaut que 2.46:1 sur le pied de page : il reste un
+     remplissage et une bordure, jamais un texte sur ces surfaces. */
   --gold-light: #e5b55a;
   --gold-pale: #f5e6c8;
 
   /* --- Textes ----------------------------------------------------------- */
   --ivory: #faf7f2;
-  --muted: #9aa7be; /* corps de texte sur fond sombre */
-  --muted-soft: #8b98af; /* texte secondaire dans les cartes */
-  --slate: #6b7a96; /* mentions les plus discretes */
+  /* Les trois niveaux de gris attenue passent au blanc, valeur posee par le
+     handoff lui-meme sur les nouveaux bleus. Ils ne se distinguaient que sur
+     du quasi-noir : sur les fonds actuels ils tombent respectivement a
+     3.76:1, 2.11:1 et 1.57:1, tres au-dessous du seuil AA de 4.5:1. En blanc
+     ils rendent 9.15:1 sur --navy-deep, 6.14:1 sur --navy-card et 6.81:1 sur
+     --navy-footer. Les trois noms subsistent le temps qu'un lot dedie les
+     fusionne : voir la ligne ouverte dans docs/BACKLOG.md. */
+  --muted: #ffffff; /* corps de texte sur fond sombre */
+  --muted-soft: #ffffff; /* texte secondaire dans les cartes */
+  --slate: #ffffff; /* mentions les plus discretes */
 
   /* Le site est integralement navy et or. Les anciennes teintes ambre
      (Papillon) et teal (ALTARYS ENTERPRISE) ont ete retirees : la gamme qui

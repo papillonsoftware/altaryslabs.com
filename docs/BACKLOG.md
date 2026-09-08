@@ -188,6 +188,21 @@ on the same foundation; `UI-002` merged on 2026-08-07 with three review rounds o
 its own, so the `UI-001` findings are now buried under a rewrite of the same
 files. Whoever picks this up is auditing history, not protecting the next item.
 
+### Three attenuated-grey tokens now hold the same value
+
+`--muted`, `--muted-soft` and `--slate` all read `#ffffff` since `UI-006`. They
+encoded three levels of grey that only ever separated on the near-black navy;
+on the handoff blues the handoff itself paints white at all three. Three tokens
+holding one value invite a future change to be made in one of them and not the
+others.
+
+Merging them into a single token touches around ten declarations across
+`global.css`, `Hero.astro`, `Footer.astro`, `RoadmapWaves.astro`,
+`PageHeader.astro`, `AboutContent.astro`, `LegalPage.astro` and `FeatureGrid.astro`.
+Left out of `UI-006`, whose diff is deliberately confined to colour values: a
+rename touching eight files would have buried the eleven contrast corrections
+that item exists to carry. See D136.
+
 ### The contact pages ship 4.5 KB of French comments to every visitor
 
 The built `/contact` and `/en/contact` carry 9498 bytes of inline script, of
