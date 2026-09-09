@@ -21,8 +21,17 @@ the switch on 2026-08-07: the default background is cream, every section
 declares its surface explicitly rather than inheriting, and the footer is five
 columns. Nothing about the palette is pending any more.
 
-`main` still serves the legacy one-page site through GitHub Pages. Nothing has
-been merged into it. The rebuild lives on `refonte-multipages`.
+**`OPS-002` landed on 2026-08-08.** `refonte-multipages` merged into `main` (PR
+#2), the DNS cutover moved `altaryslabs.com` and `www.altaryslabs.com` to
+Cloudflare Pages, and `main` is now the live production branch, deployed
+automatically on every push. GitHub Pages served the legacy site until then and
+its removal from the DNS zone and repository settings is being confirmed as a
+close-out step, not assumed done just because the cutover landed.
+
+The integration branch, freed of its GitHub Pages constraint, is renamed
+**`post-refonte`** the same day (D100): same role, no direct commits, every
+item through a PR against it, but merging it into `main` now means an
+immediate production deploy rather than a one-time founder-gated switch.
 
 ## Done
 
@@ -57,9 +66,12 @@ been merged into it. The rebuild lives on `refonte-multipages`.
 | 0 | `SITE-FIX-009` | nothing | `docs/work-items/SITE-FIX-009.md` |
 | 0 | `SITE-FIX-012` | nothing | `docs/work-items/SITE-FIX-012.md` |
 | 0 | `SITE-FIX-013` | nothing | `docs/work-items/SITE-FIX-013.md` |
+| 0 | `SITE-FIX-014` | nothing, implemented and in review | `docs/work-items/SITE-FIX-014.md` |
 | 1 | `UI-FIX-001` | nothing | `docs/work-items/UI-FIX-001.md` |
 | 1 | `PAGE-003` | three founder rulings, listed in the doc | `docs/work-items/PAGE-003.md` |
 | 1 | `UI-FIX-004` | one founder ruling on the WCAG 3.1.2 exemption | `docs/work-items/UI-FIX-004.md` |
+| 1 | `SITE-FIX-016` | `SITE-FIX-014` | `docs/work-items/SITE-FIX-016.md` |
+| 1 | `SEO-FIX-001` | `I18N-FIX-001`, merged | `docs/work-items/SEO-FIX-001.md` |
 | 3 | `UI-FIX-002` | nothing, `UI-002` has merged | `docs/work-items/UI-FIX-002.md` |
 | 3 | `UI-REF-001` | nothing, `UI-002` has merged | `docs/work-items/UI-REF-001.md` |
 | 5 | `OPS-002` | everything above | `docs/work-items/OPS-002.md` |
@@ -179,6 +191,21 @@ on the same foundation; `UI-002` merged on 2026-08-07 with three review rounds o
 its own, so the `UI-001` findings are now buried under a rewrite of the same
 files. Whoever picks this up is auditing history, not protecting the next item.
 
+### Three attenuated-grey tokens now hold the same value
+
+`--muted`, `--muted-soft` and `--slate` all read `#ffffff` since `UI-006`. They
+encoded three levels of grey that only ever separated on the near-black navy;
+on the handoff blues the handoff itself paints white at all three. Three tokens
+holding one value invite a future change to be made in one of them and not the
+others.
+
+Merging them into a single token touches around ten declarations across
+`global.css`, `Hero.astro`, `Footer.astro`, `RoadmapWaves.astro`,
+`PageHeader.astro`, `AboutContent.astro`, `LegalPage.astro` and `FeatureGrid.astro`.
+Left out of `UI-006`, whose diff is deliberately confined to colour values: a
+rename touching eight files would have buried the eleven contrast corrections
+that item exists to carry. See D136.
+
 ### The contact pages ship 4.5 KB of French comments to every visitor
 
 The built `/contact` and `/en/contact` carry 9498 bytes of inline script, of
@@ -221,6 +248,14 @@ rather than left in a review file. See D126.
   it merged.
 - **The prototypes are wrong on six points.** `CLAUDE.md` lists them with their
   decision rows. The repository wins on all six.
+- **Run `bin/docs_check` before opening a pull request.** It returns the
+  accounting defects of the prose, which produced 58 of the 91 blocking findings
+  of the last four rounds. It reports form only and never meaning: a green run
+  says the accounting is right, not that the prose is sound. See D129 and D132.
+  **It exits 1 on the integration branch today**, on seven gaps no current
+  author caused, until `SITE-FIX-016` lands. Compare your gaps against the list
+  in that fiche rather than reading the exit code alone, otherwise the habit of
+  ignoring it sets in before the tool has earned anything.
 - **Run `bin/contrast_sweep` before declaring a UI item done.** Three review
   rounds in a row found colour classes that reading had missed. Measuring
   converges; enumerating does not. See D048.

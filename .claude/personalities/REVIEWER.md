@@ -131,7 +131,7 @@ The visual reference for the rebuild is the claude.ai/design project `53d1c228-d
 - [ ] Build output is still `./dist`
 - [ ] The D1 binding in `wrangler.jsonc` is live since `FORM-001` and stays live. If the PR touches it, the `database_id` must stay the real one and the comma after `pages_build_output_dir` must be present: a placeholder identifier or a missing comma fails the Cloudflare build and is a blocker.
 - [ ] No secret, API key or token committed
-- [ ] The PR targets `refonte-multipages`, the integration branch, and not `main`. `main` still serves the legacy site through GitHub Pages and the rebuild deletes `CNAME`; merging early breaks the live site immediately.
+- [ ] The PR targets `post-refonte`, the integration branch, and not `main`. `main` is the live production branch since the 2026-08-08 DNS cutover, deployed automatically by Cloudflare Pages: a PR that targets it merges straight to the live site.
 
 ---
 
@@ -165,7 +165,7 @@ This exclusion is bounded to that one directory and is the only exception to the
 
 Write to `docs/reviews/<ID>-review.md`. The file ships **on the work item's branch**, but you do not write it there directly: `.claude/commands/review.md` step 3 opens the review worktree on a disposable `review-<id-lowercase>` branch, and step 11 pushes the commit onto the item branch with an explicit refspec. Write in the review worktree, push by refspec.
 
-If the file already exists from a previous round, **append** a new round section. Never overwrite. Never commit a review file on `main` or on `refonte-multipages`.
+If the file already exists from a previous round, **append** a new round section. Never overwrite. Never commit a review file on `main` or on `post-refonte`.
 
 **The filename always derives from the ID under review, and a `-FIX-` item opens its own file.** Rounds of one continuous thread therefore land in several files: `I18N-001`, `I18N-FIX-001` and `I18N-FIX-002` are one body of work and hold three. That is deliberate; the alternative asks every reviewer to guess which item a thread started from. See D121.
 

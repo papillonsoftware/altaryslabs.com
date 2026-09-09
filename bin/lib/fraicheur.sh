@@ -6,7 +6,7 @@
 # .claude/personalities/REVIEWER.md et --append-system-prompt depuis
 # .claude/reviewer-append.txt. Ces deux chemins sont resolus dans l'arbre de
 # travail d'ou le script tourne, quel qu'il soit. Si cet arbre est en retard sur
-# origin/refonte-multipages, le relecteur recoit une version perimee de ses
+# origin/post-refonte, le relecteur recoit une version perimee de ses
 # propres instructions et RIEN ne le lui signale.
 #
 # Constate reellement sur la ronde 3 de SITE-FIX-002 : l'arbre etait 20 commits
@@ -41,7 +41,7 @@ FICHIERS_AMORCAGE=(
 )
 
 verifier_fraicheur() {
-  local base="origin/refonte-multipages"
+  local base="origin/post-refonte"
 
   if ! git rev-parse --git-dir >/dev/null 2>&1; then
     echo "ERREUR : $(pwd) n'est pas un depot git. Lancer le relecteur depuis le worktree de l'item." >&2
